@@ -73,16 +73,58 @@ get_MSE <- function(raw_data, LMMSObject){
   # check for LMMS Spline object
   stopifnot(is(LMMSObject,"lmmspline"))
   
-  raw_data %>% rownames_to_column("sample") %>%
+  X1 <- raw_data %>% rownames_to_column("sample") %>%
     mutate(ID = sample %>% str_split("_") %>% map_chr(~.x[1])) %>%
     mutate(time = sample %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric) %>%
-    gather(molecule, Yi, -c(time, ID, sample)) %>%
-    left_join(LMMSObject@predSpline %>% 
-                rownames_to_column("molecule") %>% 
-                mutate(model_used = factor(LMMSObject@modelsUsed)) %>%
-                gather(time, Y_hat, -c(molecule, model_used)) %>% 
-                mutate(time = as.numeric(time))) %>%
+    gather(molecule, Yi, -c(time, ID, sample))
+  
+  X2 <- LMMSObject@predSpline %>% 
+    rownames_to_column("molecule") %>% 
+    mutate(model_used = factor(LMMSObject@modelsUsed)) %>%
+    gather(time, Y_hat, -c(molecule, model_used)) %>% 
+    mutate(time = as.numeric(time))
+  
+  res <- left_join(X1, X2, by = c("molecule" = "molecule", "time"="time")) %>%
+    na.omit() %>% # filter pred time that are not included in raw_data 
     mutate(error = (Yi-Y_hat)^2) %>% 
     group_by(molecule, model_used) %>%
     summarise(MSE = mean(error))
+  return(res)
+}
+
+
+norm_OTU <- function(DF, AR = F){
+  # OTU in col; Sample in Row
+  # AR = T : relative data with 0, add pouillème
+  low.count.removal = function(
+    data, # OTU count data frame of size n (sample) x p (OTU)
+    percent=0.01 # cutoff chosen
+  ){
+    keep.otu = which(colSums(data)*100/(sum(colSums(data))) > percent)
+    data.filter = data[,keep.otu]
+    return(list(data.filter = data.filter, keep.otu = keep.otu))
+  }
+  
+  result.filter = low.count.removal(DF, percent=0.01)
+  data.filter = result.filter$data.filter
+  if(AR) data.filter <- data.filter +0.0001
+  
+  TSS.divide = function(x){
+    x/sum(x)
+  }
+  data.TSS = t(apply(data.filter, 1, TSS.divide))
+  
+  data.TSS.clr = logratio.transfo(data.TSS, logratio = 'CLR')
+  
+  # reconstrcuct dataframe
+  data.good <- as.data.frame(matrix(ncol = ncol(data.TSS.clr), 
+                                    nrow = nrow( data.TSS.clr)))
+  rownames(data.good) <- rownames(data.TSS.clr)
+  colnames(data.good) <- colnames(data.TSS.clr)
+  for( i in c(1:nrow(data.TSS.clr))){
+    for( j in c(1:ncol(data.TSS.clr))){
+      data.good[i,j] <- data.TSS.clr[i,j]
+    }
+  }
+  return(data.good)
 }
