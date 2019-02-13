@@ -197,7 +197,8 @@ pca.get_cluster <- function(pca.Obj){
 
 pca.plot <- function(pca.Obj, title = "PCA"){
   cluster.info <- pca.get_cluster(pca.Obj)
-  cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
+  #cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
+  cluster.level <- .get.cluster.info(cluster.info$cluster)
   X <- pca.Obj$X
   # norm_profile <- function(profile){
   #   profile*length(profile)/(sum(abs(profile), na.rm = T))
@@ -225,7 +226,9 @@ norm_profile <- function(profile){
 
 spca.plot <- function(pca.Obj, title = "sPCA"){
   cluster.info <- pca.get_cluster(pca.Obj) %>% filter(cluster != 0)
-  cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
+  # cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
+  cluster.level <- .get.cluster.info(cluster.info$cluster)
+  
   X <- pca.Obj$X
   # norm_profile <- function(profile){
   #   profile*length(profile)/(sum(abs(profile), na.rm = T))
@@ -238,7 +241,7 @@ spca.plot <- function(pca.Obj, title = "sPCA"){
     left_join(cluster.info, by = c("molecule"="molecule")) %>%
     filter(!is.na(cluster)) %>%  ## filter cluster != 0, NA introduced
     group_by(molecule) %>%
-    mutate(time = as.numeric(time)) %>%
+    mutate(time = as.numeric(time)) %>% 
     mutate(cluster = factor(cluster, levels= cluster.level))
   
   ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) + 
@@ -246,6 +249,12 @@ spca.plot <- function(pca.Obj, title = "sPCA"){
     facet_wrap(~ cluster, dir = "v", nrow = 2) +
     ggtitle(title) + 
     scale_color_manual(values = color.mixo(1:length(cluster.level)))
+}
+
+.get.cluster.info <- function(cluster) {
+  c1 <- cluster %>% abs %>% unique
+  cc <- c(c1,c1) %>% sort %>% `*`(c(1,-1))
+  cc[cc %in% unique(cluster)]
 }
 
 
@@ -303,4 +312,45 @@ tune.spca.choice.keepX <- function(tune.spca.Obj, draw = TRUE) {
     #     
   }
   return(choice.keepX)
+}
+
+wrapper.silhouette.pca <- function(X, ...){
+  X <- as.data.frame(X)
+  X.pca <- pca(X = X, ...)
+  X.pca.cluster <- pca.get_cluster(X.pca)
+  
+  X.DF <- Spearman_distance(X)
+  X.DF_clu <- Add_Cluster_metadata(X.DF,  X.pca.cluster)
+  X.SC <- Slhouette_coef_df(X.DF_clu)
+  return(mean(X.SC$silhouette.coef))
+}
+
+wrapper.silhouette.spca <- function(X, keepX, plot.t = FALSE, ...){
+  X <- as.data.frame(X)
+  X.spca <- spca(X = X, keepX = keepX, ...)
+  X.spca.cluster <- pca.get_cluster(X.spca) %>% filter(cluster != 0)
+  X.filter <- X %>% dplyr::select(X.spca.cluster$molecule)
+  
+  X.DF <- Spearman_distance(X.filter)
+  X.DF_clu <- Add_Cluster_metadata(X.DF,  X.spca.cluster)
+  X.SC <- Slhouette_coef_df(X.DF_clu)
+  if(plot.t){
+    print(plot_silhouette_order_color(X.SC))
+  }
+  return(mean(X.SC$silhouette.coef))
+}
+
+wrapper.silhouette.spca.paper <- function(X, keepX, plot.t = FALSE, ...){
+  X <- as.data.frame(X)
+  X.spca <- spca(X = X, keepX = keepX, ...)
+  X.spca.cluster <- pca.get_cluster(X.spca) %>% filter(cluster != 0)
+  X.filter <- X %>% dplyr::select(X.spca.cluster$molecule)
+  
+  X.DF <- Spearman_distance(X.filter)
+  X.DF_clu <- Add_Cluster_metadata(X.DF,  X.spca.cluster)
+  X.SC <- Slhouette_coef_df(X.DF_clu)
+  if(plot.t){
+    print(plot_fig.paper(X.SC))
+  }
+  return(mean(X.SC$silhouette.coef))
 }

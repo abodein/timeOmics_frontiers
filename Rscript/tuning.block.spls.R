@@ -248,3 +248,7 @@ wrapper.detect_drop_out <- function(DF, first_name, threshold = 2){
     rownames_to_column("contrib") %>% mutate(contrib = contrib %>% str_replace(".*-",""))
   return(drop)
 }
+
+
+
+
