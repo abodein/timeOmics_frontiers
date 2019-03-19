@@ -1,0 +1,529 @@
+---
+title: "Analysis Frontier Final version"
+author: "OC"
+date: "23 January 2019"
+output:
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 6
+  html_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 4
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r ,echo=FALSE,warning=FALSE, message=FALSE}
+rm(list=ls(all=TRUE))
+library(lmms)
+library(mixOmics)
+#library(mclust)
+library(knitr)
+#library(dendextend)
+#library(nnet)
+# library(ape)
+# library(lmeSplines)
+# library(stringr)
+# library(graphics)
+library(reshape2)
+library(dynOmics)
+library(tidyverse)
+# folder to be used in the script
+setwd("C:/Data/Données/projet_en_cours/EN_COURS_time_course_frontiers/")
+
+
+```
+
+# Data
+
+In this data set, **three bioreactors** with similar performances were considered as replicates. Different parameters were measured accross time in the three bioreactors.
+
+> Performance data: 
+Based on chemical measurement, the time course evolution of a set of parameters was measured (CH4, C02, acetate, propionate). 
+
+> Metabolites data: 
+The time course evolution of 20 selected metabolites was measured with GCMS. 
+
+
+> Microbial data: 
+DNA from samples taken across time was extracted and sequenced. (16S metabarcoding). 
+
+
+
+```{r, echo=FALSE}
+cat('Loading of the data')
+load('bioreactor.RData')
+```
+
+# Data transformation
+
+>Performance data is not transformed.
+
+>Metabolites (GCMS) data are log transformed. 
+
+>Microbial data 
+
+1) are filtered (only OTUs with at least 1% of abundance in at least 1 sample are kept = 51 OTUs).
+
+2) a count of 1 sequence is added to each sample/OTU (to avoid 0 in the datamatrix)  
+
+3) relative abundance is calculated 
+
+4) obtain data is clr transformed
+
+```{r, echo=FALSE, eval=TRUE}
+#GCMS data are log transformed
+GCMS_log=log(GCMS+1,10)
+
+# transfortmation of OTUs data
+TSS.divide = function(x){
+  x/sum(x)
+}
+# function is applied to each row
+pc_abundance = (apply(abundance, 2, TSS.divide))
+
+
+#Only OTUs present at at least 1% in one of the samples are kept.
+pc_abundance_sel = apply(subset((abundance),apply(pc_abundance,1, function(x) max(x,na.rm=TRUE))>0.01)+1,2,TSS.divide)
+#data are clr transformed
+clr_abundance=logratio.transfo(t(pc_abundance_sel), logratio = 'CLR', offset = 0)
+
+
+
+```
+
+# Spline smoothing
+
+All the data are modelled with spline smoothing. After spline smoothing, 
+
+```{r, echo=FALSE, message=FALSE,eval=TRUE}
+#spline smoothing of GCMS data
+testLmmspline_metabo <- lmmSpline(data=(GCMS_log),time=metadata_GCMS$Number_of_days,sampleID=metadata_GCMS$rep_reactor,keepModels=T,timePredict=c(10:57),basis="p-spline")
+GCMS_data =testLmmspline_metabo@predSpline
+GCMS_data=t(GCMS_data[,colnames(GCMS_data)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)])
+
+#spline for the OTUs
+### to have the predict values
+testLmmspline_OTUs <- lmmSpline(data=(clr_abundance),time=OTU_metadata$Number_of_days,sampleID=OTU_metadata$reactor_id,keepModels=T,timePredict=c(10:57),basis="p-spline")
+OTU_data=testLmmspline_OTUs@predSpline
+OTU_data=t(OTU_data[,colnames(OTU_data)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)])
+
+#one table for each performance data
+melt_acetate=melt(as.matrix(acetate))
+melt_propionate=melt(as.matrix(propionate))
+melt_CH4=melt(as.matrix(CH4))
+melt_CO2=melt(as.matrix(CO2))
+
+#one table for liquid compound concentration
+melt_liq=melt_acetate
+melt_liq$time=melt_acetate$Var1
+melt_liq$sampleID=melt_acetate$Var2
+melt_liq$acetate=melt_acetate$value
+melt_liq$propionate=melt_propionate$value
+
+#one table for gas production
+melt_perf=melt_CH4
+melt_perf$CH4=melt_CH4$value
+melt_perf$CO2=melt_CO2$value
+melt_perf$time=melt_CH4$Var1
+melt_perf$sampleID=melt_CH4$Var2
+
+#spline smoothing of this data 
+lmms_liq <- lmmSpline(data=cbind(melt_liq$acetate, melt_liq$propionate),time=melt_liq$time,sampleID=melt_liq$sampleID,keepModels=T,timePredict=c(10:57),basis="p-spline")
+
+lmms_perf <- lmmSpline(data=cbind(melt_perf$CH4, melt_perf$CO2),time=melt_perf$time,sampleID=melt_perf$sampleID,keepModels=T,timePredict=c(10:57),basis="p-spline")
+
+#prediction after spline smoothing
+liq_data=t(lmms_liq@predSpline[,colnames(lmms_liq@predSpline)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)])
+perf_data=t(lmms_perf@predSpline[,colnames(lmms_perf@predSpline)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)])
+colnames(liq_data)=c("acetate",'propionate')
+colnames(perf_data)=c('CH4','CO2')
+
+```
+
+# Use of Antoine's filters
+
+## OTUs
+
+```{r, echo=FALSE, eval=TRUE}
+source("filter.R")
+library(Hotelling)
+OTU_norm=clr(t(pc_abundance_sel))
+
+row.names(OTU_norm)=paste(OTU_metadata$initial_CONCENTRATION,'_',  OTU_metadata$Number_of_days, sep="")
+
+OTU_norm=as.data.frame((OTU_norm))
+
+## Now included inside source code folder
+# here the problem is that OTU_norm should be a data frame with molecule in columns
+# and sample ID in rows.
+# Sample IDs should be in the form : SAMPLE_TIME
+# Please rename rownames in order to have the correct format.
+test_filter=wrapper.filter.splines(OTU_norm,testLmmspline_OTUs,stationnarity.test = FALSE, homoskedasticity = TRUE,MSE.filter = TRUE)
+get_MSE(OTU_norm,testLmmspline_OTUs )
+
+
+ls(test_filter)
+test_filter$to_keep
+test_filter$res.filter
+
+results=test_filter$res.filter[seq(1,nrow(test_filter$res.filter),2),]
+summary(test_filter$res.filter[,c(2,4)])
+summary(results)
+
+kept_OTU_name=results[results$MSE.filter&results$BP.test,1] ### OTUs to keep
+OTU_data_initial=OTU_data
+
+OTU_data=OTU_data_initial[,colnames(OTU_data_initial)%in%as.matrix(kept_OTU_name)]
+
+matplot(x=matrix(rep(rownames(OTU_data), length(as.matrix(kept_OTU_name))), ncol=length(as.matrix(kept_OTU_name))), y=scale(OTU_data), type = 'l', main='plot of scaled kept OTUs', xlab='time')
+
+rejected_OTU_name=results[!results$MSE.filter|!results$BP.test,1] ### OTUs rejected
+
+OTU_data_rejected=OTU_data_initial[,colnames(OTU_data_initial)%in%as.matrix(rejected_OTU_name)]
+
+matplot(x=matrix(rep(rownames(OTU_data_rejected), length(as.matrix(rejected_OTU_name))), ncol=length(as.matrix(rejected_OTU_name))), y=scale(OTU_data_rejected), type = 'l', main='plot of scaled rejected OTUs', xlab='time')
+```
+
+## GCMS
+
+```{r, echo=FALSE, eval=TRUE}
+GCMS_norm=GCMS_log
+row.names(GCMS_norm)=paste(metadata_GCMS$rep_reactor,'_',  metadata_GCMS$Number_of_days, sep="")
+
+
+
+test_filter=wrapper.filter.splines(GCMS_norm,testLmmspline_metabo,stationnarity.test = TRUE, homoskedasticity = TRUE,MSE.filter = TRUE)
+get_MSE(GCMS_norm,testLmmspline_metabo )
+
+
+ls(test_filter)
+test_filter$to_keep
+test_filter$res.filter
+
+
+summary(test_filter$res.filter[,c(3,5)])
+
+
+kept_GCMS_name=test_filter$res.filter[test_filter$res.filter$BP.test,1] ### GCMS to keep
+GCMS_data_initial=GCMS_data
+
+GCMS_data=GCMS_data_initial[,colnames(GCMS_data_initial)%in%as.matrix(kept_GCMS_name)]
+
+
+matplot(x=matrix(rep(rownames(GCMS_data), length(as.matrix(kept_GCMS_name))), ncol=length(as.matrix(kept_GCMS_name))), y=scale(GCMS_data), type = 'l', main='plot of scaled kept metabo', xlab='time')
+
+rejected_GCMS_name=test_filter$res.filter[!test_filter$res.filter$BP.test,1]  ### GCMSs rejected
+
+GCMS_data_rejected=GCMS_data_initial[,colnames(GCMS_data_initial)%in%as.matrix(rejected_GCMS_name)]
+
+matplot(x=matrix(rep(rownames(GCMS_data_rejected), length(as.matrix(rejected_GCMS_name))), ncol=length(as.matrix(rejected_GCMS_name))), y=scale(GCMS_data_rejected), type = 'l', main='plot of scaled rejected metabo', xlab='time')
+```
+
+
+# Test PCA silhouette Antoine
+
+```{r, echo=FALSE, warning=FALSE}
+walk(dir("C:/Data/Données/projet_en_cours/EN_COURS_time_course_frontiers/timeOmics_dev/R/", pattern = ".R$", full.names = TRUE),source)
+```
+
+
+
+
+## 16S data only
+
+### PCA and calculation of silhouette coefficiant
+
+```{r, echo=FALSE}
+## ----pca, cache=T--------------------------------------------------------
+pca.res <- pca(OTU_data, ncomp = 2, scale = T, center = T)
+
+#pca.get_cluster(pca.res) %>% head
+(pca.get_cluster(pca.res))
+
+(table(pca.get_cluster(pca.res)[,2]))
+
+pca.plot(pca.res)
+
+# compute silhouette coef, for pca
+# time consuming
+silhouette_coeff=wrapper.silhouette.pca(OTU_data, ncomp = 2, scale = T, center=T)
+
+cat('Silhouette coefficiant value is', silhouette_coeff)
+```
+
+### sPCA, tuning and representation
+
+```{r, echo=FALSE, warning=FALSE}
+## ----spca, cache = T-----------------------------------------------------
+keepX = list(comp1=c(6:30), comp2=c(6:30))
+
+start.time <- Sys.time()
+res.tune.spca <- tune.spca(X =OTU_data, ncomp = 2, keepX = keepX)
+
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+cat('Tuning of the sPCA takes',time.taken)
+
+keepX=tune.spca.choice.keepX(res.tune.spca, draw = T) 
+
+cat('Tuning suggests to keep')
+print(keepX)
+
+spca.res_f <- spca(OTU_data, ncomp = 2, keepX = keepX) 
+wrapper.silhouette.pca(OTU_data, ncomp = 2, scale = T, center=T)
+spca.plot(spca.res_f)
+
+
+(pca.get_cluster(spca.res_f))
+
+(table(pca.get_cluster(spca.res_f)[,2]))
+```
+
+
+## GCMS data only
+
+### PCA and calculation of silhouette coefficiant
+
+```{r, echo=FALSE}
+## ----pca, cache=T--------------------------------------------------------
+pca.res <- pca(GCMS_data, ncomp = 2, scale = T, center = T)
+
+#pca.get_cluster(pca.res) %>% head
+(pca.get_cluster(pca.res))
+
+(table(pca.get_cluster(pca.res)[,2]))
+
+pca.plot(pca.res)
+
+# compute silhouette coef, for pca
+# time consuming
+silhouette_coeff=wrapper.silhouette.pca(GCMS_data, ncomp = 2, scale = T, center=T)
+
+cat('Silhouette coefficiant value is', silhouette_coeff)
+```
+
+### sPCA, tuning and representation
+
+```{r, echo=FALSE, warning=FALSE}
+## ----spca, cache = T-----------------------------------------------------
+keepX = list(comp1=c(2:15), comp2=c(6:15))
+
+start.time <- Sys.time()
+res.tune.spca <- tune.spca(X =GCMS_data, ncomp = 2, keepX = keepX)
+
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+cat('Tuning of the sPCA takes',time.taken)
+
+keepX=tune.spca.choice.keepX(res.tune.spca, draw = T) 
+
+cat('Tuning suggests to keep')
+print(keepX)
+
+spca.res_f <- spca(GCMS_data, ncomp = 2, keepX = keepX) 
+wrapper.silhouette.pca(GCMS_data, ncomp = 2, scale = T, center=T)
+spca.plot(spca.res_f)
+
+(pca.get_cluster(spca.res_f))
+
+(table(pca.get_cluster(spca.res_f)[,2]))
+```
+
+## 16S and GCMS data mixed together
+
+### PCA and calculation of silhouette coefficiant
+
+```{r, echo=FALSE}
+combined_data=cbind(OTU_data, GCMS_data)
+
+## ----pca, cache=T--------------------------------------------------------
+pca.res <- pca(combined_data, ncomp = 2, scale = T, center = T)
+
+#pca.get_cluster(pca.res) %>% head
+(pca.get_cluster(pca.res))
+
+(table(pca.get_cluster(pca.res)[,2]))
+
+pca.plot(pca.res)
+
+# compute silhouette coef, for pca
+# time consuming
+silhouette_coeff=wrapper.silhouette.pca(combined_data, ncomp = 2, scale = T, center=T)
+
+cat('Silhouette coefficiant value is', silhouette_coeff)
+```
+
+### sPCA, tuning and representation
+
+```{r, echo=FALSE, warning=FALSE}
+## ----spca, cache = T-----------------------------------------------------
+keepX = list(comp1=c(6:30), comp2=c(6:30))
+
+start.time <- Sys.time()
+res.tune.spca <- tune.spca(X =combined_data, ncomp = 2, keepX = keepX)
+
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+cat('Tuning of the sPCA takes',time.taken)
+
+keepX=tune.spca.choice.keepX(res.tune.spca, draw = T) 
+
+cat('Tuning suggests to keep')
+print(keepX)
+
+spca.res_f <- spca(combined_data, ncomp = 2, keepX = keepX) 
+wrapper.silhouette.pca(combined_data, ncomp = 2, scale = T, center=T)
+spca.plot(spca.res_f)
+
+
+(pca.get_cluster(spca.res_f))
+
+(table(pca.get_cluster(spca.res_f)[,2]))
+```
+
+
+# Test sPLS code Antoine
+
+```{r, echo=FALSE, message=FALSE}
+X <- OTU_data
+Y <- GCMS_data
+
+keepX <- list(seq(5,30,1),seq(5,30,1))
+keepY <- list(seq(4,10,1),seq(4,10,1))
+
+start.time <- Sys.time()
+tune.spls2.res <- tune.spls2(X = X, Y = Y, ncomp = 2, keepX, keepY)
+
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+cat('Tuning of the sPLS takes',time.taken)
+
+```
+```{r, echo=FALSE}
+#spls.inflection <- spls.get_all_inflection_points(tune.spls2.res)
+#spls.get_keepX_keepY(spls.inflection)
+
+cat("pb with get inflection points of spls")
+cat("error message:Error in (function (..., row.names = NULL, check.rows = FALSE, check.names = TRUE,  :  arguments imply differing number of rows: 221, 2 ")
+keepX=c(5,5)
+keepY=c(4,4)
+spls.res <- spls(X = X, Y = Y, ncomp = 2, keepX=keepX, keepY = keepY)
+spls.cluster <- spls.get_cluster(spls.res)
+spls.cluster %>% group_by(cluster, block) %>% summarise(n = n()) 
+#%>% knitr::kable()cat("pb with get inflection points of spls")
+
+
+spls.plot(spls.res)
+
+
+```
+
+
+# Test block sPLS code Antoine
+
+## Tuning of the block sPLS
+
+```{r, echo=FALSE, message=FALSE}
+data <- list("OTU"=OTU_data,"GCMS"=GCMS_data, "perf"=cbind(perf_data,liq_data))
+  
+ncomp= 2
+
+list_keepX <- list("OTU" = seq(5,30,1), 
+                   "GCMS" = c(5,10,1),
+                   "perf" =c (1,3,1))
+
+design = matrix(1, ncol = length(data), nrow = length(data), 
+                dimnames = list(names(data), names(data)))
+diag(design) = 0
+design
+## ---- eval = F-----------------------------------------------------------
+## # time consuming
+
+ start.time <- Sys.time()
+#
+#
+#
+tune.full <- tune.block.spls(data = data, list_keepX = list_keepX, design, ncomp = 2)
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+cat('Tuning of the block sPLS takes',time.taken)
+
+
+```
+
+## Slopes to select keepX
+
+```{r, echo=FALSE, message=FALSE, warning=FALSE}
+slopes <- compute_slopes(tune.full, data)
+SD <- detect_signif_slopes(slopes.obj = slopes, data = data)
+all_drop <- wrapper.detect_drop_out(SD, names(data)) %>% 
+  mutate(distance_from_origin = get_distance_w_origin(., names(data), origin= lapply(list_keepX, min) %>% unlist))
+
+all_drop <- all_drop %>% mutate(c_pos = c_pos %>% as.character %>% as.numeric ) %>%
+  mutate(c_neg = c_neg %>% as.character %>% as.numeric ) %>%
+  mutate(slope_pos = slope_pos %>% as.character %>% as.numeric ) %>%
+  mutate(slope_neg = slope_neg %>% as.character %>% as.numeric ) %>%
+  mutate(distance_from_origin = distance_from_origin %>% as.character %>% as.numeric )
+
+b <- all_drop %>% mutate(score = -((c_pos * slope_pos) + (c_neg*slope_neg))/(distance_from_origin + 1)) %>%
+  split(list(.$comp))
+for(n in names(b)){
+  b[[n]] <- b[[n]] %>% top_n(1, wt=score)
+}
+b <- do.call("rbind", b) 
+b <- b %>% filter(comp %in% c(1,2))
+keepX <- b %>% dplyr::select(names(data), comp) %>% group_by(comp) %>% unique %>% ungroup %>% dplyr::select(-comp) %>% lapply(function(x) as.numeric(as.character(x))) 
+
+
+```
+
+## Final block sPLS
+
+```{r, echo=FALSE, message=FALSE}
+#keepX=list("OTU"=c(14,6),"GCMS"=c(3,5),"perf"=c(1,3))
+
+final <- mixOmics::block.spls(X = data, indY = 1, keepX = keepX, ncomp = 2, design=design, mode = "canonical")
+#class(data)
+data=lapply(data,scale)
+## ---- sparse_clusters, message=F, warning=F------------------------------
+get_cluster <- function(res){
+  res %>% as.data.frame() %>% #%>% filter(rowSums(.) != 0) -> b
+    rownames_to_column("molecule") %>% gather(comp, value, -molecule) %>% 
+    mutate(comp = comp %>% str_replace('comp ', "") %>% as.numeric()) %>%
+    mutate(value = sign(value) * comp) %>% dplyr::select(-comp) %>% 
+    rename(cluster = value) %>% filter(cluster != 0)
+}
+
+cluster <- final[["loadings"]] %>% lapply(function(x) get_cluster(x))
+
+# subset data
+subset <- purrr::map(names(data), function(omic) data[[omic]][,colnames(data[[omic]]) %in% cluster[[omic]][["molecule"]]] )
+
+# add cluster metadat
+sub <- subset %>% lapply(function(x) x %>% t %>% as.data.frame %>% rownames_to_column("molecule") %>% gather(time, value, -molecule)) %>% set_names(names(data))
+sub <- purrr::map(names(data), function(omic) sub[[omic]] %>% left_join(cluster[[omic]])) %>% set_names(names(data))
+
+sub <- purrr::map(names(data), function(omic) sub[[omic]] %>% mutate("omic" = omic)) %>% set_names(names(data))
+sub.final <- do.call("rbind", sub) %>% mutate(omic = as.factor(omic)) %>% mutate(time = as.numeric(time)) %>%
+  mutate(comp = abs(as.numeric(cluster))) %>% mutate(contrib = ifelse(sign(cluster) + 1, "pos", "neg")) 
+
+## ------------------------------------------------------------------------
+ggplot(sub.final, aes(x=time, y=value, fill = molecule)) + geom_line(aes(color = omic)) + facet_grid(contrib ~ comp, scales="free") + scale_colour_manual(values = c("#0091eaff", "#ff9236", "#a5a5a5")) + theme_bw() + labs(title = "Multi-Omic Sparse Clusters", y = "Expression", x = "Time") + theme(legend.position = "bottom")
+
+
+
+
+```
+
+
+
+
+
+
+

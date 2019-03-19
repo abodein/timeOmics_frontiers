@@ -1,0 +1,184 @@
+---
+title: "Milk (v5)"
+output:
+  html_document:
+    toc: true
+    toc_depth: 2
+---
+
+
+```{r, echo =F}
+knitr::opts_chunk$set(fig.align = "center")
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+```
+
+# Preliminary
+
+```{r, warning=F, message=F}
+library(tidyverse)
+library(mixOmics)
+walk(dir("~/Documents/timeOmics_dev/R/", pattern = ".R$", full.names = TRUE),source)
+```
+
+## Data Description & Design
+
+Data & Design description speach // TABLE with metadata information
+```{r design_plot}
+load("./milk_data.RData")
+ggplot(data= design , aes(x = TIME, y = BABY, color = Sexe)) + 
+  geom_point() + facet_grid(Delivery~., scales = "free_y") + ggtitle("Design")
+```
+
+
+## Workflow
+
+<center>
+![](./workflow.png)
+</center>
+
+# Analysis
+
+## Pre-processing
+
+I perform standard preprocessing steps : 
+
+* Low Count Removal
+* Total Sum Scalling
+* Centered Log Ratio Transformation
+
+```{r normOTU, fig.width=10}
+OTU_norm <- norm_OTU(OTU, AR = T)  
+# option AR(Abondance Relative) = data allready in AR.
+# need to add a "pouillème" in order to cumpute CLR.
+
+#pca(OTU_norm, ncomp = 10) %>% plot
+pca.res <- pca(OTU_norm, ncomp = 4)
+
+plotIndiv(pca.res, group = design$BABY, ind.names = design$TIME, 
+          comp = c(1,2), legend.title = "Baby", legend = T, title = "Comp 1-2")
+plotIndiv(pca.res, group = design$Delivery, ind.names = design$TIME, 
+          comp = c(1,2), legend.title = "Delivery Mode", legend = T, title = "Comp 1-2")
+
+# per sample OTU evolution
+OTU_norm %>% as.data.frame() %>% rownames_to_column("sample") %>%
+  gather(OTU, value, -sample) %>%
+  mutate(time = sample %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric)%>%
+  mutate(baby = sample %>% str_split("_") %>% map_chr(~.x[1])) %>%
+  ggplot(aes(time, value, col=OTU)) + geom_line() + facet_wrap(~baby) + theme_bw() + 
+  theme(legend.position = "none") + ggtitle("OTU evolution by baby")
+```
+
+## Splines and Filter
+
+```{r lmms, cache =T}
+time_lmms <- rownames(OTU_norm) %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric
+sample_id = rownames(OTU_norm)
+
+# cubic p-spline
+spline.MILK.cubicpspline = lmms::lmmSpline(data = OTU_norm, time = time_lmms, 
+                                       sampleID = sample_id,
+                                       basis = 'cubic p-spline', keepModels = T , numCores = 2)
+
+spline.MILK.pspline = lmms::lmmSpline(data = OTU_norm, time = time_lmms,
+                                       sampleID = sample_id,
+                                       basis = 'p-spline', keepModels = T,  numCores = 2 )
+
+spline.MILK.cubic = lmms::lmmSpline(data = OTU_norm, time = time_lmms, 
+                                       sampleID = sample_id,
+                                       basis = 'cubic', keepModels = T , numCores = 2)
+# summary 
+spline.MILK.cubicpspline@modelsUsed %>% table %>% as.data.frame() %>% 
+  set_names("ModelUsed", "Cubic P-spline") %>% 
+  left_join(spline.MILK.pspline@modelsUsed %>% table%>% as.data.frame() %>% set_names("ModelUsed", "P-spline")) %>% 
+  left_join(spline.MILK.cubic@modelsUsed %>% table%>% as.data.frame() %>% set_names("ModelUsed", "Cubic")) %>% 
+  knitr::kable()
+```
+
+I kept P-spline basis (less straight lines). 
+Filter splines based on Homoskedasticity test and MSE cutoff.
+
+```{r lmms_filter}
+filter.spline.res <- wrapper.filter.splines(OTU_norm, spline.MILK.pspline)
+index.filter <- (rownames(spline.MILK.pspline@predSpline) %in% filter.spline.res$to_keep) %>% which()
+## filter plot to add ## MSE / pvalue
+```
+
+
+```{r lmms_plot1}
+spline.data <- spline.MILK.pspline@predSpline[index.filter,] %>% t %>% as.data.frame()
+spline.data %>% rownames_to_column("time") %>%
+  gather(Features, value, - time) %>% mutate(time =as.numeric(time)) %>% 
+  ggplot(aes(x=time, y = value, col = Features)) + geom_line() + theme_bw() +
+  theme(legend.position = "none") + ggtitle("Modelled OTU evolution")
+```
+
+## timecourse PCA
+
+### With lines
+
+```{r pca_1}
+pca.res <- pca(spline.data, ncomp = 2, scale = F, center = T)
+pca.plot(pca.res, title = "PCA, with lines, scale = F")
+
+plotIndiv(pca.res)
+plotVar(pca.res)
+
+pca.res <- pca(spline.data, ncomp = 2, scale = T, center = T)
+pca.get_cluster(pca.res) %>% pull(cluster) %>% table
+pca.plot(pca.res, title = "PCA, with lines, scale = T")
+
+pca.res <- pca(spline.data, ncomp = 2, scale = F, center = T)
+
+# silhouette coefficient for this clustering
+wrapper.silhouette.pca(spline.data, ncomp = 2, scale = T, center=T)
+```
+
+### without lines
+
+```{r pca_2}
+spline.0 <- spline.MILK.pspline@predSpline[spline.MILK.pspline@modelsUsed != 0, ] %>% 
+  t %>% as.data.frame()
+# no filter needed
+
+pca.res.0 <- pca(spline.0, ncomp = 2, scale = T, center = T)
+
+plotIndiv(pca.res)
+plotVar(pca.res)
+
+pca.get_cluster(pca.res) %>% pull(cluster) %>% table
+pca.plot(pca.res)
+
+# silhouette coefficient for this clustering
+wrapper.silhouette.pca(spline.data, ncomp = 2, scale = T, center=T)
+```
+
+## timecourse sPCA
+
+### with lines
+
+```{r spca_1, warnings = F, message=F, cache = T}
+keepX = list(seq(11,29, 3), seq(9,15,1))
+res.tune.spca <- tune.spca(X = spline.data, ncomp = 2, keepX = keepX)
+tune.spca.choice.keepX(res.tune.spca, draw = T) 
+
+
+spca.res_f <- spca(spline.data, ncomp = 2, keepX = c(17,10)) 
+
+wrapper.silhouette.pca(spline.data, ncomp = 2, scale = T, center=T)
+spca.plot(spca.res_f)
+```
+
+### without lines
+
+```{r spca_2, warnings = F, message=F, cache =T}
+keepX = list(seq(11,29, 3), seq(9,15,1))
+res.tune.spca <- tune.spca(X = spline.0, ncomp = 2, keepX = keepX)
+tune.spca.choice.keepX(res.tune.spca, draw = T) 
+
+
+spca.res_f <- spca(spline.0, ncomp = 2, keepX = c(17,12)) 
+
+wrapper.silhouette.pca(spline.0, ncomp = 2, scale = T, center=T)
+spca.plot(spca.res_f)
+```
