@@ -1,7 +1,7 @@
 ---
-title: "Milk (v5)"
+title: "Gut Baby"
 output:
-  html_document:
+  pdf_document:
     toc: true
     toc_depth: 2
 ---
@@ -11,37 +11,45 @@ output:
 knitr::opts_chunk$set(fig.align = "center")
 knitr::opts_chunk$set(warning = FALSE)
 knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(cache = TRUE)
 ```
 
 # Preliminary
 
-```{r, warning=F, message=F}
+```{r, warning=F, message=F, cache=F}
 library(tidyverse)
 library(mixOmics)
-walk(dir("~/Documents/timeOmics_dev/R/", pattern = ".R$", full.names = TRUE),source)
+walk(dir("~/Documents/timeOmics_dev/Rscript/", pattern = ".R$", full.names = TRUE),source)
 ```
 
 ## Data Description & Design
 
-Data & Design description speach // TABLE with metadata information
+Original paper (Development of the Human Infant Intestinal Microbiota, Palmer et al. 2007) studied gastrointestinal microbiome of 14 babies during the first year of life.
+They collected an average of 26 stool samples from 14 healthy full-term human infants.
+They have also included vagina and milk microbiome composition from the mothers and stool samples from mothers and fathers.
+
+For demonstration purposes and because babies' gut almost reach an "adult-like" composition, we have focused our attention on the first 100 days of life.
+We also excluded babies who recieved an antibiotic treatment during that period, because antibiotics can change drastically microbiome composition.
+
+Our final design consists in an average of 21 timepoits for each of the 11 selected babies.
+
 ```{r design_plot}
-load("./milk_data.RData")
-ggplot(data= design , aes(x = TIME, y = BABY, color = Sexe)) + 
-  geom_point() + facet_grid(Delivery~., scales = "free_y") + ggtitle("Design")
+load("../Data/milk_data.RData")
+ggplot(data= design %>% rename(Sex = Sexe), aes(x = TIME, y = BABY, color = Sex)) + 
+  geom_point() + facet_grid(Delivery~., scales = "free_y") + ggtitle("Design") +
+  #scale_color_manual(values = color.mixo(1:2))  + 
+  theme_bw()
+  
+
+design %>% dplyr::select(BABY, TIME) %>% mutate(BABY = as.numeric(BABY)) %>%
+  group_by(BABY) %>%summarise(n_timepoints = n()) %>% knitr::kable()
 ```
-
-
-## Workflow
-
-<center>
-![](./workflow.png)
-</center>
 
 # Analysis
 
 ## Pre-processing
 
-I perform standard preprocessing steps : 
+We perform standard pre-processing steps : 
 
 * Low Count Removal
 * Total Sum Scalling
@@ -59,7 +67,9 @@ plotIndiv(pca.res, group = design$BABY, ind.names = design$TIME,
           comp = c(1,2), legend.title = "Baby", legend = T, title = "Comp 1-2")
 plotIndiv(pca.res, group = design$Delivery, ind.names = design$TIME, 
           comp = c(1,2), legend.title = "Delivery Mode", legend = T, title = "Comp 1-2")
+```
 
+```{r plot_design, fig.width=10, fig.height=10}
 # per sample OTU evolution
 OTU_norm %>% as.data.frame() %>% rownames_to_column("sample") %>%
   gather(OTU, value, -sample) %>%
@@ -69,116 +79,344 @@ OTU_norm %>% as.data.frame() %>% rownames_to_column("sample") %>%
   theme(legend.position = "none") + ggtitle("OTU evolution by baby")
 ```
 
-## Splines and Filter
+## Split
+
+```{r}
+delivery_mode <- design %>% dplyr::select(BABY, Delivery) %>% unique
+index.C <- rownames(OTU) %>% str_split("_") %>% map_chr(~.x[1]) %in% 
+  (delivery_mode %>% filter(Delivery == "C-section") %>% pull(BABY))
+OTU_norm.C <- OTU[index.C,] %>% norm_OTU(AR = T)
+OTU_norm.V <- OTU[!index.C,] %>% norm_OTU(AR = T)
+```
+
+## LMMS 
+
+### C-section
 
 ```{r lmms, cache =T}
-time_lmms <- rownames(OTU_norm) %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric
-sample_id = rownames(OTU_norm)
+time_lmms.C <- rownames(OTU_norm.C) %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric
+sample_id = rownames(OTU_norm.C)
 
 # cubic p-spline
-spline.MILK.cubicpspline = lmms::lmmSpline(data = OTU_norm, time = time_lmms, 
+spline.MILK.C.cubicpspline = lmms::lmmSpline(data = OTU_norm.C, time = time_lmms.C, 
                                        sampleID = sample_id,
-                                       basis = 'cubic p-spline', keepModels = T , numCores = 2)
+                                       basis = 'cubic p-spline', keepModels = T, 
+                                       numCores = 2)
 
-spline.MILK.pspline = lmms::lmmSpline(data = OTU_norm, time = time_lmms,
-                                       sampleID = sample_id,
-                                       basis = 'p-spline', keepModels = T,  numCores = 2 )
+spline.MILK.C.pspline = lmms::lmmSpline(data = OTU_norm.C, time = time_lmms.C,
+                                      sampleID = sample_id,
+                                      basis = 'p-spline', keepModels = T,
+                                      numCores = 2 )
 
-spline.MILK.cubic = lmms::lmmSpline(data = OTU_norm, time = time_lmms, 
-                                       sampleID = sample_id,
-                                       basis = 'cubic', keepModels = T , numCores = 2)
+spline.MILK.C.cubic = lmms::lmmSpline(data = OTU_norm.C, time = time_lmms.C, 
+                                    sampleID = sample_id,
+                                    basis = 'cubic', keepModels = T, 
+                                    numCores = 2)
 # summary 
-spline.MILK.cubicpspline@modelsUsed %>% table %>% as.data.frame() %>% 
+spline.MILK.C.cubicpspline@modelsUsed %>% table %>% as.data.frame() %>% 
   set_names("ModelUsed", "Cubic P-spline") %>% 
-  left_join(spline.MILK.pspline@modelsUsed %>% table%>% as.data.frame() %>% set_names("ModelUsed", "P-spline")) %>% 
-  left_join(spline.MILK.cubic@modelsUsed %>% table%>% as.data.frame() %>% set_names("ModelUsed", "Cubic")) %>% 
+  left_join(spline.MILK.C.pspline@modelsUsed %>% table%>% as.data.frame() %>% 
+              set_names("ModelUsed", "P-spline")) %>% 
+  left_join(spline.MILK.C.cubic@modelsUsed %>% table%>% as.data.frame() %>% 
+              set_names("ModelUsed", "Cubic")) %>% 
   knitr::kable()
 ```
 
-I kept P-spline basis (less straight lines). 
-Filter splines based on Homoskedasticity test and MSE cutoff.
 
-```{r lmms_filter}
-filter.spline.res <- wrapper.filter.splines(OTU_norm, spline.MILK.pspline)
-index.filter <- (rownames(spline.MILK.pspline@predSpline) %in% filter.spline.res$to_keep) %>% which()
-## filter plot to add ## MSE / pvalue
+### Vaginal 
+
+```{r lmms2, cache =T}
+time_lmms.V <- rownames(OTU_norm.V) %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric
+sample_id = rownames(OTU_norm.V)
+
+# cubic p-spline
+spline.MILK.V.cubicpspline = lmms::lmmSpline(data = OTU_norm.V, time = time_lmms.V, 
+                                       sampleID = sample_id,
+                                       basis = 'cubic p-spline', keepModels = T, 
+                                       numCores = 2)
+
+spline.MILK.V.pspline = lmms::lmmSpline(data = OTU_norm.V, time = time_lmms.V,
+                                      sampleID = sample_id,
+                                      basis = 'p-spline', keepModels = T,
+                                      numCores = 2 )
+
+spline.MILK.V.cubic = lmms::lmmSpline(data = OTU_norm.V, time = time_lmms.V, 
+                                    sampleID = sample_id,
+                                    basis = 'cubic', keepModels = T, 
+                                    numCores = 2)
+# summary 
+spline.MILK.V.cubicpspline@modelsUsed %>% table %>% as.data.frame() %>% 
+  set_names("ModelUsed", "Cubic P-spline") %>% 
+  left_join(spline.MILK.V.pspline@modelsUsed %>% table%>% as.data.frame() %>% 
+              set_names("ModelUsed", "P-spline")) %>% 
+  left_join(spline.MILK.V.cubic@modelsUsed %>% table%>% as.data.frame() %>% 
+              set_names("ModelUsed", "Cubic")) %>% 
+  knitr::kable()
 ```
 
+More straight lines in every delivery mode.
+Less in pspline.
 
-```{r lmms_plot1}
-spline.data <- spline.MILK.pspline@predSpline[index.filter,] %>% t %>% as.data.frame()
-spline.data %>% rownames_to_column("time") %>%
+## Filter
+
+### C-section
+
+```{r}
+filter.spline.C.res <- wrapper.filter.splines(OTU_norm.C, spline.MILK.C.pspline)
+index.filter.C <- (rownames(spline.MILK.C.pspline@predSpline) %in% filter.spline.C.res$to_keep) %>% 
+  which
+```
+
+```{r}
+spline.data.C <- spline.MILK.C.pspline@predSpline[index.filter.C,] %>% t %>% as.data.frame()
+spline.data.C %>% rownames_to_column("time") %>%
   gather(Features, value, - time) %>% mutate(time =as.numeric(time)) %>% 
   ggplot(aes(x=time, y = value, col = Features)) + geom_line() + theme_bw() +
   theme(legend.position = "none") + ggtitle("Modelled OTU evolution")
 ```
 
-## timecourse PCA
+### Vaginal
 
-### With lines
+```{r}
+filter.spline.V.res <- wrapper.filter.splines(OTU_norm.V, spline.MILK.V.pspline)
+index.filter.V <- (rownames(spline.MILK.V.pspline@predSpline) %in% filter.spline.V.res$to_keep) %>% 
+  which()
+```
+
+```{r}
+spline.data.V <- spline.MILK.V.pspline@predSpline[index.filter.V,] %>% t %>% as.data.frame()
+spline.data.V %>% rownames_to_column("time") %>%
+  gather(Features, value, - time) %>% mutate(time =as.numeric(time)) %>% 
+  ggplot(aes(x=time, y = value, col = Features)) + geom_line() + theme_bw() +
+  theme(legend.position = "none") + ggtitle("Modelled OTU evolution")
+```
+
+## PCA Clustering
+
+### C-section
 
 ```{r pca_1}
-pca.res <- pca(spline.data, ncomp = 2, scale = F, center = T)
-pca.plot(pca.res, title = "PCA, with lines, scale = F")
+pca.res.C <- pca(spline.data.C, ncomp = 2, scale = F, center = T)
+pca.plot(pca.res.C, title = "C-section PCA, scale = F")
 
-plotIndiv(pca.res)
-plotVar(pca.res)
+plotIndiv(pca.res.C)
+plotVar(pca.res.C)
 
-pca.res <- pca(spline.data, ncomp = 2, scale = T, center = T)
-pca.get_cluster(pca.res) %>% pull(cluster) %>% table
-pca.plot(pca.res, title = "PCA, with lines, scale = T")
+pca.res.C <- pca(spline.data.C, ncomp = 2, scale = T, center = T)
+pca.get_cluster(pca.res.C) %>% pull(cluster) %>% table
+pca.plot(pca.res.C, title = "PCA, with lines, scale = T")
+# paper
+pca.plot(pca.res.C, title = "C-section PCA Clusters")
 
-pca.res <- pca(spline.data, ncomp = 2, scale = F, center = T)
+
+pca.res.C <- pca(spline.data.C, ncomp = 2, scale = F, center = T)
 
 # silhouette coefficient for this clustering
-wrapper.silhouette.pca(spline.data, ncomp = 2, scale = T, center=T)
+wrapper.silhouette.pca(spline.data.C, ncomp = 2, scale = T, center=T)
 ```
 
-### without lines
+### Vaginal
 
 ```{r pca_2}
-spline.0 <- spline.MILK.pspline@predSpline[spline.MILK.pspline@modelsUsed != 0, ] %>% 
-  t %>% as.data.frame()
-# no filter needed
+pca.res.V <- pca(spline.data.V, ncomp = 2, scale = T, center = T)
+pca.plot(pca.res.V, title = "Vaginal PCA Clusters")
 
-pca.res.0 <- pca(spline.0, ncomp = 2, scale = T, center = T)
+plotIndiv(pca.res.V)
+plotVar(pca.res.V)
 
-plotIndiv(pca.res)
-plotVar(pca.res)
+pca.res.V <- pca(spline.data.V, ncomp = 2, scale = T, center = T)
+pca.get_cluster(pca.res.V) %>% pull(cluster) %>% table
+pca.plot(pca.res.V, title = "PCA, with lines, scale = T")
 
-pca.get_cluster(pca.res) %>% pull(cluster) %>% table
-pca.plot(pca.res)
+pca.res.V <- pca(spline.data.V, ncomp = 2, scale = F, center = T)
 
 # silhouette coefficient for this clustering
-wrapper.silhouette.pca(spline.data, ncomp = 2, scale = T, center=T)
+wrapper.silhouette.pca(spline.data.V, ncomp = 2, scale = T, center=T)
 ```
 
-## timecourse sPCA
+## sparse PCA Clustering
 
-### with lines
+### C-section 
 
-```{r spca_1, warnings = F, message=F, cache = T}
+```{r}
 keepX = list(seq(11,29, 3), seq(9,15,1))
-res.tune.spca <- tune.spca(X = spline.data, ncomp = 2, keepX = keepX)
-tune.spca.choice.keepX(res.tune.spca, draw = T) 
+res.tune.spca.C <- tune.spca(X = spline.data.C, ncomp = 2, keepX = keepX)
+tune.spca.choice.keepX(res.tune.spca.C, draw = T) 
 
 
-spca.res_f <- spca(spline.data, ncomp = 2, keepX = c(17,10)) 
+spca.res_f.C <- spca(spline.data.C, ncomp = 2, keepX = c(17,9)) 
+pca.get_cluster(spca.res_f.C) %>% pull(cluster) %>% table
 
-wrapper.silhouette.pca(spline.data, ncomp = 2, scale = T, center=T)
-spca.plot(spca.res_f)
+wrapper.silhouette.spca.paper(spline.data.C, keepX = c(17,9),  ncomp = 2, scale = T, center=T, plot.t = T)
+spca.plot(spca.res_f.C, title = "C-section sparse PCA Clusters")
 ```
 
-### without lines
 
-```{r spca_2, warnings = F, message=F, cache =T}
+### Vaginal 
+
+```{r}
 keepX = list(seq(11,29, 3), seq(9,15,1))
-res.tune.spca <- tune.spca(X = spline.0, ncomp = 2, keepX = keepX)
-tune.spca.choice.keepX(res.tune.spca, draw = T) 
+res.tune.spca.V <- tune.spca(X = spline.data.V, ncomp = 2, keepX = keepX)
+tune.spca.choice.keepX(res.tune.spca.V, draw = T) 
 
 
-spca.res_f <- spca(spline.0, ncomp = 2, keepX = c(17,12)) 
+spca.res_f.V <- spca(spline.data.V, ncomp = 2, keepX = c(17,10)) 
+pca.get_cluster(spca.res_f.V) %>% pull(cluster) %>% table
 
-wrapper.silhouette.pca(spline.0, ncomp = 2, scale = T, center=T)
-spca.plot(spca.res_f)
+wrapper.silhouette.spca.paper(spline.data.V, keepX = c(17,10),  ncomp = 2, scale = T, center=T, plot.t = T)
+spca.plot(spca.res_f.V, title = "Vaginal sparse PCA Clusters")
+```
+
+
+# Results
+
+Silhouette coefficient :
+
+|  | PCA | PCA w/o lines | sPCA | sPCA w/o lines |
+|----------|-----|-------|------|----------------|
+|C-section | 0.84 | 0.69 | 0.95 | 0.72 |
+| Vaginal | 0.87 | 0.44 | 0.86 | 0.58 |
+
+
+
+nb of molecules :
+
+|  | 0 (after filter) | 1 |
+|--|------------------|---|
+|C-section | 42 | 29 |
+| Vaginale | 68 | 22 |
+
+# Comparison with fPCA
+
+## C-section
+
+```{r}
+library(fdapace)
+
+
+data <- as.matrix(spline.data.C)
+
+# prepare fclust input
+FPCA_input <- MakeFPCAInputs(IDs = colnames(data) %>% rep(each=dim(data)[1]),
+                             tVec = rep(rownames(data) %>% as.numeric(),dim(data)[2]),
+                            yVec = data)
+set.seed(123)
+fclust.res <- FClust(FPCA_input$Ly, FPCA_input$Lt, 
+                     optnsFPCA = list(userBwCov= 2, FVEthreshold = 0.90),
+                     k = 4, cmethod = "EMCluster")
+
+tmp <- bind_cols(as.data.frame(colnames(data)), 
+                 as.data.frame(as.character(fclust.res$cluster))) %>%
+    set_names(c("molecule", "cluster"))
+
+DF <- Spearman_distance(data)
+B <- Add_Cluster_metadata(DF, tmp)
+SC.fpca.1 <- Slhouette_coef_df(B)
+mean(SC.fpca.1$silhouette.coef)
+
+#plot_silhouette_order_color(SC.fpca.1)
+plot_fig.paper2(SC.fpca.1)
+
+## plot clusters
+data %>% as.data.frame() %>% rownames_to_column("time") %>%
+  gather(molecule, value, -time) %>% 
+  left_join(tmp) %>%   # add cluster metadata %>%
+  mutate(time = as.numeric(time)) %>%
+  ggplot(aes(x=time, y=value, group=molecule, color = as.factor(cluster))) + 
+  geom_line() + facet_wrap(~as.factor(cluster)) + theme(legend.position="none") +
+  ggtitle("fPCA, EMCluster")
+
+# idem with 
+set.seed(123)
+fclust.res.2 <- FClust(FPCA_input$Ly, FPCA_input$Lt, 
+                       optnsFPCA = list(userBwCov= 2, FVEthreshold = 0.90),
+                       k = 4, cmethod = "kCFC")
+
+tmp <- bind_cols(as.data.frame(colnames(data)), 
+                 as.data.frame(as.character(fclust.res.2$cluster))) %>%
+    set_names(c("molecule", "cluster"))
+
+B <- Add_Cluster_metadata(DF, tmp)
+SC.fpca.2 <- Slhouette_coef_df(B)
+mean(SC.fpca.2$silhouette.coef)
+
+#plot_silhouette_order_color(SC.fpca.2)
+plot_fig.paper2(SC.fpca.2)
+
+## plot clusters
+data %>% as.data.frame() %>% rownames_to_column("time") %>%
+  gather(molecule, value, -time) %>% 
+  left_join(tmp) %>%   # add cluster metadata %>%
+  mutate(time = as.numeric(time)) %>%
+  ggplot(aes(x=time, y=value, group=molecule, color = as.factor(cluster))) + 
+  geom_line() + facet_wrap(~as.factor(cluster)) + theme(legend.position="none") +
+  scale_color_manual(values=color.mixo(1:4)) + ggtitle("fPCA, kCFC")
+
+```
+
+## Vaginal
+
+```{r, cache=T}
+data <- as.matrix(spline.data.V)
+
+# prepare fclust input
+FPCA_input <- MakeFPCAInputs(IDs = colnames(data) %>% rep(each=dim(data)[1]),
+                             tVec = rep(rownames(data) %>% as.numeric(),dim(data)[2]),
+                             yVec = data)
+set.seed(123)
+fclust.res <- FClust(FPCA_input$Ly, FPCA_input$Lt, 
+                     optnsFPCA = list(userBwCov= 2, FVEthreshold = 0.90),
+                     k = 4, cmethod = "EMCluster")
+
+tmp <- bind_cols(as.data.frame(colnames(data)), 
+                 as.data.frame(as.character(fclust.res$cluster))) %>%
+    set_names(c("molecule", "cluster"))
+
+DF <- Spearman_distance(data)
+B <- Add_Cluster_metadata(DF, tmp)
+SC.fpca.1 <- Slhouette_coef_df(B)
+mean(SC.fpca.1$silhouette.coef)
+
+
+#plot_silhouette_order_color(SC.fpca.1)
+
+title = "Vaginal fPCA (EM) clustering : "
+plot_fig.paper2(SC.fpca.1, title)
+
+## plot clusters
+data %>% as.data.frame() %>% rownames_to_column("time") %>%
+  gather(molecule, value, -time) %>% 
+  left_join(tmp) %>%   # add cluster metadata %>%
+  mutate(time = as.numeric(time)) %>%
+  ggplot(aes(x=time, y=value, group=molecule, color = as.factor(cluster))) + 
+  geom_line() + facet_wrap(~as.factor(cluster)) + theme(legend.position="none") +
+  ggtitle("Vaginal fPCA (EM) Clusters") + 
+  scale_color_manual(values = color.mixo(1:4))
+
+# idem with 
+set.seed(123)
+fclust.res.2 <- FClust(FPCA_input$Ly, FPCA_input$Lt, 
+                       optnsFPCA = list(userBwCov= 2, FVEthreshold = 0.90),
+                       k = 4, cmethod = "kCFC")
+tmp <- bind_cols(as.data.frame(colnames(data)), 
+                 as.data.frame(as.character(fclust.res.2$cluster))) %>%
+    set_names(c("molecule", "cluster"))
+
+B <- Add_Cluster_metadata(DF, tmp)
+SC.fpca.2 <- Slhouette_coef_df(B)
+mean(SC.fpca.2$silhouette.coef)
+
+#plot_silhouette_order_color(SC.fpca.2)
+title = "Vaginal fPCA (k-CFC) clustering : "
+plot_fig.paper2(SC.fpca.2, title)
+
+
+## plot clusters
+data %>% as.data.frame() %>% rownames_to_column("time") %>%
+  gather(molecule, value, -time) %>% 
+  left_join(tmp) %>%   # add cluster metadata %>%
+  mutate(time = as.numeric(time)) %>%
+  ggplot(aes(x=time, y=value, group=molecule, color = as.factor(cluster))) + 
+  geom_line() + facet_wrap(~as.factor(cluster)) + theme(legend.position="none") +
+  scale_color_manual(values=color.mixo(1:4)) + ggtitle("Vaginal fPCA (k-CFC) Clusters")
 ```
