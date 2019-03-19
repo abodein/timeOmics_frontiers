@@ -15,5 +15,5 @@ This folder contains also pdf output files.
 
 ## Data
 
-Raw data used to conduct exemple analysis.
+Raw data used to conduct example analysis.
 
