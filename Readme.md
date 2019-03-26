@@ -12,8 +12,8 @@ Contains the R files used for time-course microbiome clustering and integration.
 
 Folder that contains the Rmarkdown scripts to re-run our 2 examples.
 
-**Baby gut**: studies microbiome dynamic during the first 100 days of infant early life.
-**Bioreactor**: integrates microbiome, metabolomic and a continious response of interest.
+* **Baby gut**: studies microbiome dynamic during the first 100 days of infant early life.
+* **Bioreactor**: integrates microbiome, metabolomic and a continious response of interest.
 This folder also contains the pdf output files.
 
 This folder contains also pdf output files.
