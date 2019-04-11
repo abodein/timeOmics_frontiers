@@ -1,8 +1,8 @@
 library(tidyverse)
-setwd("/home/antoine/Documents/timeOmics/CS_microbiome/Milk/Final/")
+#setwd("/home/antoine/Documents/timeOmics/CS_microbiome/Milk/Final/")
 
-phylochip <- read_tsv("../data_phylochip.txt")
-other_metadata <- read_csv("../metadata.csv")
+phylochip <- read_tsv("../Data/data_phylochip.txt")
+other_metadata <- read_csv("../Data/metadata.csv")
 
 design <- colnames(phylochip) %>% as.data.frame() %>% set_names("sample") %>% filter( sample %>% str_detect("-")) %>%
   mutate(sample = sample %>% str_replace("D-", "Day ")) %>%
