@@ -1,6 +1,6 @@
 library(tidyverse)
 library(mixOmics)
-source("~/Documents/timeOmics/silhouette/silhouette.R")
+#source("~/Documents/timeOmics/silhouette/silhouette.R")
 #library(numDeriv)
 library(pspline)
 
