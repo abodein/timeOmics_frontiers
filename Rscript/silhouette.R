@@ -236,3 +236,58 @@ plot_curves <- function(raw_df, cluster){
 #######
 # Optim sPCA feature selection
 #######
+
+
+
+### figure paper 
+plot_fig.paper <- function(coef.df, title = ""){
+  cluster_level <- coef.df %>% group_by(cluster) %>% 
+    summarise(max = max(silhouette.coef)) %>% 
+    arrange(desc(max)) %>% 
+    dplyr::select(cluster) %>% pull %>% 
+    factor(levels = .) %>% levels()
+  
+  mean_silhouette = mean( coef.df$silhouette.coef)
+  
+  C <-  coef.df  %>% 
+    mutate(cluster = factor(cluster, levels = cluster_level)) %>% 
+    arrange(desc(cluster),silhouette.coef) %>% 
+    mutate(molecule = factor(molecule, levels = molecule) ) %>% mutate(color = as.character(cluster))
+  
+  ggplot(C, aes(molecule, silhouette.coef)) + 
+    geom_bar(aes(fill = color), position = "dodge", stat = "identity") + 
+    coord_flip() + geom_hline(aes(yintercept = mean_silhouette)) + 
+    labs(title = paste0(title, "Silhouette Graph, mean = ",round(mean_silhouette, digits = 2))) +
+    theme_minimal() + 
+    theme(axis.text.y=element_blank()) + 
+    scale_fill_manual(values = color.mixo(1:4)) +
+    ylim(-0.5,1)
+  #    ylim(min(coef.df$silhouette.coef), 1) +
+  #    guides(fill=guide_legend(title="cluster"))
+}
+
+plot_fig.paper2 <- function(coef.df, title = ""){
+  cluster_level <- coef.df %>% group_by(cluster) %>% 
+    summarise(max = max(silhouette.coef)) %>% 
+    arrange(desc(max)) %>% 
+    dplyr::select(cluster) %>% pull %>% 
+    factor(levels = .) %>% levels()
+  
+  mean_silhouette = mean( coef.df$silhouette.coef)
+  
+  C <-  coef.df  %>% 
+    mutate(cluster = factor(cluster, levels = cluster_level)) %>% 
+    arrange(desc(cluster),silhouette.coef) %>% 
+    mutate(molecule = factor(molecule, levels = molecule) ) %>% mutate(color = as.character(cluster))
+  
+  ggplot(C, aes(molecule, silhouette.coef)) + 
+    geom_bar(aes(fill = color), position = "dodge", stat = "identity") + 
+    coord_flip() + geom_hline(aes(yintercept = mean_silhouette)) + 
+    labs(title = paste0(title, "Silhouette Graph, mean = ",round(mean_silhouette, digits = 2))) +
+    theme_minimal() + 
+    theme(axis.text.y=element_blank()) + 
+    scale_fill_manual(values = color.mixo(1:4)) +
+    
+    ylim(min(coef.df$silhouette.coef), 1) +
+    guides(fill=guide_legend(title="cluster"))
+}
