@@ -19,7 +19,7 @@ knitr::opts_chunk$set(cache = TRUE)
 ```{r, warning=F, message=F, cache=F}
 library(tidyverse)
 library(mixOmics)
-walk(dir("~/Documents/timeOmics_dev/Rscript/", pattern = ".R$", full.names = TRUE),source)
+walk(dir("../Rscript/", pattern = ".R$", full.names = TRUE),source)
 ```
 
 ## Data Description & Design
@@ -195,6 +195,47 @@ spline.data.V %>% rownames_to_column("time") %>%
 
 ### C-section
 
+```{r, echo = F, include = F}
+.pca.plot.sacmda <- function(pca.Obj, title = "PCA"){
+  cluster.info <- pca.get_cluster(pca.Obj) %>% filter(cluster != 0)
+  #cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
+  cluster.level <- .get.cluster.info(cluster.info$cluster)
+  X <- pca.Obj$X
+  # norm_profile <- function(profile){
+  #   profile*length(profile)/(sum(abs(profile), na.rm = T))
+  # }
+  # X <- lapply(as.data.frame(X), norm_profile) %>% as.data.frame()
+  # X <- scale(X, center = T, scale = T)
+  
+  data <- X %>% as.data.frame() %>% rownames_to_column("time") %>%
+    gather(molecule, value, -time) %>%
+    left_join(cluster.info, by = c("molecule"="molecule")) %>%
+    group_by(molecule) %>%
+    filter(!is.na(cluster)) %>%
+    mutate(time = as.numeric(time)) %>%
+    mutate(cluster = factor(cluster, levels= cluster.level)) %>%
+    mutate(Component = paste0("Comp ",abs(as.numeric(as.character(cluster)))))%>%
+    mutate(Sign = ifelse(sign(as.numeric(as.character(cluster)))>0, "Positive", "Negative")) %>%
+    mutate(Sign = factor(Sign, levels = c("Positive", "Negative")))
+  
+  ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) + 
+    geom_line() + 
+    #facet_wrap(~ cluster, dir = "v", nrow = 2) +
+    facet_grid(Sign ~ Component) +
+    ggtitle(title) + 
+    scale_color_manual(values = color.mixo(1:length(cluster.level))) + theme_bw()
+}
+
+# SACMDA
+pca.res.C <- pca(spline.data.C, ncomp = 2, scale = F, center = T)
+pca.get_cluster(pca.res.C) %>% pull(cluster) %>% table
+.pca.plot.sacmda(pca.res.C, title = "C-section PCA clusters")
+spca.res_f.C <- spca(spline.data.C, ncomp = 2, keepX = c(17,9), scale=F, center =T) 
+wrapper.silhouette.spca.paper(spline.data.C, ncomp = 2, scale = T, center=T, keepX = c(17,9))
+pca.get_cluster(spca.res_f.C) %>% pull(cluster) %>% table
+.pca.plot.sacmda(spca.res_f.C, title = "C-section sparse PCA Clusters")
+```
+
 ```{r pca_1}
 pca.res.C <- pca(spline.data.C, ncomp = 2, scale = F, center = T)
 pca.plot(pca.res.C, title = "C-section PCA, scale = F")
@@ -284,7 +325,7 @@ nb of molecules :
 |  | 0 (after filter) | 1 |
 |--|------------------|---|
 |C-section | 42 | 29 |
-| Vaginale | 68 | 22 |
+| Vaginal  | 68 | 22 |
 
 # Comparison with fPCA
 
