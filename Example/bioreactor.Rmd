@@ -1,0 +1,436 @@
+---
+title: "Bioreactor time-course analysis"
+author: "Olivier Chapleur"
+output:
+  html_document:
+    toc: yes
+    toc_depth: '6'
+  pdf_document:
+    number_sections: yes
+    toc: yes
+    toc_depth: 6
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r ,echo=FALSE,warning=FALSE, message=FALSE}
+rm(list=ls(all=TRUE))
+#loading of the packages
+library(lmms)
+library(mixOmics)
+library(knitr)
+library(reshape2)
+library(tidyverse)
+
+
+```
+
+# Data
+
+In this data set, **three bioreactors** with similar performances were considered as replicates. Different parameters were measured accross time in the three bioreactors.
+
+> Performance data: 
+Based on chemical measurement, the time course evolution of a set of parameters was measured (CH4, C02, acetate, propionate). 
+
+> Metabolites data: 
+The time course evolution of 20 selected metabolites was measured with GCMS. 
+
+
+> Microbial data: 
+DNA from samples taken across time was extracted and sequenced. (16S metabarcoding). 
+
+
+
+```{r, echo=FALSE}
+#loading of the data
+load('bioreactor.RData')
+source('spls.results.R')
+source("filter.R")
+source("block.spls.results.R")
+
+# performance data: acetate  CH4  C02  propionate
+# 16S data: abundance (raw counts), OTU_metadata (metadata associated to the OTUs), taxo (OTUs taxonomy)
+# metabolomic data: GCMS (intensity of the metabolites), metadata_GCMS (metadata associated to the metabolites)
+```
+
+# Data preprocessing
+
+
+
+>Metabolites (GCMS) data are log transformed. 
+
+>Microbial data 
+
+1) are filtered (only OTUs with at least 1% of abundance in at least 1 sample are kept = 51 OTUs).
+
+2) a count of 1 sequence is added to each sample/OTU (to avoid 0 in the datamatrix)  
+
+3) relative abundance is calculated 
+
+4) obtain data is clr transformed
+
+>Performance data is not transformed.
+
+
+```{r, echo=FALSE, eval=TRUE}
+#GCMS data are log transformed
+GCMS.log=log(GCMS+1,10)
+```
+
+```{r, echo=FALSE, eval=TRUE}
+# function for TSS transformation of the data
+TSS.divide = function(x){
+  x/sum(x)
+}
+# function is applied to each row to calculate the percentage of each OTU in the samples
+pc.abundance = (apply(abundance, 2, TSS.divide))
+
+
+#Only OTUs present at at least percent% in one of the samples are kept.
+percent=0.01 # threshold for filtering (1%)
+pc.abundance.sel = apply(subset((abundance),apply(pc.abundance,1, function(x) max(x,na.rm=TRUE))>percent)+1,2,TSS.divide)
+
+#data are clr transformed
+clr.abundance=logratio.transfo(t(pc.abundance.sel), logratio = 'CLR', offset = 0)
+
+
+
+cat("Ther are", nrow(pc.abundance.sel), "OTUs after", percent, "% filter")
+
+```
+
+# Spline smoothing
+
+All the data are modelled with spline smoothing. 
+
+```{r, echo=FALSE, message=FALSE,eval=TRUE}
+#spline smoothing of GCMS data
+lmms.metabolites <- lmmSpline(data=(GCMS.log),time=metadata_GCMS$Number_of_days,sampleID=metadata_GCMS$rep_reactor,keepModels=T,timePredict=c(10:57),basis="p-spline") # values are predicted for every date
+data.metabolites =lmms.metabolites@predSpline
+data.metabolites=t(data.metabolites[,colnames(data.metabolites)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)]) # only a few dates are kept (same dates for all the data)
+
+
+summary(lmms.metabolites)# to get a summary of the lmms analysis
+```
+```{r, echo=FALSE, message=FALSE,eval=TRUE}
+#spline for the OTUs
+lmms.OTUs <- lmmSpline(data=(clr.abundance),time=OTU_metadata$Number_of_days,sampleID=OTU_metadata$reactor_id,keepModels=T,timePredict=c(10:57),basis="p-spline") # values are predicted for every date
+data.OTUS=lmms.OTUs@predSpline
+data.OTUS=t(data.OTUS[,colnames(data.OTUS)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)]) # only a few dates are kept (same dates for all the data)
+
+summary(lmms.OTUs)# to get a summary of the lmms analysis
+```
+
+```{r, echo=FALSE, message=FALSE,eval=TRUE}
+# we have a different number of time points and replicates for the performance data. 
+
+#we first reshape the data to create one table for each performance data
+melt.acetate=melt(as.matrix(acetate))
+melt.propionate=melt(as.matrix(propionate))
+melt.CH4=melt(as.matrix(CH4))
+melt.CO2=melt(as.matrix(CO2))
+
+
+#one table for liquid compound concentration (acetate and propionate), same number of time points
+melt.liq=data.frame('time'=melt.acetate$Var1, 'sampleID'=melt.acetate$Var2,'acetate'=melt.acetate$value, 'propionate'=melt.propionate$value)
+
+#one table for gas production (CH4 and CO2), same number of time points
+melt.perf=data.frame('time'=melt.CH4$Var1, 'sampleID'=melt.CH4$Var2,'CH4'=melt.CH4$value, 'CO2'=melt.CO2$value)
+
+
+#spline smoothing of this data 
+lmms.liq <- lmmSpline(data=cbind(melt.liq$acetate, melt.liq$propionate),time=melt.liq$time,sampleID=melt.liq$sampleID,keepModels=T,timePredict=c(10:57),basis="p-spline")
+
+lmms.perf <- lmmSpline(data=cbind(melt.perf$CH4, melt.perf$CO2),time=melt.perf$time,sampleID=melt.perf$sampleID,keepModels=T,timePredict=c(10:57),basis="p-spline")
+
+#prediction after spline smoothing
+liq.data=t(lmms.liq@predSpline[,colnames(lmms.liq@predSpline)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)]) 
+perf.data=t(lmms.perf@predSpline[,colnames(lmms.perf@predSpline)%in%c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)])
+colnames(liq.data)=c("acetate",'propionate')
+colnames(perf.data)=c('CH4','CO2')
+
+
+
+summary(lmms.liq)# to get a summary of the lmms analysis
+summary(lmms.perf)# to get a summary of the lmms analysis
+```
+
+# Filtering of the obtained profiles
+
+## OTUs
+
+```{r, echo=FALSE, eval=TRUE}
+
+class(clr.abundance) <- c('matrix')
+
+# to use the filtering function, sample IDs should be named as follows SAMPLE_TIME
+row.names(clr.abundance)=paste(OTU_metadata$initial_CONCENTRATION,'_',  OTU_metadata$Number_of_days, sep="")
+
+
+clr.abundance=data.frame(clr.abundance) #data table must be a data frame with molecule in columns
+
+
+OTU.filter=wrapper.filter.splines(clr.abundance,lmms.OTUs,stationnarity.test = FALSE, homoskedasticity = TRUE,MSE.filter = TRUE)
+get_MSE(clr.abundance,lmms.OTUs )
+
+# ls(OTU.filter) # what is returned by filtering function 
+OTU.filter$to_keep ## OTUs to keep
+kable(OTU.filter$res.filter) ## for each molecule, indicate if the different test were passed, and with which model the molecule has been modelled
+
+
+summary(OTU.filter$res.filter[,c(2,4)]) ## summary of the test
+
+
+data.OTUS.kept=data.OTUS[,colnames(data.OTUS)%in%as.matrix(OTU.filter$to_keep)] # kept OTUs after filtering
+
+matplot(x=matrix(rep(rownames(data.OTUS.kept), length(as.matrix(OTU.filter$to_keep))), ncol=length(as.matrix(OTU.filter$to_keep))), y=scale(data.OTUS.kept), type = 'l', main='plot of scaled kept OTUs', xlab='time') # plot of the kept OTUs
+
+rejected.OTU.name=colnames(data.OTUS)[!colnames(data.OTUS)%in%as.matrix(OTU.filter$to_keep)] ### OTUs rejected
+data.OTUS.rejected=data.OTUS[,!colnames(data.OTUS)%in%as.matrix(OTU.filter$to_keep)]
+
+matplot(x=matrix(rep(rownames(data.OTUS.rejected), length(as.matrix(rejected.OTU.name))), ncol=length(as.matrix(rejected.OTU.name))), y=scale(data.OTUS.rejected), type = 'l', main='plot of scaled rejected OTUs', xlab='time') # plot of the rejected OTUs
+
+```
+
+## Metabolites
+
+```{r, echo=FALSE, eval=TRUE}
+
+row.names(GCMS.log)=paste(metadata_GCMS$rep_reactor,'_',  metadata_GCMS$Number_of_days, sep="")# to use the filtering function, sample IDs should be named as follows SAMPLE_TIME
+
+
+
+metabolites.filter=wrapper.filter.splines(GCMS.log,lmms.metabolites,stationnarity.test = FALSE, homoskedasticity = TRUE,MSE.filter = FALSE)
+
+metabolites.filter$to_keep #molecules to keep
+metabolites.filter$res.filter
+summary(metabolites.filter$res.filter)
+
+
+kept.metabolites.name=metabolites.filter$res.filter[metabolites.filter$res.filter$BP.test,1] ### metabolites to keep
+data.metabolites.initial=data.metabolites
+
+data.metabolites.kept=data.metabolites[,colnames(data.metabolites)%in%as.matrix(metabolites.filter$to_keep)]
+
+
+matplot(x=matrix(rep(rownames(data.metabolites.kept), length((metabolites.filter$to_keep))), ncol=length((metabolites.filter$to_keep))), y=scale(data.metabolites.kept), type = 'l', main='plot of scaled kept metabolites', xlab='time')
+
+rejected.metabolites.name=metabolites.filter$res.filter[!colnames(data.metabolites)%in%as.matrix(metabolites.filter$to_keep),1]  ### molecules rejected
+
+data.metabolites.rejected=data.metabolites[,!colnames(data.metabolites)%in%as.matrix(metabolites.filter$to_keep)] # profiles of the rejected molecules
+ 
+
+matplot(x=matrix(rep(rownames(data.metabolites.rejected), length(as.matrix(rejected.metabolites.name))), ncol=length(as.matrix(rejected.metabolites.name))), y=scale(data.metabolites.rejected), type = 'l', main='plot of scaled rejected metabolites', xlab='time') #plot of the rejected profiles
+
+
+```
+
+
+
+# sPLS
+
+16S data and metabolites are analysed. 
+
+
+
+
+```{r, echo=FALSE, results='asis',fig.height=4, eval=TRUE}
+
+ 
+ X1 =data.OTUS.kept
+ X2=data.metabolites.kept
+ 
+  ncomp = 2
+ 
+
+spls.res = spls(X = X1, Y = X2, keepX=c(20,12), keepY=c(8,8), ncomp = ncomp, mode = 'regression', scale = TRUE) # keepX keepY values can be modified
+plotIndiv(spls.res) # individual plot
+plotArrow(spls.res) # i
+
+plotVar(spls.res) #variable plot
+
+```
+
+
+
+```{r, echo=FALSE}
+
+#profiles of the variables selected on each axis for each block are extracted. (spls.result function)
+
+summary.X1= spls.result(data = scale(X1), block = 'X', spls.res)
+summary.X2 = spls.result(data = scale(X2), block = 'Y', spls.res)
+
+#data are scaled in the function
+```
+
+
+```{r, echo=FALSE}
+
+# representation of the mean profiles for each block (means calculated per sign and based on original but scaled data provided in spls.result)
+meltm = melt(t(cbind(summary.X1$spls.means, summary.X2$spls.means)))
+meltm$comp = substr(meltm$Var1, 1, 5) 
+meltm$data = rep(c(rep('OTU', ncol(summary.X1$spls.means)), rep('Metabolites', ncol(summary.X2$spls.means))), nrow(data.OTUS))
+print(ggplot(data=meltm, aes(x=Var2, y=value, group = data, color = data)) + geom_line() + facet_wrap( ~ Var1) + ggtitle('sPLS clusters, mean profiles') + xlab('time') +ylab('scaled value'))
+```
+
+```{r, echo=FALSE}
+
+# all profiles can be represented
+# --------------------
+# melt data for ggplot
+melt.data = melt(t(cbind(scale(X1[, names(summary.X1$var.selected)]), scale(X2[, names(summary.X2$var.selected)]))))
+#melt.data = melt(t(cbind((X1[, names(summary.X1$var.selected)]), (X2[, names(summary.X2$var.selected)]))))
+melt.data$comp= as.factor(rep(c(summary.X1$var.selected, summary.X2$var.selected), nrow(data.OTUS)))  # filling up the melted values by repeating comp and sign
+melt.data$sign= as.factor(rep(c(summary.X1$var.sign, summary.X2$var.sign), nrow(data.OTUS)))
+melt.data$data = rep(c(rep('OTUs', length(summary.X1$var.selected)), rep('Metabolites', length(summary.X2$var.selected))), nrow(data.OTUS))
+
+
+
+color=c("tomato","slateblue")
+names(color)=c("OTUs","Metabolites")
+
+#png("spls_bioreactor.png", width = 3000, height = 1800, res = 400,pointsize=12)
+
+print(ggplot(melt.data, aes(x=Var2, y=value, group = interaction(Var1,data), color = data)) +scale_color_manual(values=color)+ geom_line(lwd=0.2) +   facet_grid(sign~comp, labeller=labeller(sign = c(pos="Positive",neg="Negative"), comp=c('1'="Component 1", '2'="Component 2", '3'='Component 3')))+ ggtitle('                       sPLS, correlated data across time') + xlab('Number of days')+ scale_y_continuous(limits = c(-2, 2)) +ylab('Scaled value'))
+
+#dev.off()
+
+# print(ggplot(data=melt.data, aes(x=Var2, y=value, group = Var1, color = data)) + geom_line() + facet_wrap( ~ comp) + ggtitle('sPLS') + xlab('time'))
+# # can change color = comp to color = Var1 to see the name of the vaiables selected
+# 
+# # subset only on a particular component and represent pos / neg shapes
+# print(ggplot(subset(melt.data, comp == 1), aes(x=Var2, y=value, group = Var1, color = data)) + geom_line() + facet_wrap( ~ sign) + ggtitle('sPLS comp1') + xlab('time'))
+# 
+# 
+# # subset only on a particular component and represent pos / neg shapes
+# print(ggplot(subset(melt.data, comp == 2), aes(x=Var2, y=value, group = Var1, color = data)) + geom_line() + facet_wrap( ~ sign) + ggtitle('sPLS comp2') + xlab('time'))
+
+
+##??? who's who 
+## name of the different OTUs is extracted, as well as the related taxonomic information 
+signcomp=paste(summary.X1$var.selected, summary.X1$var.sign) 
+names(signcomp)=names(summary.X1$var.sign)
+names.1neg=names(signcomp)[(signcomp=="1 neg")]
+table.1neg=(taxo[names.1neg,])
+names.1pos=names(signcomp)[(signcomp=="1 pos")]
+table.1pos=(taxo[names.1pos,])
+names.2neg=names(signcomp)[(signcomp=="2 neg")]
+table.2neg=(taxo[names.2neg,])
+names.2pos=names(signcomp)[(signcomp=="2 pos")]
+table.2pos=(taxo[names.2pos,])
+
+# same for metabolomic data 
+
+signcompX2=paste(summary.X2$var.selected, summary.X2$var.sign) 
+names(signcompX2)=names(summary.X2$var.sign)
+names.1negX2=names(signcompX2)[(signcompX2=="1 neg")]
+names.1posX2=names(signcompX2)[(signcompX2=="1 pos")]
+names.2negX2=names(signcompX2)[(signcompX2=="2 neg")]
+names.2posX2=names(signcompX2)[(signcompX2=="2 pos")]
+```
+
+
+# block sPLS
+
+The three datasets (OTUs, metabolites and performances) are analysed together. 
+
+```{r, echo=FALSE, warning=FALSE}
+Liste=list(OTU=data.OTUS, metabolites=data.metabolites)
+Y=cbind(perf.data, liq.data)
+KeepX=list(OTU=c(20, 12),metabolites=c(8,8) ) # these values can be modified
+KeepY=c(3, 1) # these values can be modified 
+res.block = block.spls(X = Liste, Y=Y, indY = 3, ncomp = 2, keepX = KeepX, keepY = KeepY, mode = "regression")
+```
+
+```{r, echo=FALSE, warning=FALSE}
+
+plotIndiv(res.block) #individuals plot
+plotArrow(res.block)
+plotVar(res.block,legend = TRUE, style ='graphics') #variables plot
+```
+
+```{r, echo=FALSE, warning=FALSE}
+comp.block = compo.block(res.block)### function to extract the name of the selected variables in each block and get the name of the component and sign of the loading on that component 
+var.selected.OTU = comp.block$var.selected.OTU
+var.selected.metabolites = comp.block$var.selected.metabolites
+var.selected.perf = comp.block$var.selected.perf
+
+sign.OTU = comp.block$sign.OTU
+sign.metabolites = comp.block$sign.metabolites
+sign.perf = comp.block$sign.perf
+```
+
+```{r, echo=FALSE, warning=FALSE, eval=TRUE}
+## modelled profiles of the selected variables are gathered in table for graphical purpose
+
+
+X11=data.OTUS
+melt.data1 = melt(t(rbind(
+  cbind(scale(X11[, names(var.selected.OTU)])))))
+melt.data1$comp= as.factor(rep(c(var.selected.OTU), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))))
+# filling up the melted values by repeating comp and sign 
+melt.data1$sign= as.factor(rep(c(sign.OTU), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))))
+melt.data1$data = rep(c(rep('OTUs', length(var.selected.OTU))), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57))))
+# subset only on a particular component and represent pos / neg shapes 
+m = length(melt.data1$data)/nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))
+melt.data1$day = rep(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57),each=m)
+
+#print(ggplot(subset(melt.data1), aes(x=day, y=value, group = Var1, color = data)) +  geom_line() +facet_grid(sign~comp,scales="free") + ggtitle('sPLS') + xlab('time'))
+
+
+X21=data.metabolites
+melt.data2 = melt(t(rbind(
+  cbind(scale(X21[, names(var.selected.metabolites)])))))
+melt.data2$comp= as.factor(rep(c(var.selected.metabolites), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))))
+# filling up the melted values by repeating comp and sign 
+melt.data2$sign= as.factor(rep(c(sign.metabolites), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))))
+melt.data2$data = rep(c(rep('Metabolites', length(var.selected.metabolites))), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57))))
+# subset only on a particular component and represent pos / neg shapes 
+m = length(melt.data2$data)/nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))
+melt.data2$day = rep(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57),each=m)
+
+#print(ggplot(subset(melt.data2), aes(x=day, y=value, group = Var1, color = data)) +  geom_line() +facet_grid(sign~comp,scales="free") + ggtitle('sPLS') + xlab('time'))
+
+
+X31=cbind(perf.data, liq.data)
+melt.data3 = melt(t(rbind(
+  cbind(scale(X31[, names(var.selected.perf)])))))
+melt.data3$comp= as.factor(rep(c(var.selected.perf), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))))
+# filling up the melted values by repeating comp and sign 
+melt.data3$sign= as.factor(rep(c(sign.perf), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))))
+melt.data3$data = rep(c(rep('Performances', length(var.selected.perf))), nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57))))
+# subset only on a particular component and represent pos / neg shapes 
+m = length(melt.data3$data)/nlevels(as.factor(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57)))
+melt.data3$day = rep(c(10,13,16,19,22,25,28,31,34,37,40,43,46,50,53,57),each=m)
+
+#print(ggplot(subset(melt.data3), aes(x=day, y=value, group = Var1, color = data)) +  geom_line() +facet_grid(sign~comp,scales="free") + ggtitle('sPLS') + xlab('time'))
+```
+
+
+```{r, echo=FALSE}
+
+melt.rgcca=rbind(melt.data1, melt.data2, melt.data3)
+
+
+color=c("tomato","slateblue", "chartreuse")
+names(color)=c("OTUs","Metabolites", "Performances")
+
+#png("blockspls_bioreactor.png", width = 3000, height = 1800, res = 400,pointsize=12)
+
+##plot of the different scale profiles selected
+
+print(ggplot(melt.rgcca, aes(x=Var2, y=value, group = interaction(Var1,data), color = data)) +scale_color_manual(values=color)+ geom_line(lwd=0.2) +   facet_grid(sign~comp, labeller=labeller(sign = c(pos="Positive",neg="Negative"), comp=c('1'="Component 1", '2'="Component 2", '3'='Component 3')))+ ggtitle('                         block sPLS, correlated data across time') + xlab('Number of days')+ scale_y_continuous(limits = c(-2, 2)) +ylab('Scaled value'))
+
+#dev.off()
+
+
+```
+```{r}
+## variables selected with block spls
+selected.variables=levels(melt.rgcca$Var1)
+non.selected.OTUs=colnames(data.OTUS)[!colnames(data.OTUS)%in%selected.variables]
+  non.selected.metabolites=colnames(data.metabolites)[!colnames(data.metabolites)%in%selected.variables]
+```
