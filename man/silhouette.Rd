@@ -7,13 +7,22 @@
 silhouette(X, cluster)
 }
 \arguments{
-\item{x}{A number.}
+\item{X}{A numeric matrix.}
 
-\item{y}{A number.}
+\item{cluster}{A data.frame
+that contains clustering information,}
 }
 \value{
 The sum of \code{x} and \code{y}.
+\describe{
+  \item{One}{First item}
+  \item{Two}{Second item}
+}
 }
 \description{
 A more detailed description.
+}
+\examples{
+data <- get_demo_silhouette()
+res <- silhouette(X = data$data, cluster = data$cluster)
 }

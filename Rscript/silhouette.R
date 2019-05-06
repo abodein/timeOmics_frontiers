@@ -99,7 +99,7 @@ Slhouette_coef_df <- function( spearman_df_w_cluster){
 }
 
 
-plot_silhouette <- function(coef.df){
+.plot_silhouette <- function(coef.df){
   cluster_level <- coef.df %>% group_by(cluster) %>% 
     summarise(max = max(silhouette.coef)) %>% 
     arrange(desc(max)) %>% 
@@ -116,13 +116,13 @@ plot_silhouette <- function(coef.df){
   ggplot(C, aes(molecule, silhouette.coef)) + 
     geom_bar(aes(fill = cluster), position = "dodge", stat = "identity") + 
     coord_flip() + geom_hline(aes(yintercept = mean_silhouette)) + 
-    labs(title = paste0("Silhoutte Graph, mean = ",round(mean_silhouette, digits = 2))) +
+    labs(title = paste0("Silhouette Graph, mean = ",round(mean_silhouette, digits = 2))) +
     theme_minimal() + 
     theme(axis.text.y=element_blank()) + 
     ylim(-1, 1)
 }
 
-plot_silhouette_mean_median <- function(coef.df){
+.plot_silhouette_mean_median <- function(coef.df){
   cluster_level <- coef.df %>% group_by(cluster) %>% 
     summarise(max = max(silhouette.coef)) %>% 
     arrange(desc(max)) %>% 
@@ -141,12 +141,13 @@ plot_silhouette_mean_median <- function(coef.df){
     geom_bar(aes(fill = cluster), position = "dodge", stat = "identity") + 
     coord_flip() + geom_hline(aes(yintercept = mean_silhouette)) +
     coord_flip() + geom_hline(aes(yintercept = median_silhouette), color="blue") + 
-    labs(title = paste0(c("Silhoutte Graph, mean = ",mean_silhouette))) + 
+    labs(title = paste0(c("Silhouette Graph, mean = ",mean_silhouette))) + 
     theme_minimal() + 
     theme(axis.text.y=element_blank())
 }
 
-plot_silhouette_order_color <- function(coef.df){
+plot_silhouette <- function(coef.df){
+  # former plot_silhouette_order_color
   cluster_level <- coef.df %>% group_by(cluster) %>% 
     summarise(max = max(silhouette.coef)) %>% 
     arrange(desc(max)) %>% 
@@ -163,11 +164,14 @@ plot_silhouette_order_color <- function(coef.df){
   ggplot(C, aes(molecule, silhouette.coef)) + 
     geom_bar(aes(fill = color), position = "dodge", stat = "identity") + 
     coord_flip() + geom_hline(aes(yintercept = mean_silhouette)) + 
-    labs(title = paste0("Silhoutte Graph, mean = ",round(mean_silhouette, digits = 2))) +
+    labs(title = paste0("Silhouette Graph, mean = ",round(mean_silhouette, digits = 2))) +
     theme_minimal() + 
     theme(axis.text.y=element_blank()) + 
-    ylim(-1, 1)
+    scale_fill_manual(values = color.mixo(1:4)) +
+    ylim(-0.5,1) +
+    guides(fill=guide_legend(title="Cluster"))
 }
+
 norm_profile <- function(profile){
   profile*length(profile)/sum(profile, na.rm = T)
 }

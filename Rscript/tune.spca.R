@@ -191,7 +191,8 @@ pca.get_cluster <- function(pca.Obj){
       inner_join(pca.clust.abs, by = c("molecule" = "molecule", "val_abs" = "val_abs")) %>%
       dplyr::select(-val_abs) %>% 
       mutate(comp = comp %>% str_remove("PC") %>% as.numeric) %>%
-      mutate(cluster = sign(value)*comp) %>% dplyr::select(c(molecule, cluster)) 
+      mutate(cluster = sign(value)*comp) %>% dplyr::select(c(molecule, cluster))  %>%
+      filter(cluster != 0)
   return(pca.clust)
 }
 
@@ -295,9 +296,10 @@ tune.spca.choice.keepX <- function(tune.spca.Obj, draw = TRUE) {
       mutate(comp = ifelse(contrib == "other", paste0(comp, "_other"), comp) %>% factor(levels = paste0(rep(1:ncomp, each=2), c("", "_other")) ))  
       # filter(contrib != "other") 
     # plot_df <- split(plot_df, paste(plot_df$comp, plot_df$contrib)) %>% map_df(~mutate(.x, MSC = norm_profile(MSC)))
+    plot_df <- filter(plot_df, contrib != "other")
     gg <- ggplot(data = plot_df, aes(x=kX, y=MSC, group = contrib, col = contrib)) + geom_line() + 
       scale_color_manual(values = color.mixo(1:3)) +
-      facet_wrap(.~comp, scales = "free", dir = "v") + 
+      facet_wrap(.~comp, scales = "free", dir = "h") + 
       ggtitle("Tuning sPCA")
     print(gg)
     
@@ -311,10 +313,10 @@ tune.spca.choice.keepX <- function(tune.spca.Obj, draw = TRUE) {
     #   facet_wrap(.~comp, scales = "free", dir = "v")
     #     
   }
-  return(choice.keepX)
+  return(invisible(choice.keepX))
 }
 
-wrapper.silhouette.pca <- function(X, ...){
+wrapper.silhouette.pca <- function(X,  plot.t = FALSE, ...){
   X <- as.data.frame(X)
   X.pca <- pca(X = X, ...)
   X.pca.cluster <- pca.get_cluster(X.pca)
@@ -322,6 +324,9 @@ wrapper.silhouette.pca <- function(X, ...){
   X.DF <- Spearman_distance(X)
   X.DF_clu <- Add_Cluster_metadata(X.DF,  X.pca.cluster)
   X.SC <- Slhouette_coef_df(X.DF_clu)
+  if(plot.t){
+    print(plot_silhouette(X.SC))
+  }
   return(mean(X.SC$silhouette.coef))
 }
 
@@ -335,7 +340,7 @@ wrapper.silhouette.spca <- function(X, keepX, plot.t = FALSE, ...){
   X.DF_clu <- Add_Cluster_metadata(X.DF,  X.spca.cluster)
   X.SC <- Slhouette_coef_df(X.DF_clu)
   if(plot.t){
-    print(plot_silhouette_order_color(X.SC))
+    print(plot_silhouette(X.SC))
   }
   return(mean(X.SC$silhouette.coef))
 }
@@ -350,7 +355,22 @@ wrapper.silhouette.spca.paper <- function(X, keepX, plot.t = FALSE, ...){
   X.DF_clu <- Add_Cluster_metadata(X.DF,  X.spca.cluster)
   X.SC <- Slhouette_coef_df(X.DF_clu)
   if(plot.t){
-    print(plot_fig.paper(X.SC))
+    print((X.SC))
   }
   return(mean(X.SC$silhouette.coef))
 }
+
+wrapper.pca.ncomp <- function(X, ncomp = 2, ...){
+  # check ncomp is numeric and greater than 0
+  res <- list(ncomp = seq(1,ncomp), 
+              sil.coef.avg = vector(mode = "numeric", length = length(seq(1,ncomp))))
+  for(comp in seq(1,ncomp)){
+      res$sil.coef.avg[comp] <-  wrapper.silhouette.pca(X, ncomp = comp, ...)
+  }
+  res <- as.data.frame(res)
+  print(ggplot(data = res, aes(x = ncomp, y = sil.coef.avg)) + geom_line() +
+    theme_bw() + ggtitle("Sil. Avg. Coef. per ncomp")+
+      scale_x_continuous(breaks = c(res$ncomp)))
+  return(invisible(as.data.frame(res)))
+}
+

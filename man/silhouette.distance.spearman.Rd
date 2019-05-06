@@ -10,5 +10,5 @@ silhouette.distance.spearman(X)
 \item{X}{A matrix}
 }
 \description{
-TODO
+Compute spearman correlation distance
 }

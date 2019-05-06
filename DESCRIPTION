@@ -16,5 +16,6 @@ Imports:
     dplyr,
     tidyr,
     tibble,
+    purrr,
     magrittr
 RoxygenNote: 6.1.1

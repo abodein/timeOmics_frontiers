@@ -150,7 +150,11 @@ spls.get_all_inflection_points <- function(tune.spls2.res){
       Y = c(Y, res$Y)
     }
   }
-  tr <- as.data.frame(list(comp = comp, contrib = contribution, X= as.numeric(as.character(X)), Y=as.numeric(as.character(Y)), Z=as.numeric(as.character(Z))))
+  tr <- as.data.frame(list(comp = comp,
+                           contrib = contribution,
+                           X= as.numeric(as.character(X)),
+                           Y=as.numeric(as.character(Y)),
+                           Z=as.numeric(as.character(Z))))
   return(tr)
 }
 
