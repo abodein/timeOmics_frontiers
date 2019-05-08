@@ -13,15 +13,15 @@ tune.spca <- function(X, ncomp, keepX){
   grid_min_keepX <- unlist(lapply(keepX,min))
   choice.keepX <- list()
   # already_selected_molecules <- vector(mode = "character", length = 0)
-  
+
   for(comp in 1:ncomp){
     # keepx grid
     tmp_keepX <- grid_min_keepX
-    
+
     results_mean_silhouette_coef_pos   <- vector(mode = "double", length= length( keepX[[comp]] ))
     results_mean_silhouette_coef_neg   <- vector(mode = "double", length= length( keepX[[comp]] ))
     results_mean_silhouette_coef_other <- vector(mode = "double", length= length( keepX[[comp]] ))
-    
+
     for(kX in keepX[[comp]]){
       # new keepX grd after each loop
       tmp_keepX[comp] <- kX
@@ -50,26 +50,26 @@ tune.spca <- function(X, ncomp, keepX){
       }
       results_mean_silhouette_coef_other[ which(kX == keepX[[comp]])[1]] <- tmp_cluster_mean_sc %>% filter(cluster == 0) %>% pull(`mean(silhouette.coef)`)
     }
-    
+
     # attribute results
-    mean_sc[[comp]] <- list("pos" = results_mean_silhouette_coef_pos, 
+    mean_sc[[comp]] <- list("pos" = results_mean_silhouette_coef_pos,
                             "neg" = results_mean_silhouette_coef_neg,
                             "other" = results_mean_silhouette_coef_other)
-    choice.keepX[[comp]] <- cbind( keepX[[comp]], rowMeans(cbind(results_mean_silhouette_coef_pos,results_mean_silhouette_coef_neg))) %>% 
+    choice.keepX[[comp]] <- cbind( keepX[[comp]], rowMeans(cbind(results_mean_silhouette_coef_pos,results_mean_silhouette_coef_neg))) %>%
       as.tibble %>% set_names("X", "value") %>% top_n(n = 1, wt = value) %>% pull(X) %>% .[1]
   }
-  
+
   results <- list("choice.keepX" = choice.keepX, "mean_sc" = mean_sc, "keepX" = keepX, ncomp = ncomp,
                   "data" = X)
   return(results)
   #return( list())
-} 
+}
 spca.tuning.plot <- function(tune.spca.Obj, comp = 1){
   keepX_c <- tune.spca.Obj$keepX[[comp]]
-  mean_sc_c <- tune.spca.Obj$mean_sc[[comp]] %>% 
+  mean_sc_c <- tune.spca.Obj$mean_sc[[comp]] %>%
     as.tibble %>% mutate(keepX = keepX_c) %>%
-    #mutate(mena = cbind(pos,neg,other) %>% rowMeans ) %>% 
-    #mutate(mean_pos_neg = cbind(pos,neg) %>% rowMeans ) %>% 
+    #mutate(mena = cbind(pos,neg,other) %>% rowMeans ) %>%
+    #mutate(mean_pos_neg = cbind(pos,neg) %>% rowMeans ) %>%
     gather(cluster, value, -keepX)
   ggplot(mean_sc_c, aes(keepX, value, group = cluster, color = cluster)) + geom_line() + theme_minimal()
 }
@@ -78,15 +78,15 @@ spca.tuning.plot.allcomp <- function(tune.spca.Obj){
   tib <- tibble()
   for(comp in 1:tune.spca.Obj[["ncomp"]]){
     keepX_c <- tune.spca.Obj$keepX[[comp]]
-    mean_sc_c <- tune.spca.Obj$mean_sc[[comp]] %>% 
+    mean_sc_c <- tune.spca.Obj$mean_sc[[comp]] %>%
       as.tibble %>% mutate(keepX = keepX_c) %>%
-      #mutate(mena = cbind(pos,neg,other) %>% rowMeans ) %>% 
-      #mutate(mean_pos_neg = cbind(pos,neg) %>% rowMeans ) %>% 
-      gather(cluster, value, -keepX) %>% mutate(comp = comp) 
+      #mutate(mena = cbind(pos,neg,other) %>% rowMeans ) %>%
+      #mutate(mean_pos_neg = cbind(pos,neg) %>% rowMeans ) %>%
+      gather(cluster, value, -keepX) %>% mutate(comp = comp)
     #print(ggplot(mean_sc_c, aes(keepX, value, group = cluster, color = cluster)) + geom_line() + theme_minimal())
     tib <- tib %>% rbind(mean_sc_c)
   }
-  ggplot(tib, aes(keepX, value, group = cluster, color = cluster)) + geom_line() + facet_wrap(~comp) + theme_bw() + 
+  ggplot(tib, aes(keepX, value, group = cluster, color = cluster)) + geom_line() + facet_wrap(~comp) + theme_bw() +
     labs(title = "sPCA - keepX optim. using mean silhouette by sign contrib. cluster", ylab = "Mean Silhouette Coef.")
   #return(tib)
 }
@@ -117,13 +117,13 @@ spca.tuning.plot.allcomp <- function(tune.spca.Obj){
       tmp_cluster <- spca.res$loadings$X[,comp] %>% sign() %>% as.data.frame() %>% rownames_to_column %>%
         set_names(c("molecule","cluster"))
       if(contrib == "pos"){
-        selected_molecules[[comp]][[contrib]] <- tmp_cluster %>% 
-          filter(cluster == 1) %>% 
-          pull(molecule) 
-      } else {  # contrib = neg 
-        selected_molecules[[comp]][[contrib]] <- tmp_cluster %>% 
-          filter(cluster == -1) %>% 
-          pull(molecule) 
+        selected_molecules[[comp]][[contrib]] <- tmp_cluster %>%
+          filter(cluster == 1) %>%
+          pull(molecule)
+      } else {  # contrib = neg
+        selected_molecules[[comp]][[contrib]] <- tmp_cluster %>%
+          filter(cluster == -1) %>%
+          pull(molecule)
       }
     }
   }
@@ -138,21 +138,21 @@ spca.tuning.plot.allcomp <- function(tune.spca.Obj){
                                              molecules = c(.x$pos, .x$neg),
                                              contrib = c(rep("pos", length(.x$pos)), rep("neg", length(.x$neg))))) %>%
     mutate(cluster = paste0(comp,"_",contrib)) %>% dplyr::select(molecules, cluster) %>% mutate(cluster = as.factor(cluster))
-  
+
   # order cluster
   lev <- vector(mode = "character", length = nlevels(ta$cluster))
   for(i in 1:(length(lev)/2)){
-    # lev[2*i -1] <- paste0(i,"_pos")  
+    # lev[2*i -1] <- paste0(i,"_pos")
     # lev[2*i] <- paste0(i,"_neg")
     lev[i + (length(lev)/2)] <- paste0(i,"_neg")
     lev[i] <- paste0(i,"_pos")
   }
-  
+
   tune.spca.Obj$data %>% as.data.frame() %>% rownames_to_column("time") %>% gather(molecules, value, -time) %>%
     filter(molecules %in% ta$molecules) %>% left_join(ta) %>% mutate(time = as.numeric(time)) %>%
     mutate(cluster = factor(cluster,levels = lev)) %>%
     ggplot(aes(x = time, y = value, fill = molecules, col = cluster)) + geom_line() + facet_wrap(~cluster) + theme_bw()
-  
+
 }
 
 detec_peaks <- function(X, x.axis){
@@ -181,17 +181,18 @@ detec_drop <- function(X, x.axis){  # negative significant slopes
 
 pca.get_cluster <- function(pca.Obj){
   # should verfied if pca.Obj == pca.Obj
-    pca.clust <- pca.Obj$loadings$X %>% as.data.frame() %>% 
-      rownames_to_column("molecule") %>% 
+    pca.clust <- pca.Obj$loadings$X %>% as.data.frame() %>%
+      rownames_to_column("molecule") %>%
       gather(comp, value, -molecule) %>%
       group_by(molecule) %>% mutate(val_abs = abs(value))
-    
+
     pca.clust.abs <- pca.clust %>% summarise(val_abs = max(val_abs))
-    pca.clust <- pca.clust %>% 
+    pca.clust <- pca.clust %>%
       inner_join(pca.clust.abs, by = c("molecule" = "molecule", "val_abs" = "val_abs")) %>%
-      dplyr::select(-val_abs) %>% 
+      dplyr::select(-val_abs) %>%
       mutate(comp = comp %>% str_remove("PC") %>% as.numeric) %>%
-      mutate(cluster = sign(value)*comp) %>% dplyr::select(c(molecule, cluster)) 
+      mutate(cluster = sign(value)*comp) %>% dplyr::select(c(molecule, cluster))  %>%
+      filter(cluster != 0)
   return(pca.clust)
 }
 
@@ -205,18 +206,18 @@ pca.plot <- function(pca.Obj, title = "PCA"){
   # }
   # X <- lapply(as.data.frame(X), norm_profile) %>% as.data.frame()
   # X <- scale(X, center = T, scale = T)
-  
+
   data <- X %>% as.data.frame() %>% rownames_to_column("time") %>%
     gather(molecule, value, -time) %>%
     left_join(cluster.info, by = c("molecule"="molecule")) %>%
     group_by(molecule) %>%
     mutate(time = as.numeric(time)) %>%
     mutate(cluster = factor(cluster, levels= cluster.level))
-  
-  ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) + 
-    geom_line() + 
+
+  ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) +
+    geom_line() +
     facet_wrap(~ cluster, dir = "v", nrow = 2) +
-    ggtitle(title) + 
+    ggtitle(title) +
     scale_color_manual(values = color.mixo(1:length(cluster.level)))
 }
 
@@ -228,26 +229,26 @@ spca.plot <- function(pca.Obj, title = "sPCA"){
   cluster.info <- pca.get_cluster(pca.Obj) %>% filter(cluster != 0)
   # cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
   cluster.level <- .get.cluster.info(cluster.info$cluster)
-  
+
   X <- pca.Obj$X
   # norm_profile <- function(profile){
   #   profile*length(profile)/(sum(abs(profile), na.rm = T))
   # }
   # X <- lapply(as.data.frame(X), norm_profile) %>% as.data.frame()
   # X <- scale(X, center = T, scale = T)
-  
+
   data <- X %>% as.data.frame() %>% rownames_to_column("time") %>%
     gather(molecule, value, -time) %>%
     left_join(cluster.info, by = c("molecule"="molecule")) %>%
     filter(!is.na(cluster)) %>%  ## filter cluster != 0, NA introduced
     group_by(molecule) %>%
-    mutate(time = as.numeric(time)) %>% 
+    mutate(time = as.numeric(time)) %>%
     mutate(cluster = factor(cluster, levels= cluster.level))
-  
-  ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) + 
-    geom_line() + 
+
+  ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) +
+    geom_line() +
     facet_wrap(~ cluster, dir = "v", nrow = 2) +
-    ggtitle(title) + 
+    ggtitle(title) +
     scale_color_manual(values = color.mixo(1:length(cluster.level)))
 }
 
@@ -272,7 +273,7 @@ tune.spca.choice.keepX <- function(tune.spca.Obj, draw = TRUE) {
     }
     choice.keepX[k] = min(choice.keepX.all[[k]][["pos"]], choice.keepX.all[[k]][["neg"]])
   }
-  
+
   if(draw){
     nrow = 0
     for(k in 1:ncomp){
@@ -288,40 +289,45 @@ tune.spca.choice.keepX <- function(tune.spca.Obj, draw = TRUE) {
         }
       }
     }
-    plot_df <- plot_df %>% 
+    plot_df <- plot_df %>%
       mutate(kX = as.numeric(kX)) %>%
       mutate(MSC = as.numeric(MSC)) %>%
       mutate(contrib = factor(contrib, levels = c("pos", "neg", "other")))%>%
-      mutate(comp = ifelse(contrib == "other", paste0(comp, "_other"), comp) %>% factor(levels = paste0(rep(1:ncomp, each=2), c("", "_other")) ))  
-      # filter(contrib != "other") 
+      mutate(comp = ifelse(contrib == "other", paste0(comp, "_other"), comp) %>% factor(levels = paste0(rep(1:ncomp, each=2), c("", "_other")) ))
+      # filter(contrib != "other")
     # plot_df <- split(plot_df, paste(plot_df$comp, plot_df$contrib)) %>% map_df(~mutate(.x, MSC = norm_profile(MSC)))
-    gg <- ggplot(data = plot_df, aes(x=kX, y=MSC, group = contrib, col = contrib)) + geom_line() + 
+    plot_df <- filter(plot_df, contrib != "other")
+    gg <- ggplot(data = plot_df, aes(x=kX, y=MSC, group = contrib, col = contrib)) + geom_line() +
       scale_color_manual(values = color.mixo(1:3)) +
-      facet_wrap(.~comp, scales = "free", dir = "v") + 
+      facet_wrap(.~comp, scales = "free_x", dir = "h") +
       ggtitle("Tuning sPCA")
-    print(gg)
-    
-    # ggplot(data = plot_df, aes(x=kX, y=MSC, group = contrib, col = contrib)) + geom_line() + 
+    #print(gg)
+
+    # ggplot(data = plot_df, aes(x=kX, y=MSC, group = contrib, col = contrib)) + geom_line() +
     #   scale_color_manual(values = color.mixo(1:3)) +
-    #   geom_vline(data = cbind(kX = rep(choice.keepX, each = 2), 
+    #   geom_vline(data = cbind(kX = rep(choice.keepX, each = 2),
     #                           comp = paste0(rep(1:ncomp, each=2), c("", "_other")),
     #                           contrib = rep("other", ncomp*2),
     #                           MSC = rep(0, ncomp*2)) %>% as.data.frame(),
     #              aes(xintercept = kX, col = contrib)) +
     #   facet_wrap(.~comp, scales = "free", dir = "v")
-    #     
+    #
   }
-  return(choice.keepX)
+  #return(invisible(list("choice.keepX" = choice.keepX, "ggplot"= gg)))
+  return(gg)
 }
 
-wrapper.silhouette.pca <- function(X, ...){
+wrapper.silhouette.pca <- function(X,  plot.t = FALSE, ...){
   X <- as.data.frame(X)
   X.pca <- pca(X = X, ...)
   X.pca.cluster <- pca.get_cluster(X.pca)
-  
+
   X.DF <- Spearman_distance(X)
   X.DF_clu <- Add_Cluster_metadata(X.DF,  X.pca.cluster)
   X.SC <- Slhouette_coef_df(X.DF_clu)
+  if(plot.t){
+    print(plot_silhouette(X.SC))
+  }
   return(mean(X.SC$silhouette.coef))
 }
 
@@ -330,12 +336,12 @@ wrapper.silhouette.spca <- function(X, keepX, plot.t = FALSE, ...){
   X.spca <- spca(X = X, keepX = keepX, ...)
   X.spca.cluster <- pca.get_cluster(X.spca) %>% filter(cluster != 0)
   X.filter <- X %>% dplyr::select(X.spca.cluster$molecule)
-  
+
   X.DF <- Spearman_distance(X.filter)
   X.DF_clu <- Add_Cluster_metadata(X.DF,  X.spca.cluster)
   X.SC <- Slhouette_coef_df(X.DF_clu)
   if(plot.t){
-    print(plot_silhouette_order_color(X.SC))
+    print(plot_silhouette(X.SC))
   }
   return(mean(X.SC$silhouette.coef))
 }
@@ -345,12 +351,28 @@ wrapper.silhouette.spca.paper <- function(X, keepX, plot.t = FALSE, ...){
   X.spca <- spca(X = X, keepX = keepX, ...)
   X.spca.cluster <- pca.get_cluster(X.spca) %>% filter(cluster != 0)
   X.filter <- X %>% dplyr::select(X.spca.cluster$molecule)
-  
+
   X.DF <- Spearman_distance(X.filter)
   X.DF_clu <- Add_Cluster_metadata(X.DF,  X.spca.cluster)
   X.SC <- Slhouette_coef_df(X.DF_clu)
   if(plot.t){
-    print(plot_fig.paper(X.SC))
+    print((X.SC))
   }
   return(mean(X.SC$silhouette.coef))
 }
+
+wrapper.pca.ncomp <- function(X, ncomp = 2, ...){
+  # check ncomp is numeric and greater than 0
+  res <- list(ncomp = seq(1,ncomp),
+              sil.coef.avg = vector(mode = "numeric", length = length(seq(1,ncomp))))
+  for(comp in seq(1,ncomp)){
+      res$sil.coef.avg[comp] <-  wrapper.silhouette.pca(X, ncomp = comp, ...)
+  }
+  res <- as.data.frame(res)
+  print(ggplot(data = res, aes(x = ncomp, y = sil.coef.avg)) + geom_line() +
+    theme_bw() + ggtitle("Average Silhouette Coefficient per ncomp")+
+        ylab("Average Silhouette Coef.")+
+      scale_x_continuous(breaks = c(res$ncomp)))
+  return(invisible(as.data.frame(res)))
+}
+
