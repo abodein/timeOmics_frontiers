@@ -204,7 +204,7 @@ spls.get_cluster <- function(spls.res){
 }
 
 spls.plot <- function(spls.Obj, title = "sPLS"){
-  cluster.info <- spls.get_cluster(spls.Obj)
+  cluster.info <- loadings.get_cluster(spls.Obj)
   cluster.level <- cluster.info$cluster %>% unique %>% abs %>% sort %>% `*`(c(1,-1))
   X <- spls.Obj$X %>% as.data.frame() %>% rownames_to_column("time") %>% gather(molecule, value, -time)
   Y <- spls.Obj$Y %>% as.data.frame() %>% rownames_to_column("time") %>% gather(molecule, value, -time)
