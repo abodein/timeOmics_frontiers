@@ -46,6 +46,8 @@ loadings.get_cluster <- function(mixOmics.res, sparse = F, cutoff = 0){
     mutate(cluster = sign(value)*comp) %>% dplyr::select(c(molecule, cluster))
 
   clust.X.2 <- suppressWarnings(clust.X.2 %>% left_join(block.info, by = c("molecule"= "molecule")))
+  clust.X.2<-  clust.X.2 %>% mutate(comp = abs(cluster)) %>%
+      mutate(contrib = sign(cluster))
 
   return(clust.X.2)
 }
