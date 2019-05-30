@@ -10,13 +10,15 @@ silhouette(X, cluster)
 \item{X}{A numeric matrix.}
 
 \item{cluster}{A data.frame
-that contains clustering information,}
+that contains clustering information with molecule and cluster}
 }
 \value{
-The sum of \code{x} and \code{y}.
 \describe{
-  \item{One}{First item}
-  \item{Two}{Second item}
+  \item{distance_df}{data.frame containing the cumputed distance between features.}
+  \item{names}{list of chararcter containing the names of the features.}
+  \item{data}{matrix containing original data.}
+  \item{cluster_df}{data.frame containing the cluster information by features.}
+  \item{coef.df}{data.frame containing ths silhouette coefficient by cluster.}
 }
 }
 \description{
@@ -25,4 +27,5 @@ A more detailed description.
 \examples{
 data <- get_demo_silhouette()
 res <- silhouette(X = data$data, cluster = data$cluster)
+
 }
