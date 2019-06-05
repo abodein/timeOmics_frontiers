@@ -15,7 +15,7 @@
 #' }
 #'
 #' @examples
-#' demo <- suppressMessages(get_demo_cluster() )
+#' demo <- suppressMessages(get_demo_cluster())
 #' pca.cluster <- getCluster(demo$pca)
 #' spca.cluster <- getCluster(demo$spca)
 #' pls.cluster <- getCluster(demo$pls)
@@ -27,6 +27,7 @@
 #' @import dplyr
 #' @import tidyr
 #' @import tibble
+#' @import stringr
 #' @importFrom magrittr %>%
 getCluster <- function(x) UseMethod("getCluster")
 
@@ -61,7 +62,10 @@ get_demo_cluster<- function(){
     return(list.res)
 }
 
-
+#' @import dplyr
+#' @import tibble
+#' @import stringr
+#' @importFrom magrittr %>%
 getCluster.pca <- function(X){
     print(class(X))
     # colnames = PC1, PC2...
@@ -73,6 +77,10 @@ getCluster.pca <- function(X){
         mutate(block = "X")
 }
 
+#' @import dplyr
+#' @import tibble
+#' @import stringr
+#' @importFrom magrittr %>%
 getCluster.spca <- function(X){
     print(class(X))
     selected.features.loadings <- X$loadings$X[rowSums(X$loadings$X) != 0,]
@@ -132,6 +140,9 @@ getCluster.mixo_spls <- function(X){
 }
 
 #' @import purrr
+#' @import stringr
+#' @import dplyr
+#' @import tibble
 getCluster.block.pls <- function(X){
 
     # get block info
@@ -151,7 +162,7 @@ getCluster.block.pls <- function(X){
 }
 
 
-#' @import purrr set_names
+#' @importFrom purrr set_names
 #' @importFrom magrittr %>%
 getMaxContrib <- function(X){
     # loadings matrix, features in rows, comp in columns
