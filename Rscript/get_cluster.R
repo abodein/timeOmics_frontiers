@@ -33,6 +33,7 @@ loadings.get_cluster <- function(mixOmics.res, sparse = F, cutoff = 0){
     rownames_to_column("molecule") %>%
     gather(comp, value, -molecule) %>%
     mutate(comp = comp %>% str_replace("comp ", "PC")) %>%
+    mutate(comp = comp %>% str_replace("comp", "PC")) %>%
     filter_if_sparse(sparse) %>%
     group_by(molecule) %>% mutate(val_abs = abs(value))
 
