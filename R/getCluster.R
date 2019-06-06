@@ -92,6 +92,10 @@ getCluster.spca <- function(X){
         mutate(block = "X")
 }
 
+#' @import dplyr
+#' @import tibble
+#' @import stringr
+#' @importFrom magrittr %>%
 getCluster.mixo_pls <- function(X){
     print(class(X))
     # block X
@@ -113,6 +117,10 @@ getCluster.mixo_pls <- function(X){
     rbind(loadings.max.X, loadings.max.Y)
 }
 
+#' @import dplyr
+#' @import tibble
+#' @import stringr
+#' @importFrom magrittr %>%
 getCluster.mixo_spls <- function(X){
     # note : can not concatenate X and Y
     # because they can have the same features names contrary to block.(s)pls
@@ -158,7 +166,30 @@ getCluster.block.pls <- function(X){
     loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
         mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max))
+    return(loadings.max)
+}
 
+
+#' @import purrr
+#' @import stringr
+#' @import dplyr
+#' @import tibble
+getCluster.block.pls <- function(X){
+
+    # get block info
+    block.info <- purrr::imap(X$loadings, function(x,y) rownames(x) %>%
+                                  as.data.frame %>%
+                                  set_names("molecule") %>%
+                                  mutate("block" = y))
+    block.info <- do.call("rbind", block.info)
+
+    loadings <- do.call("rbind", X$loadings)
+    loadings.max <- getMaxContrib(loadings)
+
+    loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
+        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = cluster * sign(contrib.max))
+    return(loadings.max)
 }
 
 
