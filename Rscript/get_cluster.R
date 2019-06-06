@@ -21,6 +21,14 @@ loadings.get_cluster <- function(mixOmics.res, sparse = F, cutoff = 0){
 
   X.block <- do.call("rbind",mixOmics.res$loadings)
 
+  block.info <- imap(mixOmics.res$loadings,
+                       function(x,y) rownames(x) %>%
+                           as.data.frame %>%
+                           set_names("molecule") %>%
+                           mutate("block" = y))
+  block.info <- do.call("rbind",block.info)
+
+
   clust.X <- X.block %>% as.data.frame() %>%
     rownames_to_column("molecule") %>%
     gather(comp, value, -molecule) %>%
@@ -37,6 +45,10 @@ loadings.get_cluster <- function(mixOmics.res, sparse = F, cutoff = 0){
     dplyr::select(-val_abs) %>%
     mutate(comp = comp %>% str_remove("PC") %>% as.numeric) %>%
     mutate(cluster = sign(value)*comp) %>% dplyr::select(c(molecule, cluster, comp, sign))
+
+  clust.X.2 <- suppressWarnings(clust.X.2 %>% left_join(block.info, by = c("molecule"= "molecule")))
+  clust.X.2<-  clust.X.2 %>% mutate(comp = abs(cluster)) %>%
+      mutate(contrib = sign(cluster))
 
   return(clust.X.2)
 
