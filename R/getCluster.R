@@ -20,8 +20,8 @@
 #' spca.cluster <- getCluster(demo$spca)
 #' pls.cluster <- getCluster(demo$pls)
 #' spls.cluster <- getCluster(demo$spls)
-#'
-#'
+#' block.pls.cluster <- getCluster(demo$block.pls)
+#' block.spls.cluster <- getCluster(demo$sblock.pls)
 #'
 #' @export
 #' @import dplyr
@@ -152,7 +152,7 @@ getCluster.mixo_spls <- function(X){
 #' @import dplyr
 #' @import tibble
 getCluster.block.pls <- function(X){
-
+    print(class(X))
     # get block info
     block.info <- purrr::imap(X$loadings, function(x,y) rownames(x) %>%
                            as.data.frame %>%
@@ -161,7 +161,8 @@ getCluster.block.pls <- function(X){
     block.info <- do.call("rbind", block.info)
 
     loadings <- do.call("rbind", X$loadings)
-    loadings.max <- getMaxContrib(loadings)
+    X.selected.features.loadings <- loadings[rowSums(loadings) != 0,]
+    loadings.max <- getMaxContrib(X.selected.features.loadings)
 
     loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
         mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
@@ -174,8 +175,9 @@ getCluster.block.pls <- function(X){
 #' @import stringr
 #' @import dplyr
 #' @import tibble
-getCluster.block.pls <- function(X){
+getCluster.block.spls <- function(X){
 
+    print(class(X))
     # get block info
     block.info <- purrr::imap(X$loadings, function(x,y) rownames(x) %>%
                                   as.data.frame %>%
