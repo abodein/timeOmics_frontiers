@@ -33,15 +33,15 @@ getCluster <- function(x) UseMethod("getCluster")
 
 get_demo_cluster<- function(){
     X <- matrix(sample(1:1000), nrow = 10)
-    rownames(X) <- paste0("l_",1:nrow(X))
+    rownames(X) <- 1:nrow(X)
     colnames(X) <- paste0("X_",1:ncol(X))
 
     Y <- matrix(sample(1:100), nrow = 10)
-    rownames(Y) <- paste0("l_",1:nrow(Y))
+    rownames(Y) <- 1:nrow(Y)
     colnames(Y) <- paste0("Y_",1:ncol(Y))
 
     Z <- matrix(sample(1:500), nrow = 10)
-    rownames(Z) <- paste0("l_",1:nrow(Z))
+    rownames(Z) <- 1:nrow(Z)
     colnames(Z) <- paste0("Z_",1:ncol(Z))
 
     list.res = list()
@@ -67,13 +67,17 @@ get_demo_cluster<- function(){
 #' @import stringr
 #' @importFrom magrittr %>%
 getCluster.pca <- function(X){
-    print(class(X))
+    print("getCluster.pca")
     # colnames = PC1, PC2...
     loadings.max <- getMaxContrib(X$loadings$X)
 
     loadings.max %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^PC") %>% as.numeric()) %>%
+        mutate(cluster = stringr::str_remove(comp, "^PC") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max)) %>%
+        mutate(cluster = factor(cluster)) %>%
+        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                        sign(contrib.max) == -1 ~ "negative",
+                                        sign(contrib.max) == 0 ~ "NULL")) %>%
         mutate(block = "X")
 }
 
@@ -87,8 +91,12 @@ getCluster.spca <- function(X){
     loadings.max <- getMaxContrib(selected.features.loadings)
 
     loadings.max %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^PC") %>% as.numeric()) %>%
+        mutate(cluster = stringr::str_remove(comp, "^PC") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max)) %>%
+        mutate(cluster = factor(cluster)) %>%
+        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                        sign(contrib.max) == -1 ~ "negative",
+                                        sign(contrib.max) == 0 ~ "NULL")) %>%
         mutate(block = "X")
 }
 
@@ -102,7 +110,7 @@ getCluster.mixo_pls <- function(X){
     loadings.max.X <- getMaxContrib(X$loadings$X)
 
     loadings.max.X <- loadings.max.X %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "X")
 
@@ -110,11 +118,15 @@ getCluster.mixo_pls <- function(X){
     loadings.max.Y <- getMaxContrib(X$loadings$Y)
 
     loadings.max.Y <- loadings.max.Y %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "Y")
 
-    rbind(loadings.max.X, loadings.max.Y)
+    rbind(loadings.max.X, loadings.max.Y) %>%
+        mutate(cluster = factor(cluster)) %>%
+        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                        sign(contrib.max) == -1 ~ "negative",
+                                        sign(contrib.max) == 0 ~ "NULL"))
 }
 
 #' @import dplyr
@@ -131,7 +143,7 @@ getCluster.mixo_spls <- function(X){
     loadings.max.X <- getMaxContrib(X.selected.features.loadings)
 
     loadings.max.X <- loadings.max.X %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "X")
 
@@ -140,11 +152,15 @@ getCluster.mixo_spls <- function(X){
     loadings.max.Y <- getMaxContrib(Y.selected.features.loadings)
 
     loadings.max.Y <- loadings.max.Y %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
         mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "Y")
 
-    rbind(loadings.max.X, loadings.max.Y)
+    rbind(loadings.max.X, loadings.max.Y)  %>%
+        mutate(cluster = factor(cluster)) %>%
+        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                        sign(contrib.max) == -1 ~ "negative",
+                                        sign(contrib.max) == 0 ~ "NULL"))
 }
 
 #' @import purrr
@@ -165,8 +181,12 @@ getCluster.block.pls <- function(X){
     loadings.max <- getMaxContrib(X.selected.features.loadings)
 
     loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max))
+        mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = cluster * sign(contrib.max)) %>%
+        mutate(cluster = factor(cluster)) %>%
+        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                        sign(contrib.max) == -1 ~ "negative",
+                                        sign(contrib.max) == 0 ~ "NULL")) %>%
     return(loadings.max)
 }
 
@@ -189,8 +209,12 @@ getCluster.block.spls <- function(X){
     loadings.max <- getMaxContrib(loadings)
 
     loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
-        mutate(cluster = str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max))
+        mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
+        mutate(cluster = cluster * sign(contrib.max)) %>%
+        mutate(cluster = factor(cluster)) %>%
+        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                        sign(contrib.max) == -1 ~ "negative",
+                                        sign(contrib.max) == 0 ~ "NULL"))
     return(loadings.max)
 }
 
