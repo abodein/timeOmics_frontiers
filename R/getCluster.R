@@ -21,14 +21,9 @@
 #' pls.cluster <- getCluster(demo$pls)
 #' spls.cluster <- getCluster(demo$spls)
 #' block.pls.cluster <- getCluster(demo$block.pls)
-#' block.spls.cluster <- getCluster(demo$sblock.pls)
+#' block.spls.cluster <- getCluster(demo$block.spls)
 #'
 #' @export
-#' @import dplyr
-#' @import tidyr
-#' @import tibble
-#' @import stringr
-#' @importFrom magrittr %>%
 getCluster <- function(x) UseMethod("getCluster")
 
 get_demo_cluster<- function(){
@@ -62,47 +57,43 @@ get_demo_cluster<- function(){
     return(list.res)
 }
 
-#' @import dplyr
-#' @import tibble
-#' @import stringr
+#' @importFrom dplyr mutate
+#' @importFrom tibble rownames_to_column
+#' @importFrom stringr str_remove
 #' @importFrom magrittr %>%
 getCluster.pca <- function(X){
     print("getCluster.pca")
     # colnames = PC1, PC2...
     loadings.max <- getMaxContrib(X$loadings$X)
 
-    loadings.max %>% rownames_to_column("molecule") %>%
+    loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^PC") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
-        mutate(cluster = factor(cluster)) %>%
-        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
-                                        sign(contrib.max) == -1 ~ "negative",
-                                        sign(contrib.max) == 0 ~ "NULL")) %>%
-        mutate(block = "X")
+        mutate(block = "X") %>%
+        .mutate_cluster()
+    Valid.getCluster(loadings.max)
+    return(loadings.max)
 }
 
-#' @import dplyr
-#' @import tibble
-#' @import stringr
+#' @importFrom dplyr mutate
+#' @importFrom tibble rownames_to_column
+#' @importFrom stringr str_remove
 #' @importFrom magrittr %>%
 getCluster.spca <- function(X){
     print(class(X))
     selected.features.loadings <- X$loadings$X[rowSums(X$loadings$X) != 0,]
     loadings.max <- getMaxContrib(selected.features.loadings)
 
-    loadings.max %>% rownames_to_column("molecule") %>%
+    loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^PC") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
-        mutate(cluster = factor(cluster)) %>%
-        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
-                                        sign(contrib.max) == -1 ~ "negative",
-                                        sign(contrib.max) == 0 ~ "NULL")) %>%
-        mutate(block = "X")
+        mutate(block = "X") %>%
+        .mutate_cluster()
+    Valid.getCluster(loadings.max)
+    return(loadings.max)
 }
 
-#' @import dplyr
-#' @import tibble
-#' @import stringr
+#' @importFrom dplyr mutate
+#' @importFrom tibble rownames_to_column
+#' @importFrom stringr str_remove
 #' @importFrom magrittr %>%
 getCluster.mixo_pls <- function(X){
     print(class(X))
@@ -111,27 +102,26 @@ getCluster.mixo_pls <- function(X){
 
     loadings.max.X <- loadings.max.X %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "X")
+
 
     # block Y
     loadings.max.Y <- getMaxContrib(X$loadings$Y)
 
     loadings.max.Y <- loadings.max.Y %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "Y")
 
-    rbind(loadings.max.X, loadings.max.Y) %>%
-        mutate(cluster = factor(cluster)) %>%
-        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
-                                        sign(contrib.max) == -1 ~ "negative",
-                                        sign(contrib.max) == 0 ~ "NULL"))
+    loadings.max <- rbind(loadings.max.X, loadings.max.Y) %>%
+        .mutate_cluster()
+
+    Valid.getCluster(loadings.max)
+    return(loadings.max)
 }
 
-#' @import dplyr
-#' @import tibble
-#' @import stringr
+#' @importFrom dplyr mutate
+#' @importFrom tibble rownames_to_column
+#' @importFrom stringr str_remove
 #' @importFrom magrittr %>%
 getCluster.mixo_spls <- function(X){
     # note : can not concatenate X and Y
@@ -144,7 +134,6 @@ getCluster.mixo_spls <- function(X){
 
     loadings.max.X <- loadings.max.X %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "X")
 
     # block Y
@@ -153,20 +142,20 @@ getCluster.mixo_spls <- function(X){
 
     loadings.max.Y <- loadings.max.Y %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
         mutate(block = "Y")
 
-    rbind(loadings.max.X, loadings.max.Y)  %>%
-        mutate(cluster = factor(cluster)) %>%
-        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
-                                        sign(contrib.max) == -1 ~ "negative",
-                                        sign(contrib.max) == 0 ~ "NULL"))
+    loadings.max <- rbind(loadings.max.X, loadings.max.Y)  %>%
+        .mutate_cluster()
+
+    Valid.getCluster(loadings.max)
+    return(loadings.max)
 }
 
-#' @import purrr
-#' @import stringr
-#' @import dplyr
-#' @import tibble
+#' @importFrom purrr imap set_names
+#' @importFrom dplyr mutate left_join
+#' @importFrom tibble rownames_to_column
+#' @importFrom stringr str_remove
+#' @importFrom magrittr %>%
 getCluster.block.pls <- function(X){
     print(class(X))
     # get block info
@@ -174,27 +163,28 @@ getCluster.block.pls <- function(X){
                            as.data.frame %>%
                            set_names("molecule") %>%
                            mutate("block" = y))
-    block.info <- do.call("rbind", block.info)
+    block.info <- do.call("rbind", block.info) %>% as.data.frame() %>%
+        mutate(block = factor(block, levels = names(X$loadings))) %>%
+        mutate(molecule = as.character(molecule))
 
     loadings <- do.call("rbind", X$loadings)
-    X.selected.features.loadings <- loadings[rowSums(loadings) != 0,]
-    loadings.max <- getMaxContrib(X.selected.features.loadings)
+    loadings.max <- getMaxContrib(loadings)
 
     loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
-        mutate(cluster = factor(cluster)) %>%
-        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
-                                        sign(contrib.max) == -1 ~ "negative",
-                                        sign(contrib.max) == 0 ~ "NULL")) %>%
+        left_join(block.info, by = c("molecule", "molecule")) %>%
+        .mutate_cluster()
+
+    Valid.getCluster(loadings.max)
     return(loadings.max)
 }
 
 
-#' @import purrr
-#' @import stringr
-#' @import dplyr
-#' @import tibble
+#' @importFrom purrr imap set_names
+#' @importFrom dplyr mutate left_join
+#' @importFrom tibble rownames_to_column
+#' @importFrom stringr str_remove
+#' @importFrom magrittr %>%
 getCluster.block.spls <- function(X){
 
     print(class(X))
@@ -203,18 +193,21 @@ getCluster.block.spls <- function(X){
                                   as.data.frame %>%
                                   set_names("molecule") %>%
                                   mutate("block" = y))
-    block.info <- do.call("rbind", block.info)
+    block.info <- do.call("rbind", block.info) %>% as.data.frame() %>%
+        mutate(block = factor(block, levels = names(X$loadings))) %>%
+        mutate(molecule = as.character(molecule))
 
+    # sparse
     loadings <- do.call("rbind", X$loadings)
-    loadings.max <- getMaxContrib(loadings)
+    X.selected.features.loadings <- loadings[rowSums(loadings) != 0,]
+    loadings.max <- getMaxContrib(X.selected.features.loadings)
 
     loadings.max <- loadings.max %>% rownames_to_column("molecule") %>%
         mutate(cluster = stringr::str_remove(comp, "^comp ") %>% as.numeric()) %>%
-        mutate(cluster = cluster * sign(contrib.max)) %>%
-        mutate(cluster = factor(cluster)) %>%
-        mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
-                                        sign(contrib.max) == -1 ~ "negative",
-                                        sign(contrib.max) == 0 ~ "NULL"))
+        left_join(block.info, by = c("molecule", "molecule")) %>%
+        .mutate_cluster()
+
+    Valid.getCluster(loadings.max)
     return(loadings.max)
 }
 
@@ -237,6 +230,23 @@ getMaxContrib <- function(X){
 # absmax.index <- function(x) { which.max( abs(x) )[1]}
 
 
+#' @importFrom dplyr mutate case_when pull
+#' @importFrom magrittr %>%
+.mutate_cluster <- function(loadings.max){
+    X <- loadings.max %>% mutate(cluster = cluster * sign(contrib.max)) %>%
+    mutate(contribution = case_when(sign(contrib.max) == 1 ~ "positive",
+                                    sign(contrib.max) == -1 ~ "negative",
+                                    sign(contrib.max) == 0 ~ "NULL"))
 
+    cluster.order <-  X %>% pull(cluster) %>% abs %>% unique %>% sort %>%
+        rep(each=2) %>% `*`(c(1,-1))
 
+    X <- X %>% mutate(cluster = factor(cluster, levels = cluster.order))
+    return(X)
+}
 
+Valid.getCluster <- function(X){
+    col_names <- c("molecule","comp","contrib.max","cluster","block","contribution")
+    stopifnot(all(col_names %in% colnames(X)))
+    # other check ?
+}

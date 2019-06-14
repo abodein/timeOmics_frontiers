@@ -39,3 +39,5 @@ rebuild.pca <- function(X){
     }
     return(Y)
 }
+
+
