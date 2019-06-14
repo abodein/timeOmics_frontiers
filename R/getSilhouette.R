@@ -24,8 +24,11 @@ getSilhouette <- function(object){
     UseMethod("getSilhouette")
 }
 
-
+#' @importFrom magrittr %>%
 getSilhouette.pca <- function(object){
     cluster <- getCluster(object) %>%
         dplyr::select("molecule", "cluster")
+
+    silhouette(X = as.data.frame(object$X), cluster = cluster)
+
 }
