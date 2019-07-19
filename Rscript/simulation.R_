@@ -1,0 +1,138 @@
+library(tidyverse)
+walk(dir("~/Documents/timeOmics/R/", pattern = ".R$", full.names = TRUE),source)
+
+# raw
+par(mfrow=c(2,2))
+c1 <- c(0, 0.5,1,1.1,1.2,1.8,2.5,5,9)
+l1 <- smooth.spline(x = c1, spar = 0.3)
+p1 <- predict(l1, seq(1,length(c1), length.out = 100))
+plot(p1$x, p1$y, type = "l", col = "red", main = "c1")
+points(c1)
+
+c3 <-  c(-2,4, 8, 6,4.5,4,3.9, 3, 1)
+l3 <- smooth.spline(x = c3, spar = 0.3)
+p3 <- predict(l3, seq(1,length(c3), length.out = 100))
+plot(p3$x, p3$y, type = "l",  col = "red", main = "c3")
+points(c3)
+
+c2 <- -c1
+l2 <- smooth.spline(x = c2, spar = 0.3)
+p2 <- predict(l2, seq(1,length(c2), length.out = 100))
+plot(p2$x, p2$y, type = "l",  col = "red", main = "c2")
+points(c2)
+
+
+c4 <- -c3
+l4 <- smooth.spline(x = c4, spar = 0.3)
+p4 <- predict(l4, seq(1,length(c4), length.out = 100))
+plot(p4$x, p4$y, type = "l",  col = "red", main = "c4")
+points(c4)
+
+par(mfrow=c(1,1))
+c1.0 <-  c1
+c1.1 <-  c1*1.5
+c1.2 <- (c1-0.3)*0.3
+c1.3 <- (c1 +0.5)*0.8
+c1.4 <- (c1-1)*1.1
+
+plot(c1, col = "red", type = "b")
+lines(c1.1, col = "darkgreen", type = "b")
+lines(c1.2, col = "darkblue", type = "b")
+lines(c1.3, col = "black", type = "b")
+lines(c1.4, col = 4, type = "b")
+
+c2.0 <-  c2
+c2.1 <-  c2*1.5
+c2.2 <- (c2-0.3)*0.3
+c2.3 <- (c2 +0.5)*0.8
+c2.4 <- (c2-1)*1.1
+
+c3.0 <-  c3
+c3.1 <-  c3*1.5
+c3.2 <- (c3-0.3)*0.3
+c3.3 <- (c3 +0.5)*0.8
+c3.4 <- (c3-1)*1.1
+
+c4.0 <-  c4
+c4.1 <-  c4*1.5
+c4.2 <- (c4-0.3)*0.3
+c4.3 <- (c4 +0.5)*0.8
+c4.4 <- (c4-1)*1.4
+
+data <- list(c1.0,c1.1,c1.2,c1.3,c1.4,c2.0,c2.1,c2.2,c2.3,c2.4,c3.0,c3.1,c3.2,c3.3,c3.4,c4.0,c4.1,c4.2,c4.3,c4.4)
+names(data) <- c("c1.0", "c1.1", "c1.2", "c1.3", "c1.4",
+                 "c2.0", "c2.1", "c2.2", "c2.3", "c2.4",
+                 "c3.0", "c3.1", "c3.2", "c3.3", "c3.4",
+                 "c4.0", "c4.1", "c4.2", "c4.3", "c4.4")
+data <- as.data.frame(data)
+data.gather <- data %>% rownames_to_column("time") %>%
+    mutate(time = as.numeric(time)) %>%
+    gather(sample, value, -time)
+
+sd = c(0.1, 0.2, 0.5)
+N_Ind = 5
+res.sim = list()
+lmms.data = list()
+set.seed(123)
+for( S in sd){
+    tmp <- data.gather
+    for(ind in 1:N_Ind){
+        vect <- vector(length = nrow(tmp), mode = "numeric")
+        for(x in 1:length(vect)){
+            vect[x] <- rnorm(1, mean = tmp$value[x], sd = S)
+        }
+        name.c <- names(tmp)
+        tmp <- data.frame(tmp, vect)
+        colnames(tmp) <- c(name.c, LETTERS[ind])
+    }
+    res.sim[[as.character(S)]] <- tmp %>% mutate(SD = S)
+    lmms.data[[as.character(S)]] <- tmp %>% dplyr::select(-c(value)) %>%
+        gather(ind, value, -c(sample, time))%>%
+        mutate(ind = c(paste0(ind, "_", time))) %>% dplyr::select(-time) %>%
+        spread(ind, value) %>% column_to_rownames("sample") %>% t
+}
+
+## LMMS
+lmms.res <- list()
+for(i in names(lmms.data)){
+    d <- lmms.data[[i]]
+    dt <- rownames(d) %>% str_split("_") %>% map_chr(~.x[2]) %>% as.numeric()
+    tmp <- lmms::lmmSpline(data = d, time = dt,
+                                     sampleID = rownames(d), deri = FALSE,
+                                     basis = "p-spline", numCores = 2)
+    lmms.res[[i]] <- t(tmp@predSpline)
+}
+
+get_correspondance_cluster <- function(X){
+    # replace cluster label based on occurence
+    tmp <- X[,2:3] %>% table %>%
+        as.data.frame() %>%
+        spread(cluster, Freq) %>%
+        column_to_rownames("first_cluster")
+    corresp <- apply(X = tmp, FUN = function(x) { colnames(tmp)[which.max(x)[1]]}, MARGIN = 1) %>%
+        as.data.frame() %>%
+        set_names("new") %>%
+        rownames_to_column("old")
+    return(corresp)
+}
+
+pref.res <- list()
+for(i in names(lmms.res)){
+    pca.res <- mixOmics::pca(lmms.res[[i]], ncomp = 2)
+    pca.res.cluster <- getCluster(pca.res) %>%
+        dplyr::select(molecule, cluster) %>%
+        mutate(first_cluster = molecule %>% str_split("\\.") %>% map_chr(~.x[1]))
+    correspondace_cluster <- get_correspondance_cluster(pca.res.cluster)
+    classify.res <- pca.res.cluster %>% left_join(correspondace_cluster, by = c("first_cluster"="old")) %>%
+        dplyr::select(cluster, new)
+
+    tt <- table(classify.res) %>% as.data.frame() %>%
+        spread(cluster, Freq) %>% arrange(as.numeric(as.character(new))) %>%
+        column_to_rownames("new")
+    tt <- tt %>% dplyr::select(rownames(tt)) %>% as.matrix()
+    pref.res[[i]] <- sum(diag(tt) / sum(tt))
+}
+
+#####
+
+

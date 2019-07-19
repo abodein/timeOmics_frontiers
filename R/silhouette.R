@@ -105,10 +105,16 @@ CheckSilhouetteInput <- function(X, cluster){
     # no duplicated value
     stopifnot(length(unique(cluster$molecule)) == nrow(cluster))
     # consistency of molecule names
-    stopifnot(all(cluster$molecule %in% colnames(data$data)))
+    stopifnot(all(cluster$molecule %in% colnames(X)))
 }
 
-
+#' @export
+ComputeSilhouetteAverage <- function(Silhouette.Obj){
+    stopifnot(is(Silhouette.Obj, "Silhouette.Obj"))
+    # not full object
+    stopifnot(length(Silhouette.Obj) == 5)
+    return( mean(Silhouette.Obj$coef.df$silhouette.coef))
+}
 
 #' Spearman distance from a matrix
 #'

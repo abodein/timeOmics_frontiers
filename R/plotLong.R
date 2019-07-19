@@ -26,7 +26,6 @@ plotLong <- function(object, time = NULL, plot = TRUE, center = TRUE, scale = TR
 
 #' @importFrom magrittr %>%
 plotLong.pca <- function(object, time = NULL, plot = TRUE, center = TRUE, scale = TRUE){
-    print("plotLong.pca")
 
     if(!is.null(time)){
         stopifnot(is.numeric(time)) # works with integer

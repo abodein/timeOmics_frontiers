@@ -62,7 +62,7 @@ get_demo_cluster<- function(){
 #' @importFrom stringr str_remove
 #' @importFrom magrittr %>%
 getCluster.pca <- function(X){
-    print("getCluster.pca")
+    #print("getCluster.pca")
     # colnames = PC1, PC2...
     loadings.max <- getMaxContrib(X$loadings$X)
 
