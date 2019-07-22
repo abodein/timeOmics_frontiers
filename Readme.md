@@ -4,8 +4,8 @@ We propose a generic data-driven framework to integrate different types of longi
 
 More details about the integrative framework can be found in https://www.biorxiv.org/content/10.1101/585802v1
 
-To reproduce the examples, the user can compile the `.Rmd` files in the `Example/` folder. 
-The list of required packages and their versions is available in the file "needed_packages.txt".  
+To reproduce the examples, the user can compile the `.Rmd` files in the `Examples/` folder. 
+The list of required packages and their versions is available in the file `Examples/needed_packages.txt`.  
 Please install them before compiling the source files.
 
 This repository is structured as follows:
