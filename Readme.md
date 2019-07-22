@@ -25,7 +25,7 @@ Folder that contains the Rmarkdown scripts to re-run our 2 examples.
 This folder also contains the pdf output files.
 
 
-## Rscript
+## Rscripts
 
 Contains the R files used for time-course microbiome clustering and integration.
 
