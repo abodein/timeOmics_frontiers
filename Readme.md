@@ -5,7 +5,7 @@ We propose a generic data-driven framework to integrate different types of longi
 More details about the integrative framework can be found in https://www.biorxiv.org/content/10.1101/585802v1
 
 To reproduce the examples, the user can compile the `.Rmd` files in the `Examples/` folder. 
-The list of required packages and their versions is available in the file `Examples/needed_packages.txt`.  
+The list of required packages and their versions is available in the file `needed_packages.txt`.  
 Please install them before compiling the source files.
 
 This repository is structured as follows:
@@ -20,6 +20,7 @@ Files are loaded when the `.Rmd` files are compiled.
 Folder that contains the Rmarkdown scripts to re-run our 2 examples.
 
 * **Baby gut microbiota developpement**: studies microbiome dynamic during the first 100 days of infant early life.
+* **Simulation**: studies to demonstrate the principles of the clustering method.
 * **Waste degradation**: integrates microbiome, metabolomic and a continious response of interest.
 
 This folder also contains the pdf output files.

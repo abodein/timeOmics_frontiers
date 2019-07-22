@@ -24,7 +24,7 @@ knitr::opts_chunk$set(fig.pos = 'H')
 ```{r, warning=F, message=F, cache=F}
 library(tidyverse)
 library(mixOmics)
-walk(dir("../Rscript/", pattern = ".R$", full.names = TRUE),source)
+walk(dir("../Rscripts/", pattern = ".R$", full.names = TRUE),source)
 ```
 
 # Data 
