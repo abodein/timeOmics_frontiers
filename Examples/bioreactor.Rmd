@@ -2,9 +2,6 @@
 title: "Bioreactor time-course analysis"
 author: "Olivier Chapleur"
 output:
-  html_document:
-    toc: yes
-    toc_depth: '6'
   pdf_document:
     number_sections: yes
     toc: yes
@@ -46,10 +43,10 @@ DNA from samples taken across time was extracted and sequenced. (16S metabarcodi
 
 ```{r, echo=FALSE}
 #loading of the data
-load('bioreactor.RData')
-source('spls.results.R')
-source("filter.R")
-source("block.spls.results.R")
+load('../Data/bioreactor.RData')
+source('../Rscripts/spls.results.R')
+source("../Rscripts/filter.R")
+source("../Rscripts/block.spls.results.R")
 
 # performance data: acetate  CH4  C02  propionate
 # 16S data: abundance (raw counts), OTU_metadata (metadata associated to the OTUs), taxo (OTUs taxonomy)
@@ -330,6 +327,12 @@ names.1negX2=names(signcompX2)[(signcompX2=="1 neg")]
 names.1posX2=names(signcompX2)[(signcompX2=="1 pos")]
 names.2negX2=names(signcompX2)[(signcompX2=="2 neg")]
 names.2posX2=names(signcompX2)[(signcompX2=="2 pos")]
+```
+## Proportionality analysis
+
+```{r}
+library(propr)
+spls.res
 ```
 
 
