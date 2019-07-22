@@ -330,10 +330,95 @@ names.2posX2=names(signcompX2)[(signcompX2=="2 pos")]
 ```
 ## Proportionality analysis
 
-```{r}
+```{r, echo=F, warning=F, message=F}
 library(propr)
-spls.res
+load("../Data/bioreactor_clusters.RData")
+source("../Rscripts/unscale.R")
+
+cluster.bioR <- cluster.pls
+OTU.bioR <- spls.res$X %>% unscale %>% `+`(abs(min(.)))
+phs.OTU <- propr::propr(OTU.bioR, metric = 'phs')@matrix
+
+metabo.bioR <- spls.res$Y %>% unscale %>% `+`(abs(min(.)))
+phs.metabo <- propr::propr(metabo.bioR, metric = 'phs')@matrix
+
+metabo.bioR <- spls.res$Y %>% unscale %>% `+`(abs(min(.)))
+phs.metabo <- propr::propr(metabo.bioR, metric = 'phs')@matrix
+
+res.phs.OTU <- phs.OTU %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR %>% filter(block == "OTU") %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>%
+    left_join(cluster.bioR %>% filter(block == "OTU"), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside"))
+
+res.phs.metabo <- phs.metabo %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR %>% filter(block == "Metabolites") %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>%
+    left_join(cluster.bioR %>% filter(block == "Metabolites"), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside"))
+
+res.rbind <- rbind(res.phs.OTU, res.phs.metabo) %>%
+    mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
+    mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set")))
+
+ggplot(res.rbind, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot() + facet_wrap(~block) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance per omic dataset") + ylim(-4, max(res.rbind$value))
+
 ```
+
+```{r, echo=F, warning=F, message=F}
+## all
+all.bioR <- cbind(OTU.bioR, metabo.bioR)
+phs.all <- propr::propr(all.bioR, metric = 'phs')@matrix
+
+res.phs.all <- phs.all %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR  %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>% 
+    left_join(cluster.bioR %>% dplyr::select(-block), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside")) %>%
+        mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
+        mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set")))
+
+ggplot(res.phs.all, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot(outlier.size = 0.5) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance  (all omics)")
+
+return_stat_median_only <- function(res.phs.X){
+    i = 1
+    res.pval <- matrix(ncol = 4, nrow = 4) %>% as.data.frame() %>%
+    set_names("cluster", "median inside", "median outside", "Wilcoxon test Pval" )
+    for(clu in unique(res.phs.X$cluster1)){
+        inside <- res.phs.X %>% filter(cluster1 == clu) %>% filter(cluster2==clu) %>% pull(value)
+        outside <- res.phs.X %>% filter(cluster1 == clu) %>% filter(cluster2!=clu) %>% pull(value)
+        
+        ttest.pval <- t.test(inside, outside)$p.value
+        utest.pval <- wilcox.test(inside, outside)$p.value
+        
+        res.pval[i,] <- c(clu, round(median(inside), digits = 2),
+                          round(median(outside), digits = 2), utest.pval)
+        i = i+1
+    }
+    return(res.pval)
+}
+return_stat_median_only(res.phs.all) %>% knitr::kable()
+```
+
+
 
 
 # block sPLS
@@ -437,3 +522,80 @@ selected.variables=levels(melt.rgcca$Var1)
 non.selected.OTUs=colnames(data.OTUS)[!colnames(data.OTUS)%in%selected.variables]
   non.selected.metabolites=colnames(data.metabolites)[!colnames(data.metabolites)%in%selected.variables]
 ```
+
+
+```{r, echo=F, warning=F, message=F}
+cluster.bioR <- cluster.block
+
+OTU.bioR <- res.block$X$OTU %>% unscale %>% `+`(abs(min(.)))
+phs.OTU <- propr::propr(OTU.bioR, metric = 'phs')@matrix
+res.phs.OTU <- phs.OTU %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR %>% filter(block == "OTU") %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>%
+    left_join(cluster.bioR %>% filter(block == "OTU"), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside"))
+
+metabo.bioR <- res.block$X$metabo %>% unscale %>% `+`(abs(min(.)))
+phs.metabo <- propr::propr(metabo.bioR, metric = 'phs')@matrix
+res.phs.metabo <- phs.metabo %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR %>% filter(block == "Metabolites") %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>%
+    left_join(cluster.bioR %>% filter(block == "Metabolites"), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside"))
+
+perf.bioR <- res.block$X$Y %>% unscale %>% `+`(abs(min(.)))
+phs.perf <- propr::propr(perf.bioR, metric = 'phs')@matrix
+res.phs.perf <- phs.perf %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR %>% filter(block == "Y") %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>%
+    left_join(cluster.bioR %>% filter(block == "Y"), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside"))
+
+res.rbind <- rbind(res.phs.OTU, res.phs.metabo, res.phs.perf) %>%
+    mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
+    mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set"))) %>%
+    mutate(block = factor(block, levels = c('OTU', 'Metabolites', 'Y')))
+
+ggplot(res.rbind, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot() + facet_wrap(~block) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance per omic dataset") + ylim(-4, max(res.rbind$value))
+
+## all
+all.bioR <- cbind(OTU.bioR, metabo.bioR, perf.bioR)
+phs.all <- propr::propr(all.bioR, metric = 'phs')@matrix
+
+res.phs.all <- phs.all %>% as.data.frame %>% rownames_to_column("feature1") %>%
+    gather(feature2, value, -feature1) %>%
+    filter(feature1 %in% cluster.bioR$molecule) %>%
+    filter(feature2 %in% cluster.bioR$molecule) %>%
+    left_join(cluster.bioR  %>% dplyr::select(-block), 
+              by = c("feature1" = "molecule")) %>%
+    rename(cluster1 = cluster) %>% 
+    left_join(cluster.bioR %>% dplyr::select(-block), 
+              by = c("feature2" = "molecule")) %>%
+    rename(cluster2 = cluster) %>%
+    mutate(insideout = ifelse(cluster1 == cluster2, "inside", "outside")) %>%
+        mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
+        mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set")))
+
+ggplot(res.phs.all, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot(outlier.size = 0.5) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance  (all omics)")
+
+return_stat_median_only(res.phs.all) %>% knitr::kable()
+```
+
