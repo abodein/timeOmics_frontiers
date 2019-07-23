@@ -98,6 +98,16 @@ raw_data <- data
 save(data, file = "./sim_raw_data.RData")
 ```
 
+```{r}
+data.gather <- data %>% as.data.frame() %>% rownames_to_column("time") %>%
+    mutate(time = as.numeric(time)) %>%
+    gather(sample, value, -time) %>% mutate(cluster = str_extract(sample, "^.."))
+
+ggplot(data.gather, aes(time, value, col = sample)) + geom_line() + facet_wrap(~cluster) +
+    ggtitle("Reference profiles and clusters") + theme_bw()
+```
+
+
 
 ```{r utils}
 # funcions
@@ -441,6 +451,8 @@ Overall accuracy of clustering with respect to noise. Twenty reference profiles,
 
 # Interpolation / No interpolation
 
+## Accuracy
+
 ```{r, fig.width=10}
 load("../Data/res_simu.RData")
 RES_interpol <- acc_no_interpol %>% mutate(interpolation = "no") %>% rbind(
@@ -452,6 +464,24 @@ ggplot(RES_interpol, aes(x = noise, y = accuaracy, fill = interpolation)) + geom
 ```
 
 Overall accuracy of clustering when time points are missing. The simulation scheme is described in 3.7.1, however, here some time points were removed. We compared the ability of LMMS to interpolate missing time points. When there are no time points missing, both interpolated and non-interpolated approaches gave a similar performance. When the number of time points increases, the classification accuracy decreases. Without noise and with several timepoints removed, LMMS tended to model straight lines, resulting in poor clustering..
+
+## Rand Index
+```{r}
+load("../Data/res_simu_rand.RData")
+RES.rand <- rbind(RES.rand.interpol.1, RES.rand.interpol.2) %>% mutate(interpolation = "with") %>% rbind(
+rbind(RES.rand.nointerpol.1, RES.rand.nointerpol.2) %>% mutate(interpolation = "without")) %>%
+mutate(noise = factor(noise)) %>%
+    mutate(nb_NA = factor(nb_NA))
+
+RES.rand %>% 
+    ggplot(aes(x = noise, y = accuaracy, fill = interpolation)) + geom_boxplot(outlier.size = 0.5, outlier.alpha = 0.5) +
+    facet_grid(~nb_NA)  +
+    theme_bw() +   
+    ggtitle("Overall accuracy of clustering with respect to noise and interpolation of missing timepoints") +
+    xlab("Noise") + ylab("Rand Index") + labs(fill = "Interpolation")
+```
+
+Overall compactness of assigned clusters when time points are missing with the Rand index.
 
 
 # fPCA / PCA
@@ -497,3 +527,4 @@ ggplot(rbind(RES.fpca, RES.pca), aes(x = method, y = accuaracy, col = method)) +
     xlab("Method") + ylab("Mean accuracy") + labs(fill = "Method")
 ```
 
+Overall accuracy of PCA and fPCA clustering with no noise. We compared the ability of PCA and fPCA to correctly assign the simulated profiles in their respective reference clusters. Without noise, fPCA clustering led to a poorer accuracy compared to PCA.
