@@ -11,6 +11,10 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+knitr::opts_chunk$set(fig.align = "center")
 ```
 
 ```{r ,echo=FALSE,warning=FALSE, message=FALSE}
@@ -95,15 +99,23 @@ clr.abundance=logratio.transfo(t(pc.abundance.sel), logratio = 'CLR', offset = 0
 
 
 
-cat("Ther are", nrow(pc.abundance.sel), "OTUs after", percent, "% filter")
+cat("There are", nrow(pc.abundance.sel), "OTUs after", percent, "% filter")
 
 ```
 
 # Spline smoothing
 
-All the data are modelled with spline smoothing. 
+All the data are modelled with spline smoothing with the Linear Mixed Model Splines framework (package `lmms`).
 
-```{r, echo=FALSE, message=FALSE,eval=TRUE}
+As a reminder, the LMMS modeling step tests 4 different models for each OTUs. 0 = linear model, 1 = linear
+mixed effect model spline (LMMS) with defined basis, 2 = LMMS taking subject-specific random intercept, 3
+= LMMS with subject specific intercept and slope.
+
+
+
+## Metabolites
+
+```{r, echo=FALSE, message=FALSE,eval=TRUE, warning=FALSE}
 #spline smoothing of GCMS data
 lmms.metabolites <- lmmSpline(data=(GCMS.log),time=metadata_GCMS$Number_of_days,sampleID=metadata_GCMS$rep_reactor,keepModels=T,timePredict=c(10:57),basis="p-spline") # values are predicted for every date
 data.metabolites =lmms.metabolites@predSpline
@@ -112,7 +124,12 @@ data.metabolites=t(data.metabolites[,colnames(data.metabolites)%in%c(10,13,16,19
 
 summary(lmms.metabolites)# to get a summary of the lmms analysis
 ```
-```{r, echo=FALSE, message=FALSE,eval=TRUE}
+
+For the metabolites data, 10 molecules were modelled with a straight line, 4 with LMMS with subject-specific random intercept, 6 with LMMS with subject specific intercept and slope.
+
+## OTUs
+
+```{r, echo=FALSE, message=FALSE,eval=TRUE, warning=FALSE}
 #spline for the OTUs
 lmms.OTUs <- lmmSpline(data=(clr.abundance),time=OTU_metadata$Number_of_days,sampleID=OTU_metadata$reactor_id,keepModels=T,timePredict=c(10:57),basis="p-spline") # values are predicted for every date
 data.OTUS=lmms.OTUs@predSpline
@@ -121,7 +138,11 @@ data.OTUS=t(data.OTUS[,colnames(data.OTUS)%in%c(10,13,16,19,22,25,28,31,34,37,40
 summary(lmms.OTUs)# to get a summary of the lmms analysis
 ```
 
-```{r, echo=FALSE, message=FALSE,eval=TRUE}
+For the microbiome data, 30 OTUs were modelled with a straight line, 19 with LMMS and 2 with LMMS with subject specific random intercept.
+
+## Performance data
+
+```{r, echo=FALSE, message=FALSE,eval=TRUE, warning=FALSE}
 # we have a different number of time points and replicates for the performance data. 
 
 #we first reshape the data to create one table for each performance data
@@ -155,9 +176,17 @@ summary(lmms.liq)# to get a summary of the lmms analysis
 summary(lmms.perf)# to get a summary of the lmms analysis
 ```
 
+Acetate and Propionate were modelled with LMMS with subject specific random intercept. CH4 and CO2 were modelled with LMMS with subject specific intercept and slope.
+
 # Filtering of the obtained profiles
 
+Straight line modelling can occur when the inter-individual variation is too high. To remove the noisy profiles,
+we first use the Breusch-Pagan test, which tests the homo-sedasticity of the residues. We then add a filter on
+the mean squared error to reduce the dispersion of the residues around the line.
+
 ## OTUs
+
+The 44 selected OTUs are listed below as well as the results of the filtering test.
 
 ```{r, echo=FALSE, eval=TRUE}
 
@@ -171,11 +200,11 @@ clr.abundance=data.frame(clr.abundance) #data table must be a data frame with mo
 
 
 OTU.filter=wrapper.filter.splines(clr.abundance,lmms.OTUs,stationnarity.test = FALSE, homoskedasticity = TRUE,MSE.filter = TRUE)
-get_MSE(clr.abundance,lmms.OTUs )
+#get_MSE(clr.abundance,lmms.OTUs )
 
 # ls(OTU.filter) # what is returned by filtering function 
 OTU.filter$to_keep ## OTUs to keep
-kable(OTU.filter$res.filter) ## for each molecule, indicate if the different test were passed, and with which model the molecule has been modelled
+#kable(OTU.filter$res.filter) ## for each molecule, indicate if the different test were passed, and with which model the molecule has been modelled
 
 
 summary(OTU.filter$res.filter[,c(2,4)]) ## summary of the test
@@ -188,12 +217,16 @@ matplot(x=matrix(rep(rownames(data.OTUS.kept), length(as.matrix(OTU.filter$to_ke
 rejected.OTU.name=colnames(data.OTUS)[!colnames(data.OTUS)%in%as.matrix(OTU.filter$to_keep)] ### OTUs rejected
 data.OTUS.rejected=data.OTUS[,!colnames(data.OTUS)%in%as.matrix(OTU.filter$to_keep)]
 
-matplot(x=matrix(rep(rownames(data.OTUS.rejected), length(as.matrix(rejected.OTU.name))), ncol=length(as.matrix(rejected.OTU.name))), y=scale(data.OTUS.rejected), type = 'l', main='plot of scaled rejected OTUs', xlab='time') # plot of the rejected OTUs
+#matplot(x=matrix(rep(rownames(data.OTUS.rejected), length(as.matrix(rejected.OTU.name))), ncol=length(as.matrix(rejected.OTU.name))), y=scale(data.OTUS.rejected), type = 'l', main='plot of scaled rejected OTUs', xlab='time') # plot of the rejected OTUs
 
 ```
 
+The filtering step removed 7 OTUs. 
+In the above graph, time profiles of the selected OTUs are displayed.
+
 ## Metabolites
 
+The 16 selected metabolites are listed below as well as the results of the filtering test.
 ```{r, echo=FALSE, eval=TRUE}
 
 row.names(GCMS.log)=paste(metadata_GCMS$rep_reactor,'_',  metadata_GCMS$Number_of_days, sep="")# to use the filtering function, sample IDs should be named as follows SAMPLE_TIME
@@ -203,7 +236,7 @@ row.names(GCMS.log)=paste(metadata_GCMS$rep_reactor,'_',  metadata_GCMS$Number_o
 metabolites.filter=wrapper.filter.splines(GCMS.log,lmms.metabolites,stationnarity.test = FALSE, homoskedasticity = TRUE,MSE.filter = FALSE)
 
 metabolites.filter$to_keep #molecules to keep
-metabolites.filter$res.filter
+#metabolites.filter$res.filter
 summary(metabolites.filter$res.filter)
 
 
@@ -220,18 +253,22 @@ rejected.metabolites.name=metabolites.filter$res.filter[!colnames(data.metabolit
 data.metabolites.rejected=data.metabolites[,!colnames(data.metabolites)%in%as.matrix(metabolites.filter$to_keep)] # profiles of the rejected molecules
  
 
-matplot(x=matrix(rep(rownames(data.metabolites.rejected), length(as.matrix(rejected.metabolites.name))), ncol=length(as.matrix(rejected.metabolites.name))), y=scale(data.metabolites.rejected), type = 'l', main='plot of scaled rejected metabolites', xlab='time') #plot of the rejected profiles
-
+#matplot(x=matrix(rep(rownames(data.metabolites.rejected), length(as.matrix(rejected.metabolites.name))), ncol=length(as.matrix(rejected.metabolites.name))), y=scale(data.metabolites.rejected), type = 'l', main='plot of scaled rejected metabolites', xlab='time') #plot of the rejected profiles
 
 ```
 
+The filtering steps removed 4 metabolites. 
+In the above graph, time profiles of the selected metabolites are displayed.
 
 
 # sPLS
 
-16S data and metabolites are analysed. 
+In the following section, we use *Projection on Latent Structures (PLS)* to cluster both OTU and metabolite time profiles.
+We also use *sparse PLS* to identify a biological signature per cluster.
 
-
+In the graphs below, time points are represented as points placed according to their projection in the
+smaller subspace spanned by the components of the sPLS. They allow to visualize the similarities (the points
+are grouped together) and the dissimilarities between the times.
 
 
 ```{r, echo=FALSE, results='asis',fig.height=4, eval=TRUE}
@@ -244,11 +281,25 @@ matplot(x=matrix(rep(rownames(data.metabolites.rejected), length(as.matrix(rejec
  
 
 spls.res = spls(X = X1, Y = X2, keepX=c(20,12), keepY=c(8,8), ncomp = ncomp, mode = 'regression', scale = TRUE) # keepX keepY values can be modified
+```
+```{r,  echo=FALSE, results='asis',fig.height=4, eval=TRUE}
 plotIndiv(spls.res) # individual plot
+```
+
+We also use an *Arrow plot* to represent the similarity between the 2 datasets.
+Each arrow corresponds to one time. The start of the arrow indicates the location of the time in X (OTUs) in one plot, and the tip the location of the same time in Y (metabolites) in the other plot. 
+Short arrows indicate if both data sets strongly agree and long arrows a disagreement between the two data sets.
+
+```{r, echo=FALSE, results='asis',fig.height=4, eval=TRUE}
 plotArrow(spls.res) # i
+```
 
+The contribution of each OTU in the construction of the new components can be displayed on the circle of
+correlations plot. On this graph, the strongly correlated OTUs are projected in the same direction. We use
+this information to build trajectory clusters.
+
+```{r, echo=FALSE, results='asis',fig.height=4, eval=TRUE}
 plotVar(spls.res) #variable plot
-
 ```
 
 
@@ -263,8 +314,9 @@ summary.X2 = spls.result(data = scale(X2), block = 'Y', spls.res)
 #data are scaled in the function
 ```
 
+In the graph bellow, we represent the mean profiles for each block.
 
-```{r, echo=FALSE}
+```{r, echo=FALSE, results='asis',fig.height=4, eval=TRUE, warning=F}
 
 # representation of the mean profiles for each block (means calculated per sign and based on original but scaled data provided in spls.result)
 meltm = melt(t(cbind(summary.X1$spls.means, summary.X2$spls.means)))
@@ -273,7 +325,13 @@ meltm$data = rep(c(rep('OTU', ncol(summary.X1$spls.means)), rep('Metabolites', n
 print(ggplot(data=meltm, aes(x=Var2, y=value, group = data, color = data)) + geom_line() + facet_wrap( ~ Var1) + ggtitle('sPLS clusters, mean profiles') + xlab('time') +ylab('scaled value'))
 ```
 
-```{r, echo=FALSE}
+We have 4 clusters with sPLS. The time profiles for both OTUs and metabolites are represented by cluster.
+The clusters are separated according to component and contibution. On the first component (first column), OTUs and metabolites with a negative contribution on the component 1 are displayed on the first row.
+OTUs and metabolites with a positive contribution on the component 1 are displayed on the second row.
+The same applies to OTUs and metébolites selected on the second component.
+
+
+```{r, echo=FALSE, results='asis',fig.height=4, eval=TRUE, warning=F}
 
 # all profiles can be represented
 # --------------------
@@ -328,7 +386,13 @@ names.1posX2=names(signcompX2)[(signcompX2=="1 pos")]
 names.2negX2=names(signcompX2)[(signcompX2=="2 neg")]
 names.2posX2=names(signcompX2)[(signcompX2=="2 pos")]
 ```
+
 ## Proportionality analysis
+
+Interpretation based on correlations between profiles must be made with caution as it is highly likely to be
+spurious. Proportional distances has been proposed as an alternative to measure association.
+
+In the following graphs, we represent all the proportionality distance $\varphi_s$ within clusters and the distance of features inside the clusters with entire background set. We first splited the analysis by omics data type and we computed the distance with the merged data after.
 
 ```{r, echo=F, warning=F, message=F}
 library(propr)
@@ -377,6 +441,8 @@ ggplot(res.rbind, aes(x= as.factor(cluster1),y = value, color = insideout)) + ge
 
 ```
 
+We used a Wilcoxon test to compare the median within the cluster and outside the cluster.
+
 ```{r, echo=F, warning=F, message=F}
 ## all
 all.bioR <- cbind(OTU.bioR, metabo.bioR)
@@ -420,10 +486,10 @@ return_stat_median_only(res.phs.all) %>% knitr::kable()
 
 
 
-
 # block sPLS
 
-The three datasets (OTUs, metabolites and performances) are analysed together. 
+The three datasets (OTUs, metabolites and performances) are analysed together.
+We used a block sparse PLS analysis.
 
 ```{r, echo=FALSE, warning=FALSE}
 Liste=list(OTU=data.OTUS, metabolites=data.metabolites)
@@ -432,6 +498,8 @@ KeepX=list(OTU=c(20, 12),metabolites=c(8,8) ) # these values can be modified
 KeepY=c(3, 1) # these values can be modified 
 res.block = block.spls(X = Liste, Y=Y, indY = 3, ncomp = 2, keepX = KeepX, keepY = KeepY, mode = "regression")
 ```
+
+The following graphs have been previously described.
 
 ```{r, echo=FALSE, warning=FALSE}
 
@@ -516,13 +584,14 @@ print(ggplot(melt.rgcca, aes(x=Var2, y=value, group = interaction(Var1,data), co
 
 
 ```
-```{r}
+```{r, echo = F}
 ## variables selected with block spls
 selected.variables=levels(melt.rgcca$Var1)
 non.selected.OTUs=colnames(data.OTUS)[!colnames(data.OTUS)%in%selected.variables]
   non.selected.metabolites=colnames(data.metabolites)[!colnames(data.metabolites)%in%selected.variables]
 ```
 
+## Proportionality analysis
 
 ```{r, echo=F, warning=F, message=F}
 cluster.bioR <- cluster.block
