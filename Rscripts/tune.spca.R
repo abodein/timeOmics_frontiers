@@ -212,13 +212,20 @@ pca.plot <- function(pca.Obj, title = "PCA"){
     left_join(cluster.info, by = c("molecule"="molecule")) %>%
     group_by(molecule) %>%
     mutate(time = as.numeric(time)) %>%
-    mutate(cluster = factor(cluster, levels= cluster.level))
+    mutate(cluster = factor(cluster, levels= cluster.level)) %>%
+    mutate(Cluster = paste0("Component ", abs(as.numeric(as.character(cluster))),
+                            " ", ifelse(as.numeric(as.character(cluster)) >0, "positive", "negative")))  %>%
+    mutate(Cluster = factor(Cluster, levels = c("Component 1 positive", "Component 1 negative",
+                                                "Component 2 positive", "Component 2 negative",
+                                                "Component 3 positive", "Component 3 negative",
+                                                "Component 4 positive", "Component 4 negative",
+                                                "Component 5 positive", "Component 5 negative")))
 
   ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) +
     geom_line() +
-    facet_wrap(~ cluster, dir = "v", nrow = 2) +
-    ggtitle(title) +
-    scale_color_manual(values = color.mixo(1:length(cluster.level)))
+    facet_wrap(~ Cluster, dir = "v", nrow = 2) +
+    ggtitle(title) + theme_bw() +
+    scale_color_manual(values = color.mixo(1:length(cluster.level))) + ylab("CLR abundance")
 }
 
 norm_profile <- function(profile){
@@ -243,13 +250,21 @@ spca.plot <- function(pca.Obj, title = "sPCA"){
     filter(!is.na(cluster)) %>%  ## filter cluster != 0, NA introduced
     group_by(molecule) %>%
     mutate(time = as.numeric(time)) %>%
-    mutate(cluster = factor(cluster, levels= cluster.level))
+    mutate(cluster = factor(cluster, levels= cluster.level)) %>%
+    mutate(Cluster = paste0("Component ", abs(as.numeric(as.character(cluster))),
+                            " ", ifelse(as.numeric(as.character(cluster)) >0, "positive", "negative")))  %>%
+    mutate(Cluster = factor(Cluster, levels = c("Component 1 positive", "Component 1 negative",
+                                                "Component 2 positive", "Component 2 negative",
+                                                "Component 3 positive", "Component 3 negative",
+                                                "Component 4 positive", "Component 4 negative",
+                                                "Component 5 positive", "Component 5 negative")))
 
   ggplot(data = data, aes(x = time, y = value, group = molecule, col = cluster)) +
     geom_line() +
-    facet_wrap(~ cluster, dir = "v", nrow = 2) +
-    ggtitle(title) +
-    scale_color_manual(values = color.mixo(1:length(cluster.level)))
+    facet_wrap(~ Cluster, dir = "v", nrow = 2) +
+    ggtitle(title) + theme_bw() +
+    scale_color_manual(values = color.mixo(1:length(cluster.level))) +
+    ylab("CLR abundance")
 }
 
 .get.cluster.info <- function(cluster) {

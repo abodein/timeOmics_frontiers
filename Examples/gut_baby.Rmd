@@ -43,7 +43,7 @@ load("../Data/milk_data.RData")
 ggplot(data= design %>% rename(Sex = Sexe), aes(x = TIME, y = BABY, color = Sex)) + 
   geom_point() + facet_grid(Delivery~., scales = "free_y") + ggtitle("Design") +
   #scale_color_manual(values = color.mixo(1:2))  + 
-  theme_bw()
+  theme_bw() + ylab("Infant") + xlab("time")
   
 
 #design %>% dplyr::select(BABY, TIME) %>% mutate(BABY = as.numeric(BABY)) %>%
@@ -658,7 +658,8 @@ data %>% as.data.frame() %>% rownames_to_column("time") %>%
   ggplot(aes(x=time, y=value, group=molecule, color = as.factor(cluster))) + 
   geom_line() + facet_wrap(~as.factor(cluster)) + theme(legend.position="none") +
   ggtitle("Vaginal fPCA (EM) Clusters") + 
-  scale_color_manual(values = color.mixo(1:4))
+  scale_color_manual(values = color.mixo(1:4)) +
+  theme_bw() + labs(color ="cluster") + ylab("CLR abundance")
 ```
 
 The EM method gives the worst results (`r round(mean(SC.fpca.1$silhouette.coef), digits = 2)`).
@@ -691,7 +692,8 @@ data %>% as.data.frame() %>% rownames_to_column("time") %>%
   mutate(time = as.numeric(time)) %>%
   ggplot(aes(x=time, y=value, group=molecule, color = as.factor(cluster))) + 
   geom_line() + facet_wrap(~as.factor(cluster)) + theme(legend.position="none") +
-  scale_color_manual(values=color.mixo(1:4)) + ggtitle("Vaginal fPCA (k-CFC) Clusters")
+  scale_color_manual(values=color.mixo(1:4)) + ggtitle("Vaginal fPCA (k-CFC) Clusters") +
+  theme_bw() + labs(color ="cluster") + ylab("CLR abundance")
 ```
 
 The kCFC method gives better results (`r round(mean(SC.fpca.2$silhouette.coef), digits = 2)`)than EM clustering but PCA clustering is much better according to our criterion (`r round(wrapper.silhouette.pca(spline.data.V, ncomp = 2, scale = T, center=T, plot.t = F), digits = 2)`) for vaginal data.

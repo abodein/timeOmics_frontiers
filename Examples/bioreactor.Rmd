@@ -492,7 +492,7 @@ The three datasets (OTUs, metabolites and performances) are analysed together.
 We used a block sparse PLS analysis.
 
 ```{r, echo=FALSE, warning=FALSE}
-Liste=list(OTU=data.OTUS, metabolites=data.metabolites)
+Liste=list(OTU=data.OTUS.kept, metabolites=data.metabolites.kept)
 Y=cbind(perf.data, liq.data)
 KeepX=list(OTU=c(20, 12),metabolites=c(8,8) ) # these values can be modified
 KeepY=c(3, 1) # these values can be modified 
@@ -578,9 +578,8 @@ names(color)=c("OTUs","Metabolites", "Performances")
 
 ##plot of the different scale profiles selected
 
-print(ggplot(melt.rgcca, aes(x=Var2, y=value, group = interaction(Var1,data), color = data)) +scale_color_manual(values=color)+ geom_line(lwd=0.2) +   facet_grid(sign~comp, labeller=labeller(sign = c(pos="Positive",neg="Negative"), comp=c('1'="Component 1", '2'="Component 2", '3'='Component 3')))+ ggtitle('                         block sPLS, correlated data across time') + xlab('Number of days')+ scale_y_continuous(limits = c(-2, 2)) +ylab('Scaled value'))
+print(ggplot(melt.rgcca, aes(x=Var2, y=value, group = interaction(Var1,data), color = data)) +scale_color_manual(values=color)+ geom_line(lwd=0.2) +   facet_grid(sign~comp, labeller=labeller(sign = c(pos="Positive",neg="Negative"), comp=c('1'="Component 1", '2'="Component 2", '3'='Component 3')))+ ggtitle('                         block sPLS, correlated data across time') + xlab('Number of days')+ scale_y_continuous(limits = c(-2, 2)) +ylab('CLR abundance or expression value (scaled)')) + theme_bw()
 
-#dev.off()
 
 
 ```

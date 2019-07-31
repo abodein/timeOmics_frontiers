@@ -124,7 +124,8 @@ plot_silhouette <- function(coef.df){
     theme_minimal() +
     theme(axis.text.y=element_blank()) +
     ylim(-1, 1) +
-    scale_fill_manual(values = color.mixo(1:length(cluster_level)))
+    scale_fill_manual(values = color.mixo(1:length(cluster_level))) +
+    xlab("OTU")
 }
 
 plot_silhouette_mean_median <- function(coef.df){
@@ -294,5 +295,6 @@ plot_fig.paper2 <- function(coef.df, title = ""){
     scale_fill_manual(values = color.mixo(1:4)) +
 
     ylim(min(coef.df$silhouette.coef), 1) +
-    guides(fill=guide_legend(title="cluster"))
+    guides(fill=guide_legend(title="cluster")) +
+    xlab("OTU")
 }
