@@ -13,13 +13,11 @@ silhouette(X, cluster)
 that contains clustering information with molecule and cluster}
 }
 \value{
-\describe{
-  \item{distance_df}{data.frame containing the cumputed distance between features.}
+\item{distance_df}{data.frame containing the cumputed distance between features.}
   \item{names}{list of chararcter containing the names of the features.}
   \item{data}{matrix containing original data.}
   \item{cluster_df}{data.frame containing the cluster information by features.}
   \item{coef.df}{data.frame containing ths silhouette coefficient by cluster.}
-}
 }
 \description{
 A more detailed description.
