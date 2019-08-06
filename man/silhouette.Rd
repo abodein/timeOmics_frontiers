@@ -7,23 +7,11 @@
 silhouette(X, cluster)
 }
 \arguments{
-\item{X}{A numeric matrix.}
+\item{X}{A numeric matrix of size NxP with feature in colnames.}
 
-\item{cluster}{A data.frame
-that contains clustering information with molecule and cluster}
-}
-\value{
-\item{distance_df}{data.frame containing the cumputed distance between features.}
-  \item{names}{list of chararcter containing the names of the features.}
-  \item{data}{matrix containing original data.}
-  \item{cluster_df}{data.frame containing the cluster information by features.}
-  \item{coef.df}{data.frame containing ths silhouette coefficient by cluster.}
+\item{cluster}{A numeric vector of sive ncol(X) containing the cluster
+information by}
 }
 \description{
 A more detailed description.
-}
-\examples{
-data <- get_demo_silhouette()
-res <- silhouette(X = data$data, cluster = data$cluster)
-
 }

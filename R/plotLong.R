@@ -240,4 +240,3 @@ plotLongGGplot <- function(data, time, cluster, plot = TRUE){
     }
     return(data.gather)
 }
-

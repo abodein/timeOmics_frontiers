@@ -30,7 +30,7 @@ getSilhouette.pca <- function(object){
         dplyr::select("molecule", "cluster")
 
     silhouette.res <- silhouette(X = as.data.frame(object$X), cluster = cluster)
-    ComputeSilhouetteAverage(silhouette.res)
+    return(silhouette.res)
 }
 
 #' @importFrom magrittr %>%
@@ -95,42 +95,4 @@ getSilhouette.block.pls <- function(object){
 
     silhouette.res <- silhouette(X = X, cluster = cluster)
     ComputeSilhouetteAverage(silhouette.res)
-}
-
-#' @export
-wrapper.getSilhouette.ncomp <- function(X, min = NULL, max = NULL, ...){
-    # test for min, max
-    if(!is.null(min)){
-        stopifnot(is.numeric(min))
-        if(!(min > 0) || !(max <= X$ncomp)){
-            stop("min should be an integer greater or equal than 1 and lower than ncomp")
-        }
-    } else {
-        min <- 1
-    }
-    if(!is.null(max)){
-        stopifnot(is.numeric(min))
-        if(!(max <= X$ncomp) || !(max > 0)){
-            stop("max should be an integer greater or equal than 1 and lower than ncomp")
-        }
-    } else {
-        max <- X$ncomp
-    }
-    # if min and max have been set
-    min <- base::min(min, max)
-    max <- base::max(min, max)
-    UseMethod("wrapper.getSilhouette.ncomp")
-}
-
-wrapper.getSilhouette.ncomp.pca <- function(X, min, max, ...){
-    # iteratively compute silhouette for min to max; re-run pca for every ncomp
-    pca.res <- list()
-    for(comp in min:max){
-        data <- X$X  # already scaled/centered
-        pca.res[[i]] <- mixOmics::pca(X = data, scale = F, ...)
-    }
-}
-
-wrapper.getSilhouette.ncomp.mixo_pls <- function(X, min, max){
-
 }

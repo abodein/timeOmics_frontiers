@@ -1,43 +1,3 @@
-#' silhouette
-#'
-#' A more detailed description.
-#'
-#' @param X A numeric matrix.
-#'
-#' @param cluster A data.frame
-#' that contains clustering information with molecule and cluster
-#'
-#'
-#' @return
-#'   \item{distance_df}{data.frame containing the cumputed distance between features.}
-#'   \item{names}{list of chararcter containing the names of the features.}
-#'   \item{data}{matrix containing original data.}
-#'   \item{cluster_df}{data.frame containing the cluster information by features.}
-#'   \item{coef.df}{data.frame containing ths silhouette coefficient by cluster.}
-#'
-#' @examples
-#' data <- get_demo_silhouette()
-#' res <- silhouette(X = data$data, cluster = data$cluster)
-#'
-#' @export
-# silhoutte general formula
-silhouette <- function(X, cluster) {
-    # validate input
-    CheckSilhouetteInput(X, cluster)
-
-    # distance
-    # do nothing if X is already a Silhouette.Obj object
-    Silhouette.Obj <- silhouette.distance.spearman(X)
-
-    # add cluster metadata
-    Silhouette.Obj <- silhouette.add_cluster(Silhouette.Obj,
-                                             cluster_df = cluster)
-
-    Silhouette.Obj <- silhouette.compute_silhouette(Silhouette.Obj)
-    return(Silhouette.Obj)
-}
-
-
 #' Get data for silhouette demo
 #'
 #' @return A matrix of expression profile, sample in raws, time in columns.
@@ -52,211 +12,136 @@ get_demo_silhouette <- function() {
 }
 
 
-Valid.Silhouette.Obj <- function(Silhouette.Obj) {
-    # silhouette.distance.spearman
-    # dim, slots, ...
-    stopifnot(is(Silhouette.Obj, "Silhouette.Obj"))
-    stopifnot(length(Silhouette.Obj) %in% c(3,4,5))
+#' silhouette
+#'
+#' A more detailed description.
+#'
+#' @param X A numeric matrix of size NxP with feature in colnames.
+#'
+#' @param cluster A numeric vector of sive ncol(X) containing the cluster
+#' information by
+#'
+#' @export
+silhouette <- function(dmatrix,  # distance matrix
+                       cluster)  # cluster vector of size ncol(dmatrix)
+    {
+    #-- checking input parameters ---------------------------------------------#
+    #--------------------------------------------------------------------------#
 
-    stopifnot(ncol(Silhouette.Obj$distance_df) %in% c(3,5))
+    #-- check dmatrix
+    stopifnot(is.matrix(dmatrix) || is.data.frame(dmatrix))
+    dmatrix <- as.matrix(dmatrix)
+    stopifnot(nrow(dmatrix) == ncol(dmatrix))
 
-    #check data
-    stopifnot(ncol(Silhouette.Obj$data) == length(Silhouette.Obj$names))
-    stopifnot(colnames(Silhouette.Obj$data) == Silhouette.Obj$names)
+    #-- check cluster
+    stopifnot(is.vector(cluster) || is.factor(cluster))
+    stopifnot(length(cluster) == ncol(dmatrix))
 
-    # check distance_df
-    stopifnot(nrow(Silhouette.Obj$distance_df) ==
-                  length(Silhouette.Obj$names)^2 - length(Silhouette.Obj$names))
+    cluster <- factor(cluster)
+    cluster.levels <- levels(cluster)
 
-    if(length(Silhouette.Obj) == 3){
-        # first building step
-        stopifnot(ncol(Silhouette.Obj$distance_df) == 3)
-    } else if(length(Silhouette.Obj) == 4 || length(Silhouette.Obj) == 5){
-        # second building step :: add metadata cluster
-        stopifnot(ncol(Silhouette.Obj$distance_df) == 5)
-        stopifnot(!is.null(Silhouette.Obj$cluster_df))
-        stopifnot(ncol(Silhouette.Obj$cluster_df) == 2)
-        stopifnot(colnames(Silhouette.Obj$cluster_df) ==
-                      c("molecule", "cluster"))
-        stopifnot(Silhouette.Obj$cluster_df$molecule %in% Silhouette.Obj$names)
-    } else if(length(Silhouette.Obj) == 5){
-        stopifnot(!is.null(Silhouette.Obj$coef.df))
-        stopifnot(ncol(Silhouette.Obj$coef.df) == 3)
-        stopifnot(nrow(Silhouette.Obj$coef.df) == length(Silhouette.Obj$names))
-        stopifnot(names(Silhouette.Obj$coef.df) ==
-                      c("molecule", "silhouette.coef","cluster"))
+
+    #- compute silhouette -----------------------------------------------------#
+    #--------------------------------------------------------------------------#
+    average.dist <- matrix(ncol = length(cluster.levels), nrow = nrow(dmatrix))
+    result <- vector(length = ncol(X))
+    for(i in 1:nrow(dmatrix)){
+        for(j in 1:length(cluster.levels)){
+            index.tmp <- cluster == cluster.levels[j]
+            if(cluster.levels[j] == cluster[i]) {
+                # we do not include d(i,i) in the sum
+                # can introduce NaN if size of cluster is 1
+                # but this is handle after because score is 0 when size of cluster is 1
+                index.tmp[i] <- FALSE
+            }
+            average.dist[i,j] <- mean(dmatrix[i, index.tmp])
+        }
+        A <- average.dist[i, cluster[i]] # a : inside
+        B <- min(average.dist[i,-c(cluster[i])])  # b
+        result[i] <- silhoutte.formula(A = A, B = B)
     }
+
+    #-- return
+    to_return <- list()
+
+    #-- silhouette coefficient by feature
+    to_return[["feature"]] <- cbind(colnames(X), cluster,  as.data.frame(result))
+    colnames(to_return[["feature"]]) <- c("feature", "cluster", "silhouette.coef")
+
+    #-- average silhouette coefficient
+    to_return[["average"]] <- mean(to_return[["feature"]][["silhouette.coef"]])
+
+    #-- average silhouette coefficient by cluster
+    to_return[["average.cluster"]] <- group_by(to_return[["feature"]], cluster) %>%
+        summarise(silhouette.coef = mean(silhouette.coef)) %>%
+        as.data.frame
+
+    return(to_return)
 }
 
-CheckSilhouetteInput <- function(X, cluster){
-    # X
-    stopifnot(is(X, "matrix") || is(X, "data.frame"))
-    stopifnot(!any(is.na(X)))
-    stopifnot(is.numeric(as.matrix(X)))
+#' dmatrix.spearman.dissimilarity
+#'
+#' Compute the spearman dissimilarity distance.
+#'
+#' @param X A numeric matrix with feature in colnames
+#'
+#' @return
+#' Return a dissimilarity matrix of size PxP.
+#'
+#' @export
+dmatrix.spearman.dissimilarity <- function(X){
+    # between 0 and 2
+    dmatrix <- cor(x = X, use = 'pairwise.complete.obs',
+                   method = 'spearman')
+    dmatrix <- 1 - dmatrix
+    return(dmatrix)
+}
 
+dmatrix.proportionality.distance <- function(X){
+    # clr first
+    dmatrix <- matrix(ncol = ncol(X), nrow = ncol(X))
+    rownames(dmatrix) <- colnames(dmatrix) <- colnames(X)
+    for(i in 1:ncol(X)){
+        for(j in 1:ncol(X)){
+            dmatrix[i,j] <- var(X[,i] - X[,j])/var(X[,i] + X[,j])
+        }
+    }
+    return(dmatrix)
+}
 
-    # cluster
-    stopifnot(is(cluster, "data.frame"))
-    # consistency of dim
-    stopifnot(ncol(cluster) == 2)
-    stopifnot(!any(is.na(cluster)))
-    stopifnot(colnames(cluster) == c("molecule", "cluster"))
-    stopifnot(nrow(cluster) == nrow(cluster))
-    # no duplicated value
-    stopifnot(length(unique(cluster$molecule)) == nrow(cluster))
-    # consistency of molecule names
-    stopifnot(all(cluster$molecule %in% colnames(X)))
+silhoutte.formula <- function(A,B){
+    # A average dist inside cluster; # B: min average dist outside
+    stopifnot(is.vector(A) && is.vector(B))
+    stopifnot(is.numeric(A) && is.numeric(B))
+    if(!(is.finite(A))){
+        return(0)
+    }else{
+        return((B - A)/(max(A,B)))
+    }
 }
 
 #' @export
-ComputeSilhouetteAverage <- function(Silhouette.Obj){
-    stopifnot(is(Silhouette.Obj, "Silhouette.Obj"))
-    # not full object
-    stopifnot(length(Silhouette.Obj) == 5)
-    return( mean(Silhouette.Obj$coef.df$silhouette.coef))
-}
+wrapper.silhouette <- function(X, cluster)
+{
+    #-- checking input parameters ---------------------------------------------#
+    #--------------------------------------------------------------------------#
 
-#' Spearman distance from a matrix
-#'
-#' Compute spearman correlation distance
-#'
-#' @param X A matrix
-#'
-#'
-#' @import dplyr
-#' @import tidyr
-#' @import tibble
-#' @importFrom magrittr %>%
-#'
-silhouette.distance.spearman <- function(X) {
-    if (!is(X, "Silhouette.Obj")) {
-        # time X molecule, dataframe with rownames(time)
-        res.cor <- cor(x = X, use = 'pairwise.complete.obs',
-                       method = 'spearman') %>%
-            as.data.frame() %>%
-            rownames_to_column(var = "molecule.x")
-        # 3 columns : molecule.x, molecule.y, dist
-        res.cor <- gather(res.cor, molecule.y, dist,-molecule.x) %>%
-            # discard distance between same molecules.
-            filter(molecule.x != molecule.y)
-        # cumpute adjusted spearman distance
-        # -rho + 1  ## Spearman like -> distance  [0:2]
-        res.cor <- mutate(res.cor, dist = -dist + 1)
+    #-- check X
+    stopifnot(is.matrix(X) || is.data.frame(X))
+    X <- as.matrix(X)
 
-        # initialize Silhouette.Obj
-        silhouette.res <- list()
-        silhouette.res$distance_df <- as.data.frame(res.cor)
-        silhouette.res$names <- colnames(X)
-        silhouette.res$data <- X
+    #-- check cluster
+    stopifnot(is.vector(cluster) || is.factor(cluster))
+    stopifnot(length(cluster) == ncol(X))
 
-        attr(silhouette.res, "class") <- "Silhouette.Obj"
-    }
+    cluster <- factor(cluster)
+    cluster.levels <- levels(cluster)
 
-    Valid.Silhouette.Obj(silhouette.res)
-    return(silhouette.res)
-}
+    #-- compute distance matrix -----------------------------------------------#
+    #--------------------------------------------------------------------------#
+    dmatrix <- dmatrix.spearman.dissimilarity(X)
 
-#' @import dplyr
-#' @importFrom magrittr %>%
-silhouette.add_cluster  <- function(Silhouette.Obj, cluster_df) {
-    # cluster_df =  molecule | cluster
-    # valiate cluster_df
-
-    # first left_join : add molecule.x cluster
-    Silhouette.Obj$distance_df <-
-        left_join(Silhouette.Obj$distance_df,
-                  cluster_df,
-                  by = c("molecule.x" = "molecule")) %>%
-        set_names(c("molecule.x", "molecule.y", "dist", "cluster.x"))
-
-    # second left_join : add molecule.y cluster
-    Silhouette.Obj$distance_df <-
-        left_join(Silhouette.Obj$distance_df,
-                  cluster_df,
-                  by = c("molecule.y" = "molecule")) %>%
-        set_names(c(
-            "molecule.x",
-            "molecule.y",
-            "dist",
-            "cluster.x",
-            "cluster.y"))
-
-    Silhouette.Obj$cluster_df <- cluster_df
-
-    Valid.Silhouette.Obj(Silhouette.Obj)
-    return(Silhouette.Obj)
-}
-
-
-#' @import purrr
-silhouette.compute_silhouette <- function(Silhouette.Obj) {
-    # test if Silhouette.Obj recieve cluster data
-    stopifnot(!is.null(Silhouette.Obj$cluster_df))
-
-    sdf <- Silhouette.Obj$distance_df %>%
-        split(Silhouette.Obj$distance_df$molecule.x)
-    liste_mol <- names(sdf)
-    coef.df <-
-        as.data.frame(matrix(
-            data = NA,
-            nrow = length(names(sdf)),
-            ncol = 3
-        )) %>%
-        set_names(c("molecule", "silhouette.coef", "cluster"))
-
-    for (mol in 1:length(names(sdf))) {
-        mol_name_tmp <- liste_mol[mol]
-        sdf_mol_tmp <- sdf[[mol_name_tmp]]
-        tmp <- compute_molecule_silhouette(sdf_mol_tmp, mol_name_tmp)
-
-        coef.df[mol, 1] <- mol_name_tmp
-        coef.df[mol, 2] <- tmp
-        coef.df[mol, 3] <- get_cluster(sdf_mol_tmp, mol_name_tmp)
-    }
-    Silhouette.Obj$coef.df <- coef.df
-    return(Silhouette.Obj)
-}
-
-# compute silhoute coef for 1 molecule
-compute_molecule_silhouette <- function(sdf, molecule){
-    # compute silhouette coef for \molecule
-    A = average_inside(df = sdf, molecule = molecule)
-    B = min_average_outside(df = sdf, molecule = molecule)
-    sc <- silhoutte_coef(A = A, B = B)
-    #df <- data.frame(molecule, sc, get_cluster(sdf, molecule)) %>% set_names(c("molecule", "silhouette.coef", "cluster"))
-    #return(df)
-}
-
-average_inside <- function(df, molecule){
-    tmp_inside <- df %>% # filter(molecule.x == molecule) %>% # good df given by split
-        filter(cluster.x == cluster.y) %>% # same cluster WARNINGS:: molecule in +1 cluster #WARNINGS 2 : only 1
-        group_by(cluster.y) %>%
-        summarise("average" =mean(dist)) %>%
-        top_n(n=-1, average) %>% dplyr::select(average) %>% pull
-    if(is_empty(tmp_inside)){
-        return(0)
-    } else {
-        return(tmp_inside)
-    }
-}
-
-# silhoutte general formula
-silhoutte_coef <- function(A,B){
-    # A average dist inside cluster; # B: min average dist outside
-    (B - A)/(max(A,B))
-}
-
-get_cluster <- function(sdf, molecule){
-    tmp <- sdf %>% dplyr::select(cluster.x) %>% unique() %>% pull
-    return(tmp[1])
-}
-
-#' @import dplyr
-#' @importFrom magrittr %>%
-min_average_outside <- function(df, molecule){
-    df %>% # filter(molelcule.x == molecule) %>%
-        filter(cluster.x != cluster.y) %>% # outside cluster
-        group_by(molecule.x) %>% # 1 molecule
-        summarise("average" =mean(dist)) %>%
-        top_n(n=-1, average) %>% dplyr::select(average) %>% pull
+    #- compute silhouette -----------------------------------------------------#
+    #--------------------------------------------------------------------------#
+    silhouette(dmatrix = dmatrix, cluster = cluster)
 }
