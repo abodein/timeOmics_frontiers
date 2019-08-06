@@ -1,8 +1,9 @@
 # Integration of longitudinal microbiome studies 
 
-We propose a generic data-driven framework to integrate different types of longitudinal data measured on the same biological specimens with microbial communities data, and select key temporal features with strong associations within the same sample group. The framework ranges from filtering and modelling, to integration using smoothing splines and multivariate dimension reduction methods to address some of the analytical challenges of microbiome-derived data. We illustrate our framework on different types of multi-omics case studies in bioreactor experiments as well as human studies.
+We propose a generic data-driven framework to integrate different types of longitudinal data measured on the same biological specimens with microbial communities data, and select key temporal features with strong associations within the same sample group. The framework ranges from filtering and modelling, to integration using smoothing splines and multivariate dimension reduction methods to address some of the analytical challenges of microbiome-derived data, as illustrated in the figure below. We present our framework on different types of multi-omics case studies in bioreactor experiments as well as human studies.
 
-More details about the integrative framework can be found in https://www.biorxiv.org/content/10.1101/585802v1
+![](./Examples/concept.png)
+More details about the integrative framework can be found in https://www.biorxiv.org/content/10.1101/585802v2
 
 To reproduce the examples, the user can compile the `.Rmd` files in the `Examples/` folder. 
 The list of required packages and their versions is available in the file `needed_packages.txt`.  
