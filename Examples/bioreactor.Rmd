@@ -437,8 +437,9 @@ res.rbind <- rbind(res.phs.OTU, res.phs.metabo) %>%
     mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
     mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set")))
 
+# png("~/Documents/timeOmics/Examples/figure/suplemental/propr_spls_by_o.png",  width=2500, height=1600, res=300)
 ggplot(res.rbind, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot() + facet_wrap(~block) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance per omic dataset") + ylim(-4, max(res.rbind$value))
-
+# dev.off()
 ```
 
 We used a Wilcoxon test to compare the median within the cluster and outside the cluster.
@@ -462,7 +463,9 @@ res.phs.all <- phs.all %>% as.data.frame %>% rownames_to_column("feature1") %>%
         mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
         mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set")))
 
+#png("./figure/figure/propr_spls_all.png",  width=2500, height=1600, res=300)
 ggplot(res.phs.all, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot(outlier.size = 0.5) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance  (all omics)")
+#dev.off()
 
 return_stat_median_only <- function(res.phs.X){
     i = 1
@@ -642,7 +645,9 @@ res.rbind <- rbind(res.phs.OTU, res.phs.metabo, res.phs.perf) %>%
     mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set"))) %>%
     mutate(block = factor(block, levels = c('OTU', 'Metabolites', 'Y')))
 
+#png("./figure/suplemental/propr_block_spls_by_o.png",  width=3000, height=1600, res=300)
 ggplot(res.rbind, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot() + facet_wrap(~block) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance per omic dataset") + ylim(-4, max(res.rbind$value))
+#dev.off()
 
 ## all
 all.bioR <- cbind(OTU.bioR, metabo.bioR, perf.bioR)
@@ -662,7 +667,9 @@ res.phs.all <- phs.all %>% as.data.frame %>% rownames_to_column("feature1") %>%
         mutate(insideout = ifelse(insideout == "inside", "within cluster", "with entire background set") ) %>%
         mutate(insideout = factor(insideout, levels = c("within cluster", "with entire background set")))
 
+#png("./figure/suplemental/propr_block_spls_all.png",  width=2500, height=1600, res=300)
 ggplot(res.phs.all, aes(x= as.factor(cluster1),y = value, color = insideout)) + geom_boxplot(outlier.size = 0.5) + theme_bw() + xlab("Cluster ID") + ylab("Proportionality distance") + labs(color = "Proportionality distance") + ggtitle("Proportionality distance  (all omics)")
+#dev.off()
 
 return_stat_median_only(res.phs.all) %>% knitr::kable()
 ```
