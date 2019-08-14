@@ -173,7 +173,7 @@ detec_drop <- function(X, x.axis){  # negative significant slopes
   for(i in 1 : length(D)){
     D[i] <- (X[i+1]-X[i])/(x.axis[i+1]+x.axis[i])
   }
-  c1 <- abs(D) > sd(D[D < 0])  # On regarde parmis les pentes négatives le SD. et on regarde si on a des choses au dessus.
+  c1 <- abs(D) > sd(D[D < 0])  #We look among negative slope and keep slope coef greater than SD.
   c2 <- D < 0 # only drop
   return(x.axis[c1 & c2][1]) # first value
 }
