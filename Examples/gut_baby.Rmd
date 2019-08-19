@@ -315,6 +315,7 @@ pca.plot(pca.res.V, title = "Vaginal PCA Clusters, scale = T")
 #wrapper.silhouette.pca(spline.data.V, ncomp = 2, scale = T, center=T)
 ```
 
+
 ## Measure of association for compositional data
 
 Interpretation based on correlations between profiles must be made with caution as it is highly likely to be spurious. Proportional distances has been proposed as an alternative to measure association. 
@@ -454,7 +455,18 @@ wrapper.silhouette.spca(spline.data.C, keepX = c(17,9),  ncomp = 2,
 # plot trajectories per cluster
 spca.plot(spca.res_f.C, title = "C-section sparse PCA Clusters")
 ```
-We finally display above the trajectories of the selected OTUs
+We finally display above the trajectories of the selected OTUs.
+
+The phylogenetic tree below were produced using GraPhlAn tools. To create such cladograms, GraPhlAn needs a taxonomy file describing the tree structure as well as an annotation file. The latter was generated partly through R-scripts (`./graphlan_csection.R`) and was finalised by hand. The final annotation file is present here (`../Data/annotation_csection.txt`) and below is the bash cammandes to reproduce the tree.
+
+```bash
+graphlan_annotate.py --annot ../Data/annotation_csection.txt \
+  ../Data/tree_csection.txt tree_csection.xml
+graphlan.py tree_csection.xml tree_csection.png --dpi 600 --size 10
+```
+
+
+![](./figure/tree_csection.png)
 
 ### Vaginal
 
@@ -486,6 +498,13 @@ spca.res_f.V <- spca(spline.data.V, ncomp = 2, keepX = c(17,10))
 spca.plot(spca.res_f.V, title = "Vaginal sparse PCA Clusters")
 ```
 
+GraPhlAn was used to buid this tree. Annotation file was patialy build with R-scripts (`./graphlan_vaginal.R`) and was finalised by hand. The final annotation file is present here (`../Data/annotation__csection_vaginal.txt`) and below is the bash cammandes to reproduce the tree.
+
+```bash
+graphlan_annotate.py --annot ../Data/annotation_vaginal.txt \
+  ../Data/tree_vaginal.txt tree_vaginal.xml
+graphlan.py tree_vaginal.xml tree_vaginal.png --dpi 600 --size 10
+```
 
 # Results
 

@@ -1,0 +1,702 @@
+title	Infant gut microbiota development study (Vaginal): OTUs by cluster
+title_font_size	17
+total_plotted_degrees	360
+start_rotation	270
+clade_marker_size	15
+branch_thickness	1.5
+branch_color	grey
+
+1. Cluster 1 (component 1 positive)	clade_marker_color	#388ECC
+2. Cluster -1 (component 1 negative)	clade_marker_color	#F68B33	
+3. Cluster 2 (component 2 positive)	clade_marker_color	#C2C2C2	
+4. Cluster -2 (component 2 negative)	clade_marker_color	#009E73
+
+1. Cluster 1 (component 1 positive)	class_legend_font_size	100
+2. Cluster -1 (component 1 negative)	class_legend_font_size	100
+3. Cluster 2 (component 2 positive)	class_legend_font_size	100
+4. Cluster -2 (component 2 negative)	class_legend_font_size	100
+
+1. Cluster 1 (component 1 positive)	clade_marker_size	80
+2. Cluster -1 (component 1 negative)	clade_marker_size	80
+3. Cluster 2 (component 2 positive)	clade_marker_size	80
+4. Cluster -2 (component 2 negative)	clade_marker_size	80
+
+Selected OTUs	clade_marker_color	black
+Selected OTUs	clade_marker_shape	*
+Selected OTUs	clade_marker_size	50
+Selected OTUs	clade_marker_edge_color	black
+
+
+##
+Bacteria^	clade_marker_size	150
+
+
+## Acidobacteria
+###########################################
+Bacteria.Acidobacteria	annotation	Acidobacteria
+Bacteria.Acidobacteria	annotation_font_size	5
+Bacteria.Acidobacteria	annotation_background_color	#E8E8E8
+
+## Actinobacteria
+###########################################
+Bacteria.Actinobacteria	annotation	Actinobacteria
+Bacteria.Actinobacteria	annotation_background_color	#E8E8E8
+Bacteria.Actinobacteria	annotation_font_size	12
+Bacteria.Actinobacteria.Actinobacteria	annotation	Actinobacteria
+Bacteria.Actinobacteria.Actinobacteria	annotation_background_color	#DADADA
+Bacteria.Actinobacteria.Actinobacteria	annotation_font_size	10
+
+#Bacteria.Actinobacteria.Actinobacteria.Actinomycetales	annotation	Actinomycetales
+#Bacteria.Actinobacteria.Actinobacteria.Actinomycetales	annotation_background_color	#CCCCCC
+#Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae	annotation	Actinomycetaceae
+#Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae	annotation_background_color	#BCBCBC
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces	annotation	Actinomyces
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces.Actinomyces neuii	annotation	A. neuii
+
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales	annotation_background_color	#CCCCCC
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales	annotation	Corynebacteriales
+#Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae	annotation	Corynebacteriaceae
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae.Corynebacterium	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae.Corynebacterium	annotation	Corynebacterium
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae.Corynebacterium	annotation_font_size	3
+#Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae	annotation	Mycobacteriaceae
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae.Mycobacterium	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae.Mycobacterium	annotation	Mycobacterium
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae.Mycobacterium	annotation_font_size	3
+
+#Bacteria.Actinobacteria.Actinobacteria.Micrococcales	annotation_background_color	#CCCCCC
+#Bacteria.Actinobacteria.Actinobacteria.Micrococcales	annotation	Micrococcales
+#Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae	annotation_background_color	#BCBCBC
+#Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae	annotation	Micrococcaceae
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter	annotation	Arthrobacter
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.Arthrobacter globiformis	annotation	A. globiformis
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.Arthrobacter globiformis	annotation_font_size	5
+
+#Bacteria.Actinobacteria.Actinobacteria.Micromonosporales	annotation_background_color	#CCCCCC
+#Bacteria.Actinobacteria.Actinobacteria.Micromonosporales	annotation	Micromonosporales
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae	annotation_background_color	#BCBCBC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae	annotation	Micromonosporaceae
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae	annotation_font_size	5
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes	annotation	Actinoplanes
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes	annotation_font_size	4
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	annotation	A. utahensis
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	annotation_font_size	5
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora	annotation	Micromonospora
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora	annotation_font_size	3
+
+#Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales	annotation_background_color	#CCCCCC
+#Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales	annotation	Propionibacteriales
+#Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae	annotation	Propionibacteriaceae
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium	annotation	Propionibacterium
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium	annotation_font_size	5
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium.Propionibacterium acnes	annotation	P. acnes
+
+Bacteria.Actinobacteria.Coriobacteriia	annotation_background_color	#DADADA
+Bacteria.Actinobacteria.Coriobacteriia	annotation	Coriobacteriia
+Bacteria.Actinobacteria.Coriobacteriia	annotation_font_size	10
+#Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales	annotation_background_color	#CCCCCC
+#Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales	annotation	Coriobacteriales
+#Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae	annotation	Coriobacteriaceae
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium	annotation	Atopobium
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium	annotation_background_color	#B0B0B0
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.Atopobium minutum	annotation	A. minutum
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.Atopobium minutum	annotation_font_size	5
+
+## Bacteroidetes
+#####################################
+Bacteria.Bacteroidetes	annotation	Bacteroidetes
+Bacteria.Bacteroidetes	annotation_background_color	#E8E8E8
+Bacteria.Bacteroidetes	annotation_font_size	12
+Bacteria.Bacteroidetes.Bacteroidia	annotation_background_color	#DADADA
+Bacteria.Bacteroidetes.Bacteroidia	annotation	Bacteroidia
+Bacteria.Bacteroidetes.Bacteroidia	annotation_font_size	10
+
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales	annotation_font_size	4
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales	annotation	Bacteroidales
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales	annotation_background_color	#CCCCCC
+#Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae	annotation_background_color	#BCBCBC
+#Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae	annotation	Bacteroidaceae
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides	annotation_background_color	#B0B0B0
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides	annotation	Bacteroides
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides	annotation_font_size	4
+
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales	annotation_background_color	#CCCCCC
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales	annotation	Cytophagales
+#Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae	annotation_background_color	#BCBCBC
+#Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae	annotation	Cytophagaceae
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga	annotation_background_color	#B0B0B0
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga	annotation	Cytophaga
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga.Cytophaga aurantiaca	annotation	C. aurantiaca
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga.Cytophaga aurantiaca	annotation_font_size	6
+
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales	annotation_background_color	#CCCCCC
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales	annotation	Sphingobacteriales
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales	annotation_font_size	4
+#Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae	annotation	Sphingobacteriaceae
+#Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae	annotation_font_size	3
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae.Sphingobacterium	annotation_background_color	#B0B0B0
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae.Sphingobacterium	annotation	Sphingobacterium
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae.Sphingobacterium	annotation_font_size	3
+Bacteria.Bacteroidetes.Cytophagia	annotation_background_color	#DADADA
+Bacteria.Bacteroidetes.Cytophagia	annotation	Cytophagia
+Bacteria.Bacteroidetes.Cytophagia	annotation_font_size	9
+#Bacteria.Bacteroidetes.Cytophagia.Cytophagales	annotation_background_color	#CCCCCC
+#Bacteria.Bacteroidetes.Cytophagia.Cytophagales	annotation	Cytophagales
+#Bacteria.Bacteroidetes.Cytophagia.Cytophagales.Cytophagaceae	annotation_background_color	#BCBCBC
+#Bacteria.Bacteroidetes.Cytophagia.Cytophagales.Cytophagaceae	annotation	Cytophagaceae
+Bacteria.Bacteroidetes.Cytophagia.Cytophagales.Cytophagaceae.Runella	annotation_background_color	#B0B0B0
+Bacteria.Bacteroidetes.Cytophagia.Cytophagales.Cytophagaceae.Runella	annotation	Runella
+
+## Cyanobacteria
+#####################################
+Bacteria.Cyanobacteria	annotation_background_color	#E8E8E8
+Bacteria.Cyanobacteria	annotation	Cyanobacteria
+Bacteria.Cyanobacteria	annotation_font_size	10
+Bacteria.Cyanobacteria.Chloroplast	annotation_background_color	#DADADA
+Bacteria.Cyanobacteria.Chloroplast	annotation	Chloroplast
+#Bacteria.Cyanobacteria.Oxyphotobacteria	annotation_background_color	#DADADA
+#Bacteria.Cyanobacteria.Oxyphotobacteria	annotation	Oxyphotobacteria
+#Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales	annotation_background_color	#CCCCCC
+#Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales	annotation	Pseudanabaenales
+#Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae	annotation_background_color	#BCBCBC
+#Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae	annotation	Pseudanabaenaceae
+Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae.Pseudanabaena	annotation_background_color	#B0B0B0
+Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae.Pseudanabaena	annotation	Pseudanabaena
+Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae.Pseudanabaena	annotation_font_size	5
+
+## Environnmental 
+##########################
+Bacteria.environnemental	annotation	Environmental
+Bacteria.environnemental	annotation_background_color	#E8E8E8
+Bacteria.environnemental.unknown.unknown.unknown.unknown.ABBB-96	annotation	ABBB-96
+Bacteria.environnemental.unknown.unknown.unknown.unknown.ABBB-96	annotation_font_size	4
+Bacteria.environnemental.unknown.unknown.unknown.unknown.adhufec51	annotation	adhufec51
+Bacteria.environnemental.unknown.unknown.unknown.unknown.adhufec51	annotation_font_size	4
+Bacteria.environnemental.unknown.unknown.unknown.unknown.HuCA36	annotation	HuCA36
+Bacteria.environnemental.unknown.unknown.unknown.unknown.HuCA36	annotation_font_size	4
+Bacteria.environnemental.unknown.unknown.unknown.unknown.MB1228	annotation	MB1228
+Bacteria.environnemental.unknown.unknown.unknown.unknown.MB1228	annotation_font_size	4
+Bacteria.environnemental.unknown.unknown.unknown.unknown.RB126	annotation	RB126
+Bacteria.environnemental.unknown.unknown.unknown.unknown.RB126	annotation_font_size	4
+
+## Epsilonbacteraeota
+################################
+Bacteria.Epsilonbacteraeota	annotation_background_color	#E8E8E8
+Bacteria.Epsilonbacteraeota	annotation	Epsilonbacteraeota
+Bacteria.Epsilonbacteraeota	annotation_font_size	8
+#Bacteria.Epsilonbacteraeota.Campylobacteria	annotation_background_color	#DADADA
+#Bacteria.Epsilonbacteraeota.Campylobacteria	annotation	Campylobacteria
+#Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales	annotation_background_color	#CCCCCC
+#Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales	annotation	Campylobacterales
+#Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae	annotation_background_color	#BCBCBC
+#Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae	annotation	Campylobacteraceae
+Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae.Campylobacter	annotation_background_color	#B0B0B0
+Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae.Campylobacter	annotation	Campylobacter
+Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae.Campylobacter	annotation_font_size	6
+
+## Fibrobacteres
+###############################
+Bacteria.Fibrobacteres	annotation_background_color	#E8E8E8
+Bacteria.Fibrobacteres	annotation	Fibrobacteres
+Bacteria.Fibrobacteres	annotation_font_size	5
+#Bacteria.Fibrobacteres.Fibrobacteria	annotation_background_color	#DADADA
+#Bacteria.Fibrobacteres.Fibrobacteria	annotation	Fibrobacteria
+#Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales	annotation	Fibrobacterales
+#Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae	annotation_background_color	#BCBCBC
+#Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae	annotation	Fibrobacteraceae
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter	annotation_background_color	#B0B0B0
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter	annotation	Fibrobacter
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter	annotation_font_size	4
+
+##	Firmicutes
+###############################
+Bacteria.Firmicutes	annotation_background_color	#E8E8E8
+Bacteria.Firmicutes	annotation	Firmicutes
+Bacteria.Firmicutes	annotation_font_size	12
+Bacteria.Firmicutes.Bacilli	annotation	Bacilli
+Bacteria.Firmicutes.Bacilli	annotation_font_size	10
+Bacteria.Firmicutes.Bacilli	annotation_background_color	#DADADA
+#Bacteria.Firmicutes.Bacilli.Bacillales	annotation	Bacillales
+#Bacteria.Firmicutes.Bacilli.Bacillales	annotation_background_color	#CCCCCC
+#Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae	annotation	Bacillaceae
+#Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae	annotation_font_size	3
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus	annotation	Bacillus
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus	annotation_font_size	5
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus.Bacillus subtilis	annotation	B. subtilis
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus.Bacillus subtilis	annotation_font_size	5
+#Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae	annotation	Staphylococcaceae
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae	annotation_font_size	3
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus	annotation	Staphylococcus
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus	annotation_font_size	4
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus.Staphylococcus sp	annotation	S. sp.
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus.Staphylococcus sp	annotation_font_size	5
+Bacteria.Firmicutes.Bacilli.Lactobacillales	annotation_background_color	#CCCCCC
+Bacteria.Firmicutes.Bacilli.Lactobacillales	annotation	Lactobacillales
+#Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae	annotation	Enterococcaceae
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus	annotation	Enterococcus
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus	annotation_font_size	4
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus.Enterococcus faecium	annotation	E. faecium
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus.Enterococcus faecium	annotation_font_size	5
+#Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae	annotation	Lactobacillaceae
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae.Lactobacillus	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae.Lactobacillus	annotation	Lactobacillus
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae.Lactobacillus	annotation_font_size	4
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae	annotation_background_color	#BCBCBC
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae	annotation	Streptococcaceae
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae	annotation_font_size	5
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus	annotation	Lactococcus
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus	annotation_font_size	4
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus.Lactobacillus delbrueckii	annotation	L. delbrueckii
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus.Lactobacillus delbrueckii	annotation_font_size	5
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Streptococcus	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Streptococcus	annotation	Streptococcus
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Streptococcus	annotation_font_size	4
+
+Bacteria.Firmicutes.Clostridia	annotation_background_color	#DADADA
+Bacteria.Firmicutes.Clostridia	annotation	Clostridia
+Bacteria.Firmicutes.Clostridia	annotation_font_size	10
+Bacteria.Firmicutes.Clostridia.Clostridiales	annotation_background_color	#CCCCCC
+Bacteria.Firmicutes.Clostridia.Clostridiales	annotation	Clostridiales
+Bacteria.Firmicutes.Clostridia.Clostridiales	annotation_font_size	10
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae	annotation_background_color	#BCBCBC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae	annotation	Clostridiaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae	annotation_font_size	10
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium	annotation	Clostridium
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium subterminale	annotation	C. subterminale
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium subterminale	annotation_font_size	3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium botulinum	annotation	C. botulinum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium botulinum	annotation_font_size	4
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium ramosum	annotation	C. ramosum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium ramosum	annotation_font_size	4
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium baratii	annotation	C. baratii
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium baratii	annotation_font_size	4
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium coccoides	annotation	C. coccoides
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium coccoides	annotation_font_size	4
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	annotation	C. leptum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	annotation_font_size	4
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium lituseburense	annotation	C. lituseburense
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium lituseburense	annotation_font_size	3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium perfringens	annotation	C. perfringens
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium perfringens	annotation_font_size	3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium sticklandii	annotation	C. sticklandii
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium sticklandii	annotation_font_size	4
+
+#Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae	annotation	Eubacteriaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium	annotation	Eubacterium
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium	annotation_font_size	4
+#Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae	annotation	Lachnospiraceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum	annotation	Cellulosilyticum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum	annotation_font_size	3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum.Cellulosilyticum lentocellum	annotation	C. lentocellum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum.Cellulosilyticum lentocellum	annotation_font_size	5
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales	annotation_background_color	#CCCCCC
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales	annotation	Thermoanaerobacterales
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales	annotation_font_size	5
+#Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae	annotation_background_color	#BCBCBC
+#Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae	annotation	Thermoanaerobacteraceae
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter	annotation	Thermoanaerobacter
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter	annotation_font_size	3
+
+Bacteria.Firmicutes.Negativicutes	annotation_background_color	#DADADA
+Bacteria.Firmicutes.Negativicutes	annotation	Negativicutes
+Bacteria.Firmicutes.Negativicutes	annotation_font_size	10
+#Bacteria.Firmicutes.Negativicutes.Selenomonadales	annotation_background_color	#CCCCCC
+#Bacteria.Firmicutes.Negativicutes.Selenomonadales	annotation	Selenomonadales
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae	annotation_background_color	#BCBCBC
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae	annotation	Veillonellaceae
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa	annotation	Sporomusa
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.Sporomusa paucivorans	annotation	S. paucivorans
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.Sporomusa paucivorans	annotation_font_size	4
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella	annotation_background_color	#B0B0B0
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella	annotation	Veillonella
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.Veillonella ratti	annotation	V. ratti
+
+## Fusobacteria
+################################
+Bacteria.Fusobacteria	annotation_background_color	#E8E8E8
+Bacteria.Fusobacteria	annotation	Fusobacteria
+Bacteria.Fusobacteria	annotation_font_size	10
+#Bacteria.Fusobacteria.Fusobacteriia	annotation_background_color	#DADADA
+#Bacteria.Fusobacteria.Fusobacteriia	annotation	Fusobacteriia
+#Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales	annotation_background_color	#CCCCCC
+#Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales	annotation	Fusobacteriales
+#Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae	annotation_background_color	#BCBCBC
+#Bacteria.Fsobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae	annotation	Fusobacteriaceae
+Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae.Fusobacterium	annotation_background_color	#B0B0B0
+Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae.Fusobacterium	annotation	Fusobacterium
+Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae.Fusobacterium	annotation_font_size	6
+Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae.Fusobacterium.Fusobacterium alocis	annotation	F. alocis
+
+## Nitrospinae
+##############################
+Bacteria.Nitrospinae	annotation_background_color	#E8E8E8
+Bacteria.Nitrospinae	annotation	Nitrospinae
+Bacteria.Nitrospinae	annotation_font_size	5
+Bacteria.Nitrospinae.Nitrospinia	annotation_background_color	#DADADA
+#Bacteria.Nitrospinae.Nitrospinia	annotation	Nitrospinia
+#Bacteria.Nitrospinae.Nitrospinia.Nitrospinales	annotation_background_color	#CCCCCC
+#Bacteria.Nitrospinae.Nitrospinia.Nitrospinales	annotation	Nitrospinales
+#Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae	annotation_background_color	#BCBCBC
+#Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae	annotation	Nitrospinaceae
+Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae.Nitrospina	annotation_background_color	#B0B0B0
+Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae.Nitrospina	annotation	Nitrospina
+Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae.Nitrospina	annotation_font_size	4
+
+## Planctomycetes
+##############################
+Bacteria.Planctomycetes	annotation_background_color	#E8E8E8
+Bacteria.Planctomycetes	annotation	Planctomycetes
+Bacteria.Planctomycetes	annotation_font_size	5
+#Bacteria.Planctomycetes.Planctomycetacia	annotation_background_color	#DADADA
+#Bacteria.Planctomycetes.Planctomycetacia	annotation	Planctomycetacia
+#Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales	annotation_background_color	#CCCCCC
+#Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales	annotation	Planctomycetales
+#Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae	annotation_background_color	#BCBCBC
+#Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae	annotation	Planctomycetaceae
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces	annotation_background_color	#B0B0B0
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces	annotation	Planctomyces
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces	annotation_font_size	4
+
+## Proteobacteria
+##############################
+Bacteria.Proteobacteria	annotation_background_color	#E8E8E8
+Bacteria.Proteobacteria	annotation	Proteobacteria
+Bacteria.Proteobacteria	annotation_font_size	12
+Bacteria.Proteobacteria.Alphaproteobacteria	annotation	Alphaproteobacteria
+Bacteria.Proteobacteria.Alphaproteobacteria	annotation_background_color	#DADADA
+Bacteria.Proteobacteria.Alphaproteobacteria	annotation_font_size	10
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales	annotation_background_color	#CCCCCC
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales	annotation	Caulobacterales
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales	annotation_font_size	5
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales.Parvularculaceae	annotation_background_color	#BCBCBC
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales.Parvularculaceae	annotation	Parvularculaceae
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales.Parvularculaceae	annotation_font_size	4
+
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales	annotation_background_color	#CCCCCC
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales	annotation	Rhizobiales
+#Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae	annotation_background_color	#BCBCBC
+#Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae	annotation	Beijerinckiaceae
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia	annotation	Beijerinckia
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia	annotation_font_size	4
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia.Beijerinckia indica	annotation	B. indica
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia.Beijerinckia indica	annotation_font_size	6
+#Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae	annotation_background_color	#BCBCBC
+#Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae	annotation	Rhizobiaceae
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae.Rhizobium	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae.Rhizobium	annotation	Rhizobium
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae.Rhizobium	annotation_font_size	4
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae.Rhizobium.Agrobacterium sp	annotation	A. sp.
+
+Bacteria.Proteobacteria.Deltaproteobacteria	annotation_background_color	#DADADA
+Bacteria.Proteobacteria.Deltaproteobacteria	annotation	Deltaproteobacteria
+
+Bacteria.Proteobacteria.Gammaproteobacteria	annotation_background_color	#DADADA
+Bacteria.Proteobacteria.Gammaproteobacteria	annotation_font_size	10
+Bacteria.Proteobacteria.Gammaproteobacteria	annotation	Gammaproteobacteria
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales	annotation	Aeromonadales
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales	annotation_background_color	#CCCCCC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae	annotation	Aeromonadaceae
+#Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae	annotation_background_color	#BCBCBC
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae.Aeromonas	annotation	Aeromonas
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae.Aeromonas	annotation_font_size	4
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae.Aeromonas	annotation_background_color	#B0B0B0
+#Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae	annotation_background_color	#BCBCBC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae	annotation	Succinivibrionaceae
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter	annotation	Ruminobacter
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter	annotation_font_size	4
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter.Ruminobacter amylophilus	annotation	R. amylophilus
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter.Ruminobacter amylophilus	annotation_font_size	3
+#Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales	annotation	Alteromonadales
+#Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales	annotation_background_color	#CCCCCC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae	annotation_background_color	#BCBCBC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae	annotation	Pseudoalteromonadaceae
+Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae.Pseudoalteromonas	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae.Pseudoalteromonas	annotation	Pseudoalteromonas
+Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae.Pseudoalteromonas	annotation_font_size	5
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales	annotation_background_color	#CCCCCC
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales	annotation	Betaproteobacteriales
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales	annotation_font_size	4
+
+#Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales	annotation_background_color	#CCCCCC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales	annotation	Enterobacteriales
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae	annotation_background_color	#BCBCBC
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae	annotation	Enterobacteriaceae
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae	annotation_font_size	5
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea	annotation_font_size	6
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea	annotation	Pantoea
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea.Pantoea agglomerans	annotation	P. agglomerans
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea.Pantoea agglomerans	annotation_font_size	3
+Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales	annotation_background_color	#CCCCCC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales	annotation	Methylococcales
+#Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae	annotation_background_color	#BCBCBC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae	annotation	Methylomonaceae
+Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae.Methylomonas	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae.Methylomonas	annotation	Methylomonas
+Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae.Methylomonas	annotation_font_size	3
+#Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales	annotation_background_color	#CCCCCC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales	annotation	Pseudomonadales
+#Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae	annotation_background_color	#BCBCBC
+#Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae	annotation	Pseudomonadaceae
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas	annotation_background_color	#B0B0B0
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas	annotation	Pseudomonas
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas	annotation_font_size	4
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas aurantiaca	annotation	P. aurantiaca
+
+## Tenericutes
+####################################
+Bacteria.Tenericutes	annotation_background_color	#E8E8E8
+Bacteria.Tenericutes	annotation	Tenericutes
+Bacteria.Tenericutes.Mollicutes	annotation_background_color	#DADADA
+Bacteria.Tenericutes.Mollicutes	annotation	Mollicutes
+#Bacteria.Tenericutes.Mollicutes.Acholeplasmatales	annotation	Acholeplasmatales
+#Bacteria.Tenericutes.Mollicutes.Acholeplasmatales	annotation_background_color	#CCCCCC
+#Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae	annotation	Acholeplasmataceae
+#Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae	annotation_background_color	#BCBCBC
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma	annotation	Acholeplasma
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma	annotation_background_color	#B0B0B0
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma	annotation_font_size	4
+#Bacteria.Tenericutes.Mollicutes.Mycoplasmatales	annotation_background_color	#CCCCCC
+#Bacteria.Tenericutes.Mollicutes.Mycoplasmatales	annotation	Mycoplasmatales
+#Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae	annotation_background_color	#BCBCBC
+#Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae	annotation	Mycoplasmataceae
+Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae.Mycoplasma	annotation_background_color	#B0B0B0
+Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae.Mycoplasma	annotation	Mycoplasma
+Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae.Mycoplasma	annotation_font_size	4
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	clade_marker_size	400
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	clade_marker_size	400
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora.unknown	clade_marker_size	400
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.unknown	clade_marker_size	400
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.Atopobium minutum	clade_marker_size	400
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.unknown	clade_marker_size	400
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga.Cytophaga aurantiaca	clade_marker_size	400
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus.Lactobacillus delbrueckii	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium coccoides	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium perfringens	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium.unknown	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum.Cellulosilyticum lentocellum	clade_marker_size	400
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter.unknown	clade_marker_size	400
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.Sporomusa paucivorans	clade_marker_size	400
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.unknown	clade_marker_size	400
+Bacteria.Fusobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_size	400
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces.unknown	clade_marker_size	400
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales.unknown.unknown.unknown	clade_marker_size	400
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	clade_marker_shape	*
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	clade_marker_shape	*
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora.unknown	clade_marker_shape	*
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.unknown	clade_marker_shape	*
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.Atopobium minutum	clade_marker_shape	*
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.unknown	clade_marker_shape	*
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga.Cytophaga aurantiaca	clade_marker_shape	*
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus.Lactobacillus delbrueckii	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium coccoides	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium perfringens	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium.unknown	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum.Cellulosilyticum lentocellum	clade_marker_shape	*
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter.unknown	clade_marker_shape	*
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.Sporomusa paucivorans	clade_marker_shape	*
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.unknown	clade_marker_shape	*
+Bacteria.Fusobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_shape	*
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces.unknown	clade_marker_shape	*
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales.unknown.unknown.unknown	clade_marker_shape	*
+Bacteria.Acidobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces.unknown	clade_marker_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces.Actinomyces neuii	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae.Corynebacterium.unknown	clade_marker_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae.Mycobacterium.unknown	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	clade_marker_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.Arthrobacter globiformis	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora.unknown	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium.unknown	clade_marker_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium.Propionibacterium acnes	clade_marker_color	#388ECC
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.unknown	clade_marker_color	#C2C2C2
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.Atopobium minutum	clade_marker_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.unknown	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.unknown	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.unknown.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga.Cytophaga aurantiaca	clade_marker_color	#009E73
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae.Sphingobacterium.unknown	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Cytophagia.Cytophagales.Cytophagaceae.Runella.unknown	clade_marker_color	#388ECC
+Bacteria.Cyanobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_color	#F68B33
+Bacteria.Cyanobacteria.Chloroplast.unknown.unknown.unknown.unknown	clade_marker_color	#F68B33
+Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae.Pseudanabaena.unknown	clade_marker_color	#F68B33
+Bacteria.environnemental.unknown.unknown.unknown.unknown.ABBB-96	clade_marker_color	#F68B33
+Bacteria.environnemental.unknown.unknown.unknown.unknown.adhufec51	clade_marker_color	#388ECC
+Bacteria.environnemental.unknown.unknown.unknown.unknown.HuCA36	clade_marker_color	#388ECC
+Bacteria.environnemental.unknown.unknown.unknown.unknown.MB1228	clade_marker_color	#F68B33
+Bacteria.environnemental.unknown.unknown.unknown.unknown.RB126	clade_marker_color	#388ECC
+Bacteria.Epsilonbacteraeota.unknown.unknown.unknown.unknown.unknown	clade_marker_color	#F68B33
+Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae.Campylobacter.unknown	clade_marker_color	#F68B33
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter.unknown	clade_marker_color	#F68B33
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter.unknown	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus.Bacillus subtilis	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus.Staphylococcus sp	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus.Enterococcus faecium	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae.Lactobacillus.unknown	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus.Lactobacillus delbrueckii	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Streptococcus.unknown	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.unknown	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium baratii	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium subterminale	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium botulinum	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium botulinum	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium ramosum	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	clade_marker_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	clade_marker_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium lituseburense	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium sticklandii	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium coccoides	clade_marker_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium perfringens	clade_marker_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium.unknown	clade_marker_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium.unknown	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum.Cellulosilyticum lentocellum	clade_marker_color	#009E73
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter.unknown	clade_marker_color	#009E73
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.unknown	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.unknown	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.Sporomusa paucivorans	clade_marker_color	#F68B33
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.unknown	clade_marker_color	#C2C2C2
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.unknown	clade_marker_color	#C2C2C2
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.Veillonella ratti	clade_marker_color	#F68B33
+Bacteria.Fusobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Fusobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_color	#C2C2C2
+Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae.Fusobacterium.Fusobacterium alocis	clade_marker_color	#F68B33
+Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae.Nitrospina.unknown	clade_marker_color	#F68B33
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces.unknown	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.unknown.unknown.unknown.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Proteobacteria.Alphaproteobacteria.unknown.unknown.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales.Parvularculaceae.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia.Beijerinckia indica	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae.Rhizobium.Agrobacterium sp	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Deltaproteobacteria.unknown.unknown.unknown.unknown	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.unknown.unknown.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae.Aeromonas.unknown	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter.Ruminobacter amylophilus	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae.Pseudoalteromonas.unknown	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales.unknown.unknown.unknown	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.unknown.unknown	clade_marker_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea.Pantoea agglomerans	clade_marker_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae.Methylomonas.unknown	clade_marker_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas aurantiaca	clade_marker_color	#F68B33
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma.unknown	clade_marker_color	#388ECC
+Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae.Mycoplasma.unknown	clade_marker_color	#388ECC
+Bacteria.Acidobacteria.unknown.unknown.unknown.unknown.unknown	annotation_background_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces.unknown	annotation_background_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Actinomycetales.Actinomycetaceae.Actinomyces.Actinomyces neuii	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Corynebacteriaceae.Corynebacterium.unknown	annotation_background_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Corynebacteriales.Mycobacteriaceae.Mycobacterium.unknown	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	annotation_background_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.unknown	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micrococcales.Micrococcaceae.Arthrobacter.Arthrobacter globiformis	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Actinoplanes.Actinoplanes utahensis	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Micromonosporales.Micromonosporaceae.Micromonospora.unknown	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium.unknown	annotation_background_color	#F68B33
+Bacteria.Actinobacteria.Actinobacteria.Propionibacteriales.Propionibacteriaceae.Propionibacterium.Propionibacterium acnes	annotation_background_color	#388ECC
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.unknown	annotation_background_color	#C2C2C2
+Bacteria.Actinobacteria.Coriobacteriia.Coriobacteriales.Coriobacteriaceae.Atopobium.Atopobium minutum	annotation_background_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.unknown	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.unknown	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.unknown.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Cytophagales.Cytophagaceae.Cytophaga.Cytophaga aurantiaca	annotation_background_color	#009E73
+Bacteria.Bacteroidetes.Bacteroidia.Sphingobacteriales.Sphingobacteriaceae.Sphingobacterium.unknown	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Cytophagia.Cytophagales.Cytophagaceae.Runella.unknown	annotation_background_color	#388ECC
+Bacteria.Cyanobacteria.unknown.unknown.unknown.unknown.unknown	annotation_background_color	#F68B33
+Bacteria.Cyanobacteria.Chloroplast.unknown.unknown.unknown.unknown	annotation_background_color	#F68B33
+Bacteria.Cyanobacteria.Oxyphotobacteria.Pseudanabaenales.Pseudanabaenaceae.Pseudanabaena.unknown	annotation_background_color	#F68B33
+Bacteria.environnemental.unknown.unknown.unknown.unknown.ABBB-96	annotation_background_color	#F68B33
+Bacteria.environnemental.unknown.unknown.unknown.unknown.adhufec51	annotation_background_color	#388ECC
+Bacteria.environnemental.unknown.unknown.unknown.unknown.HuCA36	annotation_background_color	#388ECC
+Bacteria.environnemental.unknown.unknown.unknown.unknown.MB1228	annotation_background_color	#F68B33
+Bacteria.environnemental.unknown.unknown.unknown.unknown.RB126	annotation_background_color	#388ECC
+Bacteria.Epsilonbacteraeota.unknown.unknown.unknown.unknown.unknown	annotation_background_color	#F68B33
+Bacteria.Epsilonbacteraeota.Campylobacteria.Campylobacterales.Campylobacteraceae.Campylobacter.unknown	annotation_background_color	#F68B33
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter.unknown	annotation_background_color	#F68B33
+Bacteria.Fibrobacteres.Fibrobacteria.Fibrobacterales.Fibrobacteraceae.Fibrobacter.unknown	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Bacillales.Bacillaceae.Bacillus.Bacillus subtilis	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Bacillales.Staphylococcaceae.Staphylococcus.Staphylococcus sp	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Enterococcaceae.Enterococcus.Enterococcus faecium	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Lactobacillaceae.Lactobacillus.unknown	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Lactococcus.Lactobacillus delbrueckii	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Bacilli.Lactobacillales.Streptococcaceae.Streptococcus.unknown	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.unknown	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium baratii	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium subterminale	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium botulinum	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium botulinum	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium ramosum	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	annotation_background_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium leptum	annotation_background_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium lituseburense	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium sticklandii	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium coccoides	annotation_background_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae.Clostridium.Clostridium perfringens	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium.unknown	annotation_background_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Eubacteriaceae.Eubacterium.unknown	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Cellulosilyticum.Cellulosilyticum lentocellum	annotation_background_color	#009E73
+Bacteria.Firmicutes.Clostridia.Thermoanaerobacterales.Thermoanaerobacteraceae.Thermoanaerobacter.unknown	annotation_background_color	#009E73
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.unknown	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.unknown	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Sporomusa.Sporomusa paucivorans	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.unknown	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.unknown	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Negativicutes.Selenomonadales.Veillonellaceae.Veillonella.Veillonella ratti	annotation_background_color	#F68B33
+Bacteria.Fusobacteria.unknown.unknown.unknown.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Fusobacteria.unknown.unknown.unknown.unknown.unknown	annotation_background_color	#C2C2C2
+Bacteria.Fusobacteria.Fusobacteriia.Fusobacteriales.Fusobacteriaceae.Fusobacterium.Fusobacterium alocis	annotation_background_color	#F68B33
+Bacteria.Nitrospinae.Nitrospinia.Nitrospinales.Nitrospinaceae.Nitrospina.unknown	annotation_background_color	#F68B33
+Bacteria.Planctomycetes.Planctomycetacia.Planctomycetales.Planctomycetaceae.Planctomyces.unknown	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.unknown.unknown.unknown.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Alphaproteobacteria.unknown.unknown.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Alphaproteobacteria.Caulobacterales.Parvularculaceae.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Beijerinckiaceae.Beijerinckia.Beijerinckia indica	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Alphaproteobacteria.Rhizobiales.Rhizobiaceae.Rhizobium.Agrobacterium sp	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Deltaproteobacteria.unknown.unknown.unknown.unknown	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.unknown.unknown.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Aeromonadaceae.Aeromonas.unknown	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Aeromonadales.Succinivibrionaceae.Ruminobacter.Ruminobacter amylophilus	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Alteromonadales.Pseudoalteromonadaceae.Pseudoalteromonas.unknown	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Betaproteobacteriales.unknown.unknown.unknown	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.unknown.unknown	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Enterobacteriales.Enterobacteriaceae.Pantoea.Pantoea agglomerans	annotation_background_color	#F68B33
+Bacteria.Proteobacteria.Gammaproteobacteria.Methylococcales.Methylomonaceae.Methylomonas.unknown	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas aurantiaca	annotation_background_color	#F68B33
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma.unknown	annotation_background_color	#388ECC
+Bacteria.Tenericutes.Mollicutes.Mycoplasmatales.Mycoplasmataceae.Mycoplasma.unknown	annotation_background_color	#388ECC

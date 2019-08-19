@@ -1,0 +1,32 @@
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae.Aminobacterium.unknown species
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium disporicum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides ovatus
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.[Eubacterium] coprostanoligenes group.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina.Methanosarcina mazei
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides uniformis
+Bacteria.Bacteroidetes.Bacteroidetes vadinHA17.unknown order.unknown family.unknown genus.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Proteiniphilum.unknown species
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae.Treponema 2.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.Petrimonas sulfuriphila
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma.unknown species
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Ornatilinea.unknown species
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium butyricum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.Syntrophomonas wolfei
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Longilinea.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides intestinalis
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.Anaerofilum.unknown species
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Pelotomaculum.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.unknown species
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Cryptanaerobacter.unknown species
+Bacteria.Cloacimonetes.W5.unknown order.unknown family.unknown genus.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.unknown genus.unknown species
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides graminisolvens
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Tyzzerella.Clostridium sp
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae.Defluviitoga.unknown species
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas caeni
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species

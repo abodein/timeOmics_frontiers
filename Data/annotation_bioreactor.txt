@@ -1,0 +1,247 @@
+title	Bioreactor Study: OTUs by cluster
+title_font_size	20
+total_plotted_degrees	360
+start_rotation	270
+clade_marker_size	15
+branch_thickness	1.5
+branch_color	grey
+
+1. Cluster 1 (component 1 positive)	clade_marker_color	#388ECC
+2. Cluster -1 (component 1 negative)	clade_marker_color	#F68B33	
+3. Cluster 2 (component 2 positive)	clade_marker_color	#C2C2C2	
+4. Cluster -2 (component 2 negative)	clade_marker_color	#009E73
+
+1. Cluster 1 (component 1 positive)	class_legend_font_size	100
+2. Cluster -1 (component 1 negative)	class_legend_font_size	100
+3. Cluster 2 (component 2 positive)	class_legend_font_size	100
+4. Cluster -2 (component 2 negative)	annotation_legend_font_size	100
+
+1. Cluster 1 (component 1 positive)	clade_marker_size	50
+2. Cluster -1 (component 1 negative)	clade_marker_size	50
+3. Cluster 2 (component 2 positive)	clade_marker_size	50
+4. Cluster -2 (component 2 negative)	clade_marker_size	50
+
+
+Archaea.Euryarchaeota	annotation	Euryarchaeota
+Archaea.Euryarchaeota	annotation_background_color	#B3B3B3
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae	annotation	Methanosarcinaceae
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae	annotation_background_color	#D3D3D3
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina	annotation	Methanosarcina
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina	annotation_background_color	#DBDBDB
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina.Methanosarcina mazei	annotation	M. mazei
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina.Methanosarcina mazei	clade_marker_color	#F68B33
+
+## Bacteroidetes
+#########################
+Bacteria.Bacteroidetes	annotation	Bacteroidetes
+Bacteria.Bacteroidetes	annotation_background_color	#B3B3B3
+Bacteria.Bacteroidetes.Bacteroidetes vadinHA17.unknown order.unknown family.unknown genus.unknown species	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae	annotation	Bacteroidaceae
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae	annotation_background_color	#D3D3D3
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides	annotation	Bacteroides
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides	annotation_background_color	#DBDBDB
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides graminisolvens	annotation	B. graminisolvens
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides graminisolvens	clade_marker_color	#C2C2C2
+
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides intestinalis	annotation	B. intestinalis
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides intestinalis	clade_marker_color	#C2C2C2
+
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides ovatus	annotation	B. ovatus
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides ovatus	clade_marker_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides uniformis	annotation	B. uniformis
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides uniformis	clade_marker_color	#C2C2C2
+
+
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae	annotation	Porphyromonadaceae
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae	annotation_background_color	#D3D3D3
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas	annotation_background_color	#DBDBDB
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas	annotation	Petrimonas
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.Petrimonas sulfuriphila	annotation	P. sulfuriphila
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.Petrimonas sulfuriphila	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.unknown species	clade_marker_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Proteiniphilum	annotation	Proteiniphilum
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Proteiniphilum	annotation_background_color	#DBDBDB
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Proteiniphilum.unknown species	clade_marker_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.unknown genus.unknown species	clade_marker_color	#C2C2C2
+
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae	annotation	Rikenellaceae
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae	annotation_background_color	#DBDBDB
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species	clade_marker_color	#388ECC
+
+## Chloroflexi
+#########################
+Bacteria.Chloroflexi	annotation	Chloroflexi
+Bacteria.Chloroflexi	annotation_background_color	#B3B3B3
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae	annotation	Anaerolineaceae
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae	annotation_background_color	#D3D3D3
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Longilinea	annotation	Longilinea
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Longilinea	annotation_background_color	#DBDBDB
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Longilinea.unknown species	clade_marker_color	#388ECC
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Ornatilinea	annotation	Ornatilinea
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Ornatilinea	annotation_background_color	#DBDBDB
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Ornatilinea.unknown species	clade_marker_color	#F68B33
+
+## Cloacimonetes
+#########################
+Bacteria.Cloacimonetes	annotation	Cloacimonetes
+Bacteria.Cloacimonetes	annotation_background_color	#B3B3B3
+#Bacteria.Cloacimonetes.W5.unknown order.unknown family.unknown genus.unknown species
+Bacteria.Cloacimonetes.W5.unknown order.unknown family.unknown genus.unknown species	clade_marker_color	#F68B33
+
+## Firmicutes
+########################
+Bacteria.Firmicutes	annotation	Firmicutes
+Bacteria.Firmicutes	annotation_background_color	#B3B3B3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1	annotation	Clostridiaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1	annotation_background_color	#D3D3D3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1	annotation	Clostridium
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1	annotation_background_color	#DBDBDB
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium butyricum	annotation	C. butyricum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium butyricum	clade_marker_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium disporicum	annotation	C. disporicum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium disporicum	clade_marker_color	#F68B33
+
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae	annotation	Lachnospiraceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae	annotation_background_color	#D3D3D3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea	annotation	Mobilitalea
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea	annotation_background_color	#DBDBDB
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species	clade_marker_color	#009E73
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Tyzzerella	annotation	Tyzzerella
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Tyzzerella	annotation_background_color	#DBDBDB
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Tyzzerella.Clostridium sp	clade_marker_color	#C2C2C2
+
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae	annotation	Peptococcaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae	annotation_background_color	#D3D3D3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Cryptanaerobacter	annotation	Peptococcaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Cryptanaerobacter	annotation_background_color	#DBDBDB
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Cryptanaerobacter.unknown species	clade_marker_color	#F68B33
+
+
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Pelotomaculum.unknown species	clade_marker_color	#F68B33
+
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae	annotation	Ruminococcaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae	annotation_background_color	#D3D3D3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.Anaerofilum	annotation	Anaerofilum
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.Anaerofilum	annotation_background_color	#DBDBDB
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.Anaerofilum.unknown species	clade_marker_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.[Eubacterium] coprostanoligenes group.unknown species	clade_marker_color	#C2C2C2
+
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae	annotation	Syntrophomonadaceae
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae	annotation_background_color	#D3D3D3
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas	annotation	Syntrophomonas
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas	annotation_background_color	#DBDBDB
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.Syntrophomonas wolfei	annotation	S. wolfei
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.Syntrophomonas wolfei	clade_marker_color	#F68B33
+
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species	clade_marker_color	#F68B33
+
+## Proteobacteria
+##########################
+Bacteria.Proteobacteria	annotation	Proteobacteria
+Bacteria.Proteobacteria	annotation_background_color	#B3B3B3
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae	annotation	Pseudomonadaceae
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae	annotation_background_color	#D3D3D3
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas	annotation	Pseudomonas
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas	annotation_background_color	#DBDBDB
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas caeni	annotation	P. caeni
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas caeni	clade_marker_color	#388ECC
+
+##########################
+Bacteria.Spirochaetae	annotation	Spirochaetae
+Bacteria.Spirochaetae	annotation_background_color	#B3B3B3
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae	annotation	Spirochaetaceae
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae	annotation_background_color	#D3D3D3
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae.Treponema 2	annotation	Treponema
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae.Treponema 2	annotation_background_color	#DBDBDB
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae.Treponema 2.unknown species	clade_marker_color	#388ECC
+
+##########################
+Bacteria.Synergistetes	annotation	Synergistetes
+Bacteria.Synergistetes	annotation_background_color	#B3B3B3
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae	annotation	Synergistaceae
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae	annotation_background_color	#D3D3D3
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae.Aminobacterium	annotation	Aminobacterium
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae.Aminobacterium	annotation_background_color	#DBDBDB
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae.Aminobacterium.unknown species	clade_marker_color	#388ECC
+
+##########################
+Bacteria.Tenericutes	annotation	Tenericutes
+Bacteria.Tenericutes	annotation_background_color	#B3B3B3
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae	annotation	Acholeplasmataceae
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae	annotation_background_color	#D3D3D3
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma	annotation	Acholeplasma
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma	annotation_background_color	#DBDBDB
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma.unknown species	clade_marker_color	#F68B33
+
+##########################
+Bacteria.Thermotogae	annotation	Thermotogae
+Bacteria.Thermotogae	annotation_background_color	#B3B3B3
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae	annotation	Petrotogaceae
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae	annotation_background_color	#D3D3D3
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae.Defluviitoga	annotation	Defluviitoga
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae.Defluviitoga	annotation_background_color	#DBDBDB
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae.Defluviitoga.unknown species	clade_marker_color	#388ECC
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae.Aminobacterium.unknown species	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium disporicum	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides ovatus	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.[Eubacterium] coprostanoligenes group.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species	clade_marker_size	100
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina.Methanosarcina mazei	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides uniformis	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidetes vadinHA17.unknown order.unknown family.unknown genus.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Proteiniphilum.unknown species	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species	clade_marker_size	100
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae.Treponema 2.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.Petrimonas sulfuriphila	clade_marker_size	100
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma.unknown species	clade_marker_size	100
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Ornatilinea.unknown species	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium butyricum	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.Syntrophomonas wolfei	clade_marker_size	100
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Longilinea.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides intestinalis	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.Anaerofilum.unknown species	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Pelotomaculum.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.unknown species	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Cryptanaerobacter.unknown species	clade_marker_size	100
+Bacteria.Cloacimonetes.W5.unknown order.unknown family.unknown genus.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.unknown genus.unknown species	clade_marker_size	100
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides graminisolvens	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Tyzzerella.Clostridium sp	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species	clade_marker_size	100
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae.Defluviitoga.unknown species	clade_marker_size	100
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas caeni	clade_marker_size	100
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species	clade_marker_size	100
+Bacteria.Synergistetes.Synergistia.Synergistales.Synergistaceae.Aminobacterium.unknown species	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium disporicum	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species	annotation_background_color	#F68B33
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides ovatus	annotation_background_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.[Eubacterium] coprostanoligenes group.unknown species	annotation_background_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Rikenellaceae.vadinBC27 wastewater-sludge group.unknown species	annotation_background_color	#388ECC
+Archaea.Euryarchaeota.Methanomicrobia.Methanosarcinales.Methanosarcinaceae.Methanosarcina.Methanosarcina mazei	annotation_background_color	#F68B33
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides uniformis	annotation_background_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidetes vadinHA17.unknown order.unknown family.unknown genus.unknown species	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Proteiniphilum.unknown species	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species	annotation_background_color	#C2C2C2
+Bacteria.Spirochaetae.Spirochaetes.Spirochaetales.Spirochaetaceae.Treponema 2.unknown species	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.Petrimonas sulfuriphila	annotation_background_color	#388ECC
+Bacteria.Tenericutes.Mollicutes.Acholeplasmatales.Acholeplasmataceae.Acholeplasma.unknown species	annotation_background_color	#F68B33
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Ornatilinea.unknown species	annotation_background_color	#F68B33
+Bacteria.Firmicutes.Clostridia.Clostridiales.Clostridiaceae 1.Clostridium sensu stricto 1.Clostridium butyricum	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.Syntrophomonas wolfei	annotation_background_color	#F68B33
+Bacteria.Chloroflexi.Anaerolineae.Anaerolineales.Anaerolineaceae.Longilinea.unknown species	annotation_background_color	#388ECC
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides intestinalis	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Ruminococcaceae.Anaerofilum.unknown species	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Pelotomaculum.unknown species	annotation_background_color	#F68B33
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.Petrimonas.unknown species	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Peptococcaceae.Cryptanaerobacter.unknown species	annotation_background_color	#F68B33
+Bacteria.Cloacimonetes.W5.unknown order.unknown family.unknown genus.unknown species	annotation_background_color	#F68B33
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Porphyromonadaceae.unknown genus.unknown species	annotation_background_color	#C2C2C2
+Bacteria.Bacteroidetes.Bacteroidia.Bacteroidales.Bacteroidaceae.Bacteroides.Bacteroides graminisolvens	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Tyzzerella.Clostridium sp	annotation_background_color	#C2C2C2
+Bacteria.Firmicutes.Clostridia.Clostridiales.Lachnospiraceae.Mobilitalea.unknown species	annotation_background_color	#009E73
+Bacteria.Thermotogae.Thermotogae.Petrotogales.Petrotogaceae.Defluviitoga.unknown species	annotation_background_color	#388ECC
+Bacteria.Proteobacteria.Gammaproteobacteria.Pseudomonadales.Pseudomonadaceae.Pseudomonas.Pseudomonas caeni	annotation_background_color	#388ECC
+Bacteria.Firmicutes.Clostridia.Clostridiales.Syntrophomonadaceae.Syntrophomonas.unknown species	annotation_background_color	#F68B33
