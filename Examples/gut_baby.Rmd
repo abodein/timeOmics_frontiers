@@ -457,7 +457,7 @@ spca.plot(spca.res_f.C, title = "C-section sparse PCA Clusters")
 ```
 We finally display above the trajectories of the selected OTUs.
 
-The phylogenetic tree below were produced using GraPhlAn tools. To create such cladograms, GraPhlAn needs a taxonomy file describing the tree structure as well as an annotation file. The latter was generated partly through R-scripts (`./graphlan_csection.R`) and was finalised by hand. The final annotation file is present here (`../Data/annotation_csection.txt`) and below is the bash cammandes to reproduce the tree.
+The phylogenetic tree below was produced using GraPhlAn tools. To create such cladograms, GraPhlAn needs a taxonomy file describing the tree structure as well as an annotation file. The latter was generated partly through R-scripts (`./graphlan_csection.R`) and was finalised by hand. The final annotation file is present here (`../Data/annotation_csection.txt`) and below is the bash commands to reproduce the tree.
 
 ```bash
 graphlan_annotate.py --annot ../Data/annotation_csection.txt \

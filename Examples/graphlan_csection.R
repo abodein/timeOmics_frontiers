@@ -1,45 +1,36 @@
-# annotation color
-annot <- bioreactor %>%
-    mutate(L1 = Taxonomy %>% str_split("\\.") %>% map_chr(~.x[1])) %>%
-    mutate(L2 = Taxonomy %>% str_split("\\.") %>% map_chr(~.x[2])) %>%
-    mutate(L1_L2 = paste(L1,L2, sep = "."))
 
-annot %>%    dplyr::select(L1_L2) %>% mutate(option = "annotation_background_color") %>%
-    mutate(color = "#DBDBDB") %>%
-    write_tsv("~/ls3x/graphlan/annot_background_1.txt",  col_names = F)
+library(tidyverse)
+library(mixOmics)
 
-# annotation
-annot %>% group_by(L1_L2) %>% filter(n() == 1)
-annot %>% mutate(option = "annotation") %>%
-    dplyr::select(L1_L2, option, L2) %>%
-    write_tsv("~/ls3x/graphlan/annot_L2.txt",  col_names = F)
+# ### c-section
+# csec.spca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/C-scection_spca.csv") %>%
+#     dplyr::select(molecule, cluster)
+#
+# csec.pca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/c-section_pca_all.csv")
+# csec.pca <- csec.pca %>% mutate(taxo = taxo %>% str_remove_all("D_.__") %>% str_replace("sp\\.", "sp") %>% str_replace_all(";","\\."))  %>%
+#     arrange(taxo) %>%
+#     mutate(cluster = factor(cluster, levels = c(1,-1,2,-2))) %>%
+#     mutate(selected = molecule %in% csec.spca$molecule) %>% na.omit() %>%
+#     mutate(taxo = str_replace(taxo, "Clostridium sensu stricto .", "Clostridium") %>%
+#                str_replace("Clostridiaceae 1", "Clostridiaceae") %>%
+#                str_replace(" Clostridium", "Clostridium")) %>%
+#     filter(molecule != "F_2072")
+#
+# csec.pca <- csec.pca %>% mutate(taxoo = str_count(taxo,"\\.")) %>%
+#     mutate(taxo = paste0(taxo,str_dup(".unknown", 6-taxoo)))
+#
+# csec.pca <- csec.pca %>%
+#     mutate(L1 = str_split(taxo, "\\.") %>% map_chr(~.x[1])) %>%
+#     mutate(L2 = str_split(taxo, "\\.") %>% map_chr(~.x[2])) %>%
+#     mutate(L3 = str_split(taxo, "\\.") %>% map_chr(~.x[3])) %>%
+#     mutate(L4 = str_split(taxo, "\\.") %>% map_chr(~.x[4])) %>%
+#     mutate(L5 = str_split(taxo, "\\.") %>% map_chr(~.x[5])) %>%
+#     mutate(L6 = str_split(taxo, "\\.") %>% map_chr(~.x[6]))
+#
+# csec.pca %>% write_tsv("~/ls3x/graphlan/csection/csection_pca.tsv", col_names = F)
+# save(csec.pca, file = "../Data/csec_pca.Rdata")
 
-
-### c-section
-csec.spca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/C-scection_spca.csv") %>%
-    dplyr::select(molecule, cluster)
-csec.pca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/c-section_pca_all.csv")
-csec.pca <- csec.pca %>% mutate(taxo = taxo %>% str_remove_all("D_.__") %>% str_replace("sp\\.", "sp") %>% str_replace_all(";","\\."))  %>%
-    arrange(taxo) %>%
-    mutate(cluster = factor(cluster, levels = c(1,-1,2,-2))) %>%
-    mutate(selected = molecule %in% csec.spca$molecule) %>% na.omit() %>%
-    mutate(taxo = str_replace(taxo, "Clostridium sensu stricto .", "Clostridium") %>%
-               str_replace("Clostridiaceae 1", "Clostridiaceae") %>%
-               str_replace(" Clostridium", "Clostridium")) %>%
-    filter(molecule != "F_2072")
-
-csec.pca <- csec.pca %>% mutate(taxoo = str_count(taxo,"\\.")) %>%
-    mutate(taxo = paste0(taxo,str_dup(".unknown", 6-taxoo)))
-
-csec.pca <- csec.pca %>%
-    mutate(L1 = str_split(taxo, "\\.") %>% map_chr(~.x[1])) %>%
-    mutate(L2 = str_split(taxo, "\\.") %>% map_chr(~.x[2])) %>%
-    mutate(L3 = str_split(taxo, "\\.") %>% map_chr(~.x[3])) %>%
-    mutate(L4 = str_split(taxo, "\\.") %>% map_chr(~.x[4])) %>%
-    mutate(L5 = str_split(taxo, "\\.") %>% map_chr(~.x[5])) %>%
-    mutate(L6 = str_split(taxo, "\\.") %>% map_chr(~.x[6]))
-
-csec.pca %>% write_tsv("~/ls3x/graphlan/csection/csection_pca.tsv", col_names = F)
+load("../Data/csec_pca.Rdata")
 #csec.pca %>% dplyr::select(taxo) %>% write_tsv("~/ls3x/graphlan/csection/tree.txt", col_names = F)
 
 

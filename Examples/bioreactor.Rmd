@@ -387,6 +387,17 @@ names.2negX2=names(signcompX2)[(signcompX2=="2 neg")]
 names.2posX2=names(signcompX2)[(signcompX2=="2 pos")]
 ```
 
+
+The phylogenetic tree below was produced using GraPhlAn tools. To create such cladograms, GraPhlAn needs a taxonomy file describing the tree structure as well as an annotation file. The latter was generated partly through R-scripts (`./graphlan_bioreactor.R`) and was finalised by hand. The final annotation file is present here (`../Data/annotation_bioreactor.txt`) and below is the bash commands to reproduce the tree.
+
+```bash
+graphlan_annotate.py --annot ../Data/annotation_bioreactor.txt \
+  ../Data/tree_bioreactor.txt tree_bioreactor.xml
+graphlan.py tree_bioreactor.xml tree_bioreactor.png --dpi 600 --size 10
+```
+
+![](./figure/tree_bioreactor.png)
+
 ## Proportionality analysis
 
 Interpretation based on correlations between profiles must be made with caution as it is highly likely to be

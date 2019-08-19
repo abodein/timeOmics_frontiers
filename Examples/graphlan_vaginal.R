@@ -1,29 +1,37 @@
-vag.spca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/Vaginal_spca.csv") %>%
-    dplyr::select(molecule, cluster)
-vag.pca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/vaginal_pca_all.csv") %>% rename(taxo = X4)
+library(tidyverse)
+library(mixOmics)
 
-vag.pca <- vag.pca %>% mutate(taxo = taxo %>% str_remove_all("D_.__") %>% str_replace("sp\\.", "sp") %>% str_replace_all(";","\\."))  %>%
-    arrange(taxo) %>%
-    mutate(cluster = factor(cluster, levels = c(1,-1,2,-2))) %>%
-    mutate(selected = molecule %in% csec.spca$molecule) %>% na.omit() %>%
-    mutate(taxo = str_replace(taxo, "Clostridium sensu stricto .", "Clostridium") %>%
-               str_replace("Clostridiaceae 1", "Clostridiaceae") %>%
-               str_replace(" Clostridium", "Clostridium") %>%
-               str_replace("Clostridium.\\.", "Clostridium."))
+# vag.spca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/Vaginal_spca.csv") %>%
+#     dplyr::select(molecule, cluster)
+# vag.pca <- read_csv("~/Documents/timeomics_analysis/CS_microbiome/Milk/Final/vaginal_pca_all.csv") %>% rename(taxo = X4)
+#
+# vag.pca <- vag.pca %>% mutate(taxo = taxo %>% str_remove_all("D_.__") %>% str_replace("sp\\.", "sp") %>% str_replace_all(";","\\."))  %>%
+#     arrange(taxo) %>%
+#     mutate(cluster = factor(cluster, levels = c(1,-1,2,-2))) %>%
+#     mutate(selected = molecule %in% csec.spca$molecule) %>% na.omit() %>%
+#     mutate(taxo = str_replace(taxo, "Clostridium sensu stricto .", "Clostridium") %>%
+#                str_replace("Clostridiaceae 1", "Clostridiaceae") %>%
+#                str_replace(" Clostridium", "Clostridium") %>%
+#                str_replace("Clostridium.\\.", "Clostridium."))
+#
+# vag.pca <- vag.pca %>% mutate(taxoo = str_count(taxo,"\\.")) %>%
+#     mutate(taxo = paste0(taxo,str_dup(".unknown", 6-taxoo)))
+#
+# vag.pca <- vag.pca %>%
+#     mutate(L1 = str_split(taxo, "\\.") %>% map_chr(~.x[1])) %>%
+#     mutate(L2 = str_split(taxo, "\\.") %>% map_chr(~.x[2])) %>%
+#     mutate(L3 = str_split(taxo, "\\.") %>% map_chr(~.x[3])) %>%
+#     mutate(L4 = str_split(taxo, "\\.") %>% map_chr(~.x[4])) %>%
+#     mutate(L5 = str_split(taxo, "\\.") %>% map_chr(~.x[5])) %>%
+#     mutate(L6 = str_split(taxo, "\\.") %>% map_chr(~.x[6]))
+#
+# #vag.pca %>% write_tsv("~/ls3x/graphlan/vaginal/vag_pca.tsv")
+# vag.pca %>% save(file = "~/ls3x/graphlan/vaginal/vag_pca.Rdata")
 
-vag.pca <- vag.pca %>% mutate(taxoo = str_count(taxo,"\\.")) %>%
-    mutate(taxo = paste0(taxo,str_dup(".unknown", 6-taxoo)))
 
-vag.pca <- vag.pca %>%
-    mutate(L1 = str_split(taxo, "\\.") %>% map_chr(~.x[1])) %>%
-    mutate(L2 = str_split(taxo, "\\.") %>% map_chr(~.x[2])) %>%
-    mutate(L3 = str_split(taxo, "\\.") %>% map_chr(~.x[3])) %>%
-    mutate(L4 = str_split(taxo, "\\.") %>% map_chr(~.x[4])) %>%
-    mutate(L5 = str_split(taxo, "\\.") %>% map_chr(~.x[5])) %>%
-    mutate(L6 = str_split(taxo, "\\.") %>% map_chr(~.x[6]))
-
-vag.pca %>% write_tsv("~/ls3x/graphlan/vaginal/vag_pca.tsv", col_names = F)
+load("../Data/vag_pca.Rdata")
 #vag.pca %>% dplyr::select(taxo) %>% write_tsv("~/ls3x/graphlan/vaginal/tree.txt", col_names = F)
+
 
 # annotation L2
 vag.pca %>% mutate(L1_L2 = paste(L1,L2, sep = ".")) %>% dplyr::select(L1_L2) %>% unique %>%
@@ -108,6 +116,7 @@ vag.pca %>% filter(selected) %>%
     mutate(value = "400") %>%
     write_tsv("~/ls3x/graphlan/vaginal/annot_selected_size.tsv", col_names = F)
 
+# shape
 vag.pca %>% mutate(color = color.mixo(cluster)) %>%
     mutate(option = "clade_marker_color") %>%
     dplyr::select(taxo, option, color) %>%
