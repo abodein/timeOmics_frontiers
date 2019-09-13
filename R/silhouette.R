@@ -21,6 +21,8 @@ get_demo_silhouette <- function() {
 #' @param cluster A numeric vector of sive ncol(X) containing the cluster
 #' information by
 #'
+#' @importFrom dplyr group_by
+#' @importFrom dplyr summarise
 #' @export
 silhouette <- function(dmatrix,  # distance matrix
                        cluster)  # cluster vector of size ncol(dmatrix)
@@ -44,7 +46,7 @@ silhouette <- function(dmatrix,  # distance matrix
     #- compute silhouette -----------------------------------------------------#
     #--------------------------------------------------------------------------#
     average.dist <- matrix(ncol = length(cluster.levels), nrow = nrow(dmatrix))
-    result <- vector(length = ncol(X))
+    result <- vector(length = ncol(dmatrix))
     for(i in 1:nrow(dmatrix)){
         for(j in 1:length(cluster.levels)){
             index.tmp <- cluster == cluster.levels[j]
@@ -65,15 +67,15 @@ silhouette <- function(dmatrix,  # distance matrix
     to_return <- list()
 
     #-- silhouette coefficient by feature
-    to_return[["feature"]] <- cbind(colnames(X), cluster,  as.data.frame(result))
+    to_return[["feature"]] <- cbind(colnames(dmatrix), cluster,  as.data.frame(result))
     colnames(to_return[["feature"]]) <- c("feature", "cluster", "silhouette.coef")
 
     #-- average silhouette coefficient
     to_return[["average"]] <- mean(to_return[["feature"]][["silhouette.coef"]])
 
     #-- average silhouette coefficient by cluster
-    to_return[["average.cluster"]] <- group_by(to_return[["feature"]], cluster) %>%
-        summarise(silhouette.coef = mean(silhouette.coef)) %>%
+    to_return[["average.cluster"]] <- dplyr::group_by(to_return[["feature"]], cluster) %>%
+        dplyr::summarise(silhouette.coef = mean(silhouette.coef)) %>%
         as.data.frame
 
     return(to_return)

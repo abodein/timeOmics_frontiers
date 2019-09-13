@@ -4,13 +4,13 @@
 \alias{silhouette}
 \title{silhouette}
 \usage{
-silhouette(X, cluster)
+silhouette(dmatrix, cluster)
 }
 \arguments{
-\item{X}{A numeric matrix of size NxP with feature in colnames.}
-
 \item{cluster}{A numeric vector of sive ncol(X) containing the cluster
 information by}
+
+\item{X}{A numeric matrix of size NxP with feature in colnames.}
 }
 \description{
 A more detailed description.
